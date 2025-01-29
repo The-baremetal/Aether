@@ -33,147 +33,218 @@ var Lua_grammar_antlr4ParserStaticData struct {
 func lua_grammar_antlr4ParserInit() {
 	staticData := &Lua_grammar_antlr4ParserStaticData
 	staticData.LiteralNames = []string{
-		"", "'='", "'('", "')'", "'>'", "'<'", "'>='", "'=='", "'<='", "'~='",
-		"'*'", "'/'", "'+'", "'-'", "','", "'table.insert'", "'{'", "'}'", "'['",
-		"']'", "'--[['", "'--]]'", "']]'", "'--'", "'_'", "", "", "'in'", "'print'",
-		"'and'", "'break'", "'do'", "'else'", "'elseif'", "'end'", "'false'",
-		"'for'", "'goto'", "'if'", "'nil'", "'not'", "'or'", "'repeat'", "'return'",
-		"'then'", "'true'", "'until'", "'while'", "'local'", "'function'",
+		"", "'='", "'('", "')'", "'#'", "'>'", "'<'", "'>='", "'=='", "'<='",
+		"'~='", "'*'", "'/'", "'+'", "'-'", "'//'", "'&'", "'|'", "'~'", "'<<'",
+		"'>>'", "':'", "'table.insert'", "','", "'{'", "'}'", "'['", "']'",
+		"'.'", "'--'", "'_'", "'::'", "'__'", "", "'in'", "'print'", "'and'",
+		"'break'", "'do'", "'else'", "'elseif'", "'end'", "'false'", "'for'",
+		"'goto'", "'if'", "'nil'", "'not'", "'or'", "'repeat'", "'return'",
+		"'then'", "'true'", "'until'", "'while'", "'local'", "'function'", "'index'",
+		"'newindex'", "'mode'",
 	}
 	staticData.SymbolicNames = []string{
 		"", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "",
-		"", "", "", "", "", "", "", "", "SEPARATOR", "NEWLINE", "KW_IN", "KW_PRINT",
-		"KW_AND", "KW_BREAK", "KW_DO", "KW_ELSE", "KW_ELSEIF", "KW_END", "KW_FALSE",
-		"KW_FOR", "KW_GOTO", "KW_IF", "KW_NIL", "KW_NOT", "KW_OR", "KW_REPEAT",
-		"KW_RETURN", "KW_THEN", "KW_TRUE", "KW_UNTIL", "KW_WHILE", "KW_LOCAL",
-		"KW_FUNCTION", "NUMBER", "STRING", "LETTER", "DIGIT", "WS",
+		"", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "SEPARATOR",
+		"KW_IN", "KW_PRINT", "KW_AND", "KW_BREAK", "KW_DO", "KW_ELSE", "KW_ELSEIF",
+		"KW_END", "KW_FALSE", "KW_FOR", "KW_GOTO", "KW_IF", "KW_NIL", "KW_NOT",
+		"KW_OR", "KW_REPEAT", "KW_RETURN", "KW_THEN", "KW_TRUE", "KW_UNTIL",
+		"KW_WHILE", "KW_LOCAL", "KW_FUNCTION", "KW_INDEX", "KW_NEWINDEX", "KW_MODE",
+		"NUMBER", "STRING", "LETTER", "DIGIT", "WS", "SINGLE_LINE_COMMENT",
+		"MULTI_LINE_COMMENT",
 	}
 	staticData.RuleNames = []string{
 		"program", "statement", "control_statement", "statement_terminator",
-		"assignment", "expression", "operators", "comparison_operator", "arith_operator",
-		"logical_operator", "comment", "literal", "function_call", "table_insert",
-		"function_declaration", "block", "if_statement", "for_statement", "while_statement",
-		"table", "field", "table_access", "multi_line_comment", "single_line_comment",
-		"print_statement", "identifier",
+		"assignment", "expression", "prefix_expression", "primary_expression",
+		"operators", "comparison_operator", "arith_operator", "logical_operator",
+		"bitwise_operator", "literal", "function_call", "table_insert", "function_declaration",
+		"block", "if_statement", "for_statement", "while_statement", "table",
+		"field", "table_access", "single_line_comment", "print_statement", "identifier",
+		"repeat_statement", "identifier_list", "expression_list", "return_statement",
+		"break_statement", "goto_statement", "label_statement", "function_expression",
+		"method_call", "metatable_field",
 	}
 	staticData.PredictionContextCache = antlr.NewPredictionContextCache()
 	staticData.serializedATN = []int32{
-		4, 1, 54, 269, 2, 0, 7, 0, 2, 1, 7, 1, 2, 2, 7, 2, 2, 3, 7, 3, 2, 4, 7,
+		4, 1, 66, 407, 2, 0, 7, 0, 2, 1, 7, 1, 2, 2, 7, 2, 2, 3, 7, 3, 2, 4, 7,
 		4, 2, 5, 7, 5, 2, 6, 7, 6, 2, 7, 7, 7, 2, 8, 7, 8, 2, 9, 7, 9, 2, 10, 7,
 		10, 2, 11, 7, 11, 2, 12, 7, 12, 2, 13, 7, 13, 2, 14, 7, 14, 2, 15, 7, 15,
 		2, 16, 7, 16, 2, 17, 7, 17, 2, 18, 7, 18, 2, 19, 7, 19, 2, 20, 7, 20, 2,
-		21, 7, 21, 2, 22, 7, 22, 2, 23, 7, 23, 2, 24, 7, 24, 2, 25, 7, 25, 1, 0,
-		1, 0, 5, 0, 55, 8, 0, 10, 0, 12, 0, 58, 9, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1,
-		1, 3, 1, 65, 8, 1, 1, 2, 1, 2, 1, 2, 3, 2, 70, 8, 2, 1, 3, 1, 3, 1, 4,
-		3, 4, 75, 8, 4, 1, 4, 1, 4, 1, 4, 1, 4, 1, 4, 1, 5, 1, 5, 1, 5, 1, 5, 1,
-		5, 1, 5, 1, 5, 1, 5, 1, 5, 1, 5, 3, 5, 92, 8, 5, 1, 5, 1, 5, 1, 5, 1, 5,
-		5, 5, 98, 8, 5, 10, 5, 12, 5, 101, 9, 5, 1, 6, 1, 6, 1, 6, 3, 6, 106, 8,
-		6, 1, 7, 1, 7, 1, 8, 1, 8, 1, 9, 1, 9, 1, 10, 1, 10, 3, 10, 116, 8, 10,
-		1, 11, 1, 11, 1, 12, 1, 12, 1, 12, 1, 12, 1, 12, 5, 12, 125, 8, 12, 10,
-		12, 12, 12, 128, 9, 12, 3, 12, 130, 8, 12, 1, 12, 1, 12, 1, 12, 1, 12,
-		1, 12, 1, 12, 1, 12, 1, 12, 3, 12, 140, 8, 12, 1, 13, 1, 13, 1, 13, 1,
-		13, 1, 13, 1, 13, 1, 13, 1, 14, 1, 14, 1, 14, 1, 14, 1, 14, 1, 14, 5, 14,
-		155, 8, 14, 10, 14, 12, 14, 158, 9, 14, 3, 14, 160, 8, 14, 1, 14, 1, 14,
-		1, 14, 1, 14, 1, 15, 4, 15, 167, 8, 15, 11, 15, 12, 15, 168, 1, 16, 1,
-		16, 1, 16, 1, 16, 1, 16, 1, 16, 1, 16, 1, 16, 1, 16, 5, 16, 180, 8, 16,
-		10, 16, 12, 16, 183, 9, 16, 1, 16, 1, 16, 3, 16, 187, 8, 16, 1, 16, 1,
-		16, 1, 17, 1, 17, 1, 17, 1, 17, 1, 17, 1, 17, 1, 17, 1, 17, 1, 17, 1, 17,
-		1, 17, 1, 17, 1, 17, 1, 17, 1, 17, 1, 17, 3, 17, 207, 8, 17, 1, 17, 1,
-		17, 1, 17, 1, 17, 3, 17, 213, 8, 17, 1, 18, 1, 18, 1, 18, 1, 18, 1, 18,
-		1, 18, 1, 19, 1, 19, 1, 19, 1, 19, 5, 19, 225, 8, 19, 10, 19, 12, 19, 228,
-		9, 19, 3, 19, 230, 8, 19, 1, 19, 1, 19, 1, 20, 1, 20, 1, 20, 1, 20, 1,
-		20, 3, 20, 239, 8, 20, 1, 21, 1, 21, 1, 21, 1, 21, 1, 21, 1, 22, 1, 22,
-		5, 22, 248, 8, 22, 10, 22, 12, 22, 251, 9, 22, 1, 22, 1, 22, 1, 23, 1,
-		23, 1, 24, 1, 24, 1, 24, 1, 24, 1, 24, 1, 25, 1, 25, 5, 25, 264, 8, 25,
-		10, 25, 12, 25, 267, 9, 25, 1, 25, 0, 1, 10, 26, 0, 2, 4, 6, 8, 10, 12,
-		14, 16, 18, 20, 22, 24, 26, 28, 30, 32, 34, 36, 38, 40, 42, 44, 46, 48,
-		50, 0, 6, 1, 0, 4, 9, 1, 0, 10, 13, 2, 0, 29, 29, 41, 41, 4, 0, 35, 35,
-		39, 39, 45, 45, 50, 51, 1, 0, 21, 21, 2, 0, 24, 24, 52, 53, 276, 0, 56,
-		1, 0, 0, 0, 2, 64, 1, 0, 0, 0, 4, 69, 1, 0, 0, 0, 6, 71, 1, 0, 0, 0, 8,
-		74, 1, 0, 0, 0, 10, 91, 1, 0, 0, 0, 12, 105, 1, 0, 0, 0, 14, 107, 1, 0,
-		0, 0, 16, 109, 1, 0, 0, 0, 18, 111, 1, 0, 0, 0, 20, 115, 1, 0, 0, 0, 22,
-		117, 1, 0, 0, 0, 24, 139, 1, 0, 0, 0, 26, 141, 1, 0, 0, 0, 28, 148, 1,
-		0, 0, 0, 30, 166, 1, 0, 0, 0, 32, 170, 1, 0, 0, 0, 34, 212, 1, 0, 0, 0,
-		36, 214, 1, 0, 0, 0, 38, 220, 1, 0, 0, 0, 40, 238, 1, 0, 0, 0, 42, 240,
-		1, 0, 0, 0, 44, 245, 1, 0, 0, 0, 46, 254, 1, 0, 0, 0, 48, 256, 1, 0, 0,
-		0, 50, 261, 1, 0, 0, 0, 52, 55, 3, 2, 1, 0, 53, 55, 3, 20, 10, 0, 54, 52,
-		1, 0, 0, 0, 54, 53, 1, 0, 0, 0, 55, 58, 1, 0, 0, 0, 56, 54, 1, 0, 0, 0,
-		56, 57, 1, 0, 0, 0, 57, 1, 1, 0, 0, 0, 58, 56, 1, 0, 0, 0, 59, 65, 3, 8,
-		4, 0, 60, 65, 3, 10, 5, 0, 61, 65, 3, 4, 2, 0, 62, 65, 3, 28, 14, 0, 63,
-		65, 3, 24, 12, 0, 64, 59, 1, 0, 0, 0, 64, 60, 1, 0, 0, 0, 64, 61, 1, 0,
-		0, 0, 64, 62, 1, 0, 0, 0, 64, 63, 1, 0, 0, 0, 65, 3, 1, 0, 0, 0, 66, 70,
-		3, 32, 16, 0, 67, 70, 3, 34, 17, 0, 68, 70, 3, 36, 18, 0, 69, 66, 1, 0,
-		0, 0, 69, 67, 1, 0, 0, 0, 69, 68, 1, 0, 0, 0, 70, 5, 1, 0, 0, 0, 71, 72,
-		5, 25, 0, 0, 72, 7, 1, 0, 0, 0, 73, 75, 5, 48, 0, 0, 74, 73, 1, 0, 0, 0,
-		74, 75, 1, 0, 0, 0, 75, 76, 1, 0, 0, 0, 76, 77, 3, 50, 25, 0, 77, 78, 5,
-		1, 0, 0, 78, 79, 3, 10, 5, 0, 79, 80, 3, 6, 3, 0, 80, 9, 1, 0, 0, 0, 81,
-		82, 6, 5, -1, 0, 82, 92, 3, 22, 11, 0, 83, 92, 3, 50, 25, 0, 84, 85, 5,
-		2, 0, 0, 85, 86, 3, 10, 5, 0, 86, 87, 5, 3, 0, 0, 87, 92, 1, 0, 0, 0, 88,
-		92, 3, 24, 12, 0, 89, 92, 3, 38, 19, 0, 90, 92, 3, 42, 21, 0, 91, 81, 1,
-		0, 0, 0, 91, 83, 1, 0, 0, 0, 91, 84, 1, 0, 0, 0, 91, 88, 1, 0, 0, 0, 91,
-		89, 1, 0, 0, 0, 91, 90, 1, 0, 0, 0, 92, 99, 1, 0, 0, 0, 93, 94, 10, 4,
-		0, 0, 94, 95, 3, 12, 6, 0, 95, 96, 3, 10, 5, 5, 96, 98, 1, 0, 0, 0, 97,
-		93, 1, 0, 0, 0, 98, 101, 1, 0, 0, 0, 99, 97, 1, 0, 0, 0, 99, 100, 1, 0,
-		0, 0, 100, 11, 1, 0, 0, 0, 101, 99, 1, 0, 0, 0, 102, 106, 3, 14, 7, 0,
-		103, 106, 3, 16, 8, 0, 104, 106, 3, 18, 9, 0, 105, 102, 1, 0, 0, 0, 105,
-		103, 1, 0, 0, 0, 105, 104, 1, 0, 0, 0, 106, 13, 1, 0, 0, 0, 107, 108, 7,
-		0, 0, 0, 108, 15, 1, 0, 0, 0, 109, 110, 7, 1, 0, 0, 110, 17, 1, 0, 0, 0,
-		111, 112, 7, 2, 0, 0, 112, 19, 1, 0, 0, 0, 113, 116, 3, 46, 23, 0, 114,
-		116, 3, 44, 22, 0, 115, 113, 1, 0, 0, 0, 115, 114, 1, 0, 0, 0, 116, 21,
-		1, 0, 0, 0, 117, 118, 7, 3, 0, 0, 118, 23, 1, 0, 0, 0, 119, 120, 3, 50,
-		25, 0, 120, 129, 5, 2, 0, 0, 121, 126, 3, 10, 5, 0, 122, 123, 5, 14, 0,
-		0, 123, 125, 3, 10, 5, 0, 124, 122, 1, 0, 0, 0, 125, 128, 1, 0, 0, 0, 126,
-		124, 1, 0, 0, 0, 126, 127, 1, 0, 0, 0, 127, 130, 1, 0, 0, 0, 128, 126,
-		1, 0, 0, 0, 129, 121, 1, 0, 0, 0, 129, 130, 1, 0, 0, 0, 130, 131, 1, 0,
-		0, 0, 131, 132, 5, 3, 0, 0, 132, 140, 1, 0, 0, 0, 133, 140, 3, 26, 13,
-		0, 134, 135, 5, 28, 0, 0, 135, 136, 5, 2, 0, 0, 136, 137, 3, 10, 5, 0,
-		137, 138, 5, 3, 0, 0, 138, 140, 1, 0, 0, 0, 139, 119, 1, 0, 0, 0, 139,
-		133, 1, 0, 0, 0, 139, 134, 1, 0, 0, 0, 140, 25, 1, 0, 0, 0, 141, 142, 5,
-		15, 0, 0, 142, 143, 5, 2, 0, 0, 143, 144, 3, 50, 25, 0, 144, 145, 5, 14,
-		0, 0, 145, 146, 3, 10, 5, 0, 146, 147, 5, 3, 0, 0, 147, 27, 1, 0, 0, 0,
-		148, 149, 5, 49, 0, 0, 149, 150, 3, 50, 25, 0, 150, 159, 5, 2, 0, 0, 151,
-		156, 3, 50, 25, 0, 152, 153, 5, 14, 0, 0, 153, 155, 3, 50, 25, 0, 154,
-		152, 1, 0, 0, 0, 155, 158, 1, 0, 0, 0, 156, 154, 1, 0, 0, 0, 156, 157,
-		1, 0, 0, 0, 157, 160, 1, 0, 0, 0, 158, 156, 1, 0, 0, 0, 159, 151, 1, 0,
-		0, 0, 159, 160, 1, 0, 0, 0, 160, 161, 1, 0, 0, 0, 161, 162, 5, 3, 0, 0,
-		162, 163, 3, 30, 15, 0, 163, 164, 5, 34, 0, 0, 164, 29, 1, 0, 0, 0, 165,
-		167, 3, 2, 1, 0, 166, 165, 1, 0, 0, 0, 167, 168, 1, 0, 0, 0, 168, 166,
-		1, 0, 0, 0, 168, 169, 1, 0, 0, 0, 169, 31, 1, 0, 0, 0, 170, 171, 5, 38,
-		0, 0, 171, 172, 3, 10, 5, 0, 172, 173, 5, 44, 0, 0, 173, 181, 3, 30, 15,
-		0, 174, 175, 5, 33, 0, 0, 175, 176, 3, 10, 5, 0, 176, 177, 5, 44, 0, 0,
-		177, 178, 3, 30, 15, 0, 178, 180, 1, 0, 0, 0, 179, 174, 1, 0, 0, 0, 180,
-		183, 1, 0, 0, 0, 181, 179, 1, 0, 0, 0, 181, 182, 1, 0, 0, 0, 182, 186,
-		1, 0, 0, 0, 183, 181, 1, 0, 0, 0, 184, 185, 5, 32, 0, 0, 185, 187, 3, 30,
-		15, 0, 186, 184, 1, 0, 0, 0, 186, 187, 1, 0, 0, 0, 187, 188, 1, 0, 0, 0,
-		188, 189, 5, 34, 0, 0, 189, 33, 1, 0, 0, 0, 190, 191, 5, 36, 0, 0, 191,
-		192, 3, 50, 25, 0, 192, 193, 5, 27, 0, 0, 193, 194, 3, 10, 5, 0, 194, 195,
-		5, 31, 0, 0, 195, 196, 3, 30, 15, 0, 196, 197, 5, 34, 0, 0, 197, 213, 1,
-		0, 0, 0, 198, 199, 5, 36, 0, 0, 199, 200, 3, 50, 25, 0, 200, 201, 5, 1,
-		0, 0, 201, 202, 3, 10, 5, 0, 202, 203, 5, 14, 0, 0, 203, 206, 3, 10, 5,
-		0, 204, 205, 5, 14, 0, 0, 205, 207, 3, 10, 5, 0, 206, 204, 1, 0, 0, 0,
-		206, 207, 1, 0, 0, 0, 207, 208, 1, 0, 0, 0, 208, 209, 5, 31, 0, 0, 209,
-		210, 3, 30, 15, 0, 210, 211, 5, 34, 0, 0, 211, 213, 1, 0, 0, 0, 212, 190,
-		1, 0, 0, 0, 212, 198, 1, 0, 0, 0, 213, 35, 1, 0, 0, 0, 214, 215, 5, 47,
-		0, 0, 215, 216, 3, 10, 5, 0, 216, 217, 5, 31, 0, 0, 217, 218, 3, 30, 15,
-		0, 218, 219, 5, 34, 0, 0, 219, 37, 1, 0, 0, 0, 220, 229, 5, 16, 0, 0, 221,
-		226, 3, 40, 20, 0, 222, 223, 5, 14, 0, 0, 223, 225, 3, 40, 20, 0, 224,
-		222, 1, 0, 0, 0, 225, 228, 1, 0, 0, 0, 226, 224, 1, 0, 0, 0, 226, 227,
-		1, 0, 0, 0, 227, 230, 1, 0, 0, 0, 228, 226, 1, 0, 0, 0, 229, 221, 1, 0,
-		0, 0, 229, 230, 1, 0, 0, 0, 230, 231, 1, 0, 0, 0, 231, 232, 5, 17, 0, 0,
-		232, 39, 1, 0, 0, 0, 233, 234, 3, 50, 25, 0, 234, 235, 5, 1, 0, 0, 235,
-		236, 3, 10, 5, 0, 236, 239, 1, 0, 0, 0, 237, 239, 3, 10, 5, 0, 238, 233,
-		1, 0, 0, 0, 238, 237, 1, 0, 0, 0, 239, 41, 1, 0, 0, 0, 240, 241, 3, 50,
-		25, 0, 241, 242, 5, 18, 0, 0, 242, 243, 3, 10, 5, 0, 243, 244, 5, 19, 0,
-		0, 244, 43, 1, 0, 0, 0, 245, 249, 5, 20, 0, 0, 246, 248, 8, 4, 0, 0, 247,
-		246, 1, 0, 0, 0, 248, 251, 1, 0, 0, 0, 249, 247, 1, 0, 0, 0, 249, 250,
-		1, 0, 0, 0, 250, 252, 1, 0, 0, 0, 251, 249, 1, 0, 0, 0, 252, 253, 5, 22,
-		0, 0, 253, 45, 1, 0, 0, 0, 254, 255, 5, 23, 0, 0, 255, 47, 1, 0, 0, 0,
-		256, 257, 5, 28, 0, 0, 257, 258, 5, 2, 0, 0, 258, 259, 3, 10, 5, 0, 259,
-		260, 5, 3, 0, 0, 260, 49, 1, 0, 0, 0, 261, 265, 5, 52, 0, 0, 262, 264,
-		7, 5, 0, 0, 263, 262, 1, 0, 0, 0, 264, 267, 1, 0, 0, 0, 265, 263, 1, 0,
-		0, 0, 265, 266, 1, 0, 0, 0, 266, 51, 1, 0, 0, 0, 267, 265, 1, 0, 0, 0,
-		24, 54, 56, 64, 69, 74, 91, 99, 105, 115, 126, 129, 139, 156, 159, 168,
-		181, 186, 206, 212, 226, 229, 238, 249, 265,
+		21, 7, 21, 2, 22, 7, 22, 2, 23, 7, 23, 2, 24, 7, 24, 2, 25, 7, 25, 2, 26,
+		7, 26, 2, 27, 7, 27, 2, 28, 7, 28, 2, 29, 7, 29, 2, 30, 7, 30, 2, 31, 7,
+		31, 2, 32, 7, 32, 2, 33, 7, 33, 2, 34, 7, 34, 2, 35, 7, 35, 2, 36, 7, 36,
+		1, 0, 5, 0, 76, 8, 0, 10, 0, 12, 0, 79, 9, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+		1, 1, 1, 1, 1, 1, 1, 3, 1, 89, 8, 1, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 3, 2,
+		96, 8, 2, 1, 3, 1, 3, 1, 4, 3, 4, 101, 8, 4, 1, 4, 1, 4, 1, 4, 1, 4, 1,
+		4, 1, 5, 1, 5, 1, 5, 1, 5, 1, 5, 1, 5, 1, 5, 1, 5, 1, 5, 1, 5, 1, 5, 3,
+		5, 119, 8, 5, 1, 5, 1, 5, 1, 5, 1, 5, 5, 5, 125, 8, 5, 10, 5, 12, 5, 128,
+		9, 5, 1, 6, 1, 6, 1, 6, 1, 6, 1, 6, 3, 6, 135, 8, 6, 1, 7, 1, 7, 1, 7,
+		1, 7, 1, 7, 1, 7, 1, 7, 1, 7, 1, 7, 3, 7, 146, 8, 7, 1, 8, 1, 8, 1, 8,
+		1, 8, 3, 8, 152, 8, 8, 1, 9, 1, 9, 1, 10, 1, 10, 1, 11, 1, 11, 1, 12, 1,
+		12, 1, 13, 1, 13, 1, 14, 1, 14, 1, 14, 1, 14, 1, 14, 1, 14, 3, 14, 170,
+		8, 14, 1, 14, 1, 14, 3, 14, 174, 8, 14, 1, 14, 1, 14, 3, 14, 178, 8, 14,
+		1, 14, 1, 14, 1, 14, 1, 14, 1, 14, 1, 14, 1, 14, 1, 14, 1, 14, 3, 14, 189,
+		8, 14, 1, 15, 1, 15, 1, 15, 1, 15, 1, 15, 1, 15, 1, 15, 1, 16, 1, 16, 1,
+		16, 1, 16, 1, 16, 1, 16, 5, 16, 204, 8, 16, 10, 16, 12, 16, 207, 9, 16,
+		3, 16, 209, 8, 16, 1, 16, 1, 16, 1, 16, 1, 16, 1, 17, 1, 17, 3, 17, 217,
+		8, 17, 4, 17, 219, 8, 17, 11, 17, 12, 17, 220, 1, 18, 1, 18, 1, 18, 1,
+		18, 1, 18, 1, 18, 1, 18, 1, 18, 1, 18, 5, 18, 232, 8, 18, 10, 18, 12, 18,
+		235, 9, 18, 1, 18, 1, 18, 3, 18, 239, 8, 18, 1, 18, 1, 18, 1, 19, 1, 19,
+		1, 19, 1, 19, 1, 19, 1, 19, 1, 19, 1, 19, 1, 19, 1, 19, 1, 19, 1, 19, 1,
+		19, 1, 19, 1, 19, 1, 19, 3, 19, 259, 8, 19, 1, 19, 1, 19, 1, 19, 1, 19,
+		3, 19, 265, 8, 19, 1, 20, 1, 20, 1, 20, 1, 20, 1, 20, 1, 20, 1, 21, 1,
+		21, 1, 21, 1, 21, 5, 21, 277, 8, 21, 10, 21, 12, 21, 280, 9, 21, 1, 21,
+		1, 21, 3, 21, 284, 8, 21, 1, 21, 3, 21, 287, 8, 21, 1, 21, 1, 21, 1, 22,
+		1, 22, 1, 22, 1, 22, 1, 22, 3, 22, 296, 8, 22, 1, 23, 1, 23, 1, 23, 1,
+		23, 1, 23, 1, 23, 1, 23, 1, 23, 1, 23, 3, 23, 307, 8, 23, 1, 24, 1, 24,
+		1, 25, 1, 25, 1, 25, 1, 25, 1, 25, 1, 26, 1, 26, 5, 26, 318, 8, 26, 10,
+		26, 12, 26, 321, 9, 26, 1, 27, 1, 27, 1, 27, 1, 27, 1, 27, 3, 27, 328,
+		8, 27, 1, 28, 1, 28, 1, 28, 5, 28, 333, 8, 28, 10, 28, 12, 28, 336, 9,
+		28, 1, 29, 1, 29, 1, 29, 5, 29, 341, 8, 29, 10, 29, 12, 29, 344, 9, 29,
+		1, 30, 1, 30, 1, 30, 1, 30, 5, 30, 350, 8, 30, 10, 30, 12, 30, 353, 9,
+		30, 3, 30, 355, 8, 30, 1, 30, 1, 30, 1, 31, 1, 31, 1, 31, 1, 32, 1, 32,
+		1, 32, 1, 32, 1, 33, 1, 33, 1, 33, 1, 33, 1, 34, 1, 34, 1, 34, 1, 34, 1,
+		34, 5, 34, 375, 8, 34, 10, 34, 12, 34, 378, 9, 34, 3, 34, 380, 8, 34, 1,
+		34, 1, 34, 1, 34, 1, 34, 1, 35, 1, 35, 1, 35, 1, 35, 1, 35, 1, 35, 1, 35,
+		5, 35, 393, 8, 35, 10, 35, 12, 35, 396, 9, 35, 3, 35, 398, 8, 35, 1, 35,
+		1, 35, 1, 36, 1, 36, 1, 36, 1, 36, 1, 36, 1, 36, 0, 1, 10, 37, 0, 2, 4,
+		6, 8, 10, 12, 14, 16, 18, 20, 22, 24, 26, 28, 30, 32, 34, 36, 38, 40, 42,
+		44, 46, 48, 50, 52, 54, 56, 58, 60, 62, 64, 66, 68, 70, 72, 0, 7, 1, 0,
+		5, 10, 1, 0, 11, 15, 2, 0, 36, 36, 48, 48, 1, 0, 16, 20, 4, 0, 42, 42,
+		46, 46, 52, 52, 60, 61, 2, 0, 30, 30, 62, 63, 1, 0, 57, 59, 429, 0, 77,
+		1, 0, 0, 0, 2, 88, 1, 0, 0, 0, 4, 95, 1, 0, 0, 0, 6, 97, 1, 0, 0, 0, 8,
+		100, 1, 0, 0, 0, 10, 118, 1, 0, 0, 0, 12, 134, 1, 0, 0, 0, 14, 145, 1,
+		0, 0, 0, 16, 151, 1, 0, 0, 0, 18, 153, 1, 0, 0, 0, 20, 155, 1, 0, 0, 0,
+		22, 157, 1, 0, 0, 0, 24, 159, 1, 0, 0, 0, 26, 161, 1, 0, 0, 0, 28, 188,
+		1, 0, 0, 0, 30, 190, 1, 0, 0, 0, 32, 197, 1, 0, 0, 0, 34, 218, 1, 0, 0,
+		0, 36, 222, 1, 0, 0, 0, 38, 264, 1, 0, 0, 0, 40, 266, 1, 0, 0, 0, 42, 272,
+		1, 0, 0, 0, 44, 295, 1, 0, 0, 0, 46, 306, 1, 0, 0, 0, 48, 308, 1, 0, 0,
+		0, 50, 310, 1, 0, 0, 0, 52, 315, 1, 0, 0, 0, 54, 322, 1, 0, 0, 0, 56, 329,
+		1, 0, 0, 0, 58, 337, 1, 0, 0, 0, 60, 345, 1, 0, 0, 0, 62, 358, 1, 0, 0,
+		0, 64, 361, 1, 0, 0, 0, 66, 365, 1, 0, 0, 0, 68, 369, 1, 0, 0, 0, 70, 385,
+		1, 0, 0, 0, 72, 401, 1, 0, 0, 0, 74, 76, 3, 2, 1, 0, 75, 74, 1, 0, 0, 0,
+		76, 79, 1, 0, 0, 0, 77, 75, 1, 0, 0, 0, 77, 78, 1, 0, 0, 0, 78, 1, 1, 0,
+		0, 0, 79, 77, 1, 0, 0, 0, 80, 89, 3, 8, 4, 0, 81, 89, 3, 10, 5, 0, 82,
+		89, 3, 4, 2, 0, 83, 89, 3, 32, 16, 0, 84, 89, 3, 28, 14, 0, 85, 89, 3,
+		60, 30, 0, 86, 89, 3, 62, 31, 0, 87, 89, 3, 66, 33, 0, 88, 80, 1, 0, 0,
+		0, 88, 81, 1, 0, 0, 0, 88, 82, 1, 0, 0, 0, 88, 83, 1, 0, 0, 0, 88, 84,
+		1, 0, 0, 0, 88, 85, 1, 0, 0, 0, 88, 86, 1, 0, 0, 0, 88, 87, 1, 0, 0, 0,
+		89, 3, 1, 0, 0, 0, 90, 96, 3, 36, 18, 0, 91, 96, 3, 38, 19, 0, 92, 96,
+		3, 40, 20, 0, 93, 96, 3, 54, 27, 0, 94, 96, 3, 64, 32, 0, 95, 90, 1, 0,
+		0, 0, 95, 91, 1, 0, 0, 0, 95, 92, 1, 0, 0, 0, 95, 93, 1, 0, 0, 0, 95, 94,
+		1, 0, 0, 0, 96, 5, 1, 0, 0, 0, 97, 98, 5, 33, 0, 0, 98, 7, 1, 0, 0, 0,
+		99, 101, 5, 55, 0, 0, 100, 99, 1, 0, 0, 0, 100, 101, 1, 0, 0, 0, 101, 102,
+		1, 0, 0, 0, 102, 103, 3, 56, 28, 0, 103, 104, 5, 1, 0, 0, 104, 105, 3,
+		58, 29, 0, 105, 106, 3, 6, 3, 0, 106, 9, 1, 0, 0, 0, 107, 108, 6, 5, -1,
+		0, 108, 119, 3, 26, 13, 0, 109, 119, 3, 52, 26, 0, 110, 111, 5, 2, 0, 0,
+		111, 112, 3, 10, 5, 0, 112, 113, 5, 3, 0, 0, 113, 119, 1, 0, 0, 0, 114,
+		119, 3, 28, 14, 0, 115, 119, 3, 42, 21, 0, 116, 119, 3, 46, 23, 0, 117,
+		119, 3, 68, 34, 0, 118, 107, 1, 0, 0, 0, 118, 109, 1, 0, 0, 0, 118, 110,
+		1, 0, 0, 0, 118, 114, 1, 0, 0, 0, 118, 115, 1, 0, 0, 0, 118, 116, 1, 0,
+		0, 0, 118, 117, 1, 0, 0, 0, 119, 126, 1, 0, 0, 0, 120, 121, 10, 5, 0, 0,
+		121, 122, 3, 16, 8, 0, 122, 123, 3, 10, 5, 6, 123, 125, 1, 0, 0, 0, 124,
+		120, 1, 0, 0, 0, 125, 128, 1, 0, 0, 0, 126, 124, 1, 0, 0, 0, 126, 127,
+		1, 0, 0, 0, 127, 11, 1, 0, 0, 0, 128, 126, 1, 0, 0, 0, 129, 135, 3, 14,
+		7, 0, 130, 131, 5, 47, 0, 0, 131, 135, 3, 12, 6, 0, 132, 133, 5, 4, 0,
+		0, 133, 135, 3, 12, 6, 0, 134, 129, 1, 0, 0, 0, 134, 130, 1, 0, 0, 0, 134,
+		132, 1, 0, 0, 0, 135, 13, 1, 0, 0, 0, 136, 146, 3, 26, 13, 0, 137, 146,
+		3, 52, 26, 0, 138, 139, 5, 2, 0, 0, 139, 140, 3, 10, 5, 0, 140, 141, 5,
+		3, 0, 0, 141, 146, 1, 0, 0, 0, 142, 146, 3, 28, 14, 0, 143, 146, 3, 42,
+		21, 0, 144, 146, 3, 46, 23, 0, 145, 136, 1, 0, 0, 0, 145, 137, 1, 0, 0,
+		0, 145, 138, 1, 0, 0, 0, 145, 142, 1, 0, 0, 0, 145, 143, 1, 0, 0, 0, 145,
+		144, 1, 0, 0, 0, 146, 15, 1, 0, 0, 0, 147, 152, 3, 18, 9, 0, 148, 152,
+		3, 20, 10, 0, 149, 152, 3, 22, 11, 0, 150, 152, 3, 24, 12, 0, 151, 147,
+		1, 0, 0, 0, 151, 148, 1, 0, 0, 0, 151, 149, 1, 0, 0, 0, 151, 150, 1, 0,
+		0, 0, 152, 17, 1, 0, 0, 0, 153, 154, 7, 0, 0, 0, 154, 19, 1, 0, 0, 0, 155,
+		156, 7, 1, 0, 0, 156, 21, 1, 0, 0, 0, 157, 158, 7, 2, 0, 0, 158, 23, 1,
+		0, 0, 0, 159, 160, 7, 3, 0, 0, 160, 25, 1, 0, 0, 0, 161, 162, 7, 4, 0,
+		0, 162, 27, 1, 0, 0, 0, 163, 170, 3, 52, 26, 0, 164, 170, 3, 46, 23, 0,
+		165, 166, 5, 2, 0, 0, 166, 167, 3, 10, 5, 0, 167, 168, 5, 3, 0, 0, 168,
+		170, 1, 0, 0, 0, 169, 163, 1, 0, 0, 0, 169, 164, 1, 0, 0, 0, 169, 165,
+		1, 0, 0, 0, 170, 173, 1, 0, 0, 0, 171, 172, 5, 21, 0, 0, 172, 174, 3, 52,
+		26, 0, 173, 171, 1, 0, 0, 0, 173, 174, 1, 0, 0, 0, 174, 175, 1, 0, 0, 0,
+		175, 177, 5, 2, 0, 0, 176, 178, 3, 58, 29, 0, 177, 176, 1, 0, 0, 0, 177,
+		178, 1, 0, 0, 0, 178, 179, 1, 0, 0, 0, 179, 180, 5, 3, 0, 0, 180, 189,
+		1, 0, 0, 0, 181, 189, 3, 30, 15, 0, 182, 183, 5, 35, 0, 0, 183, 184, 5,
+		2, 0, 0, 184, 185, 3, 58, 29, 0, 185, 186, 5, 3, 0, 0, 186, 189, 1, 0,
+		0, 0, 187, 189, 3, 70, 35, 0, 188, 169, 1, 0, 0, 0, 188, 181, 1, 0, 0,
+		0, 188, 182, 1, 0, 0, 0, 188, 187, 1, 0, 0, 0, 189, 29, 1, 0, 0, 0, 190,
+		191, 5, 22, 0, 0, 191, 192, 5, 2, 0, 0, 192, 193, 3, 52, 26, 0, 193, 194,
+		5, 23, 0, 0, 194, 195, 3, 10, 5, 0, 195, 196, 5, 3, 0, 0, 196, 31, 1, 0,
+		0, 0, 197, 198, 5, 56, 0, 0, 198, 199, 3, 52, 26, 0, 199, 208, 5, 2, 0,
+		0, 200, 205, 3, 52, 26, 0, 201, 202, 5, 23, 0, 0, 202, 204, 3, 52, 26,
+		0, 203, 201, 1, 0, 0, 0, 204, 207, 1, 0, 0, 0, 205, 203, 1, 0, 0, 0, 205,
+		206, 1, 0, 0, 0, 206, 209, 1, 0, 0, 0, 207, 205, 1, 0, 0, 0, 208, 200,
+		1, 0, 0, 0, 208, 209, 1, 0, 0, 0, 209, 210, 1, 0, 0, 0, 210, 211, 5, 3,
+		0, 0, 211, 212, 3, 34, 17, 0, 212, 213, 5, 41, 0, 0, 213, 33, 1, 0, 0,
+		0, 214, 216, 3, 2, 1, 0, 215, 217, 3, 6, 3, 0, 216, 215, 1, 0, 0, 0, 216,
+		217, 1, 0, 0, 0, 217, 219, 1, 0, 0, 0, 218, 214, 1, 0, 0, 0, 219, 220,
+		1, 0, 0, 0, 220, 218, 1, 0, 0, 0, 220, 221, 1, 0, 0, 0, 221, 35, 1, 0,
+		0, 0, 222, 223, 5, 45, 0, 0, 223, 224, 3, 10, 5, 0, 224, 225, 5, 51, 0,
+		0, 225, 233, 3, 34, 17, 0, 226, 227, 5, 40, 0, 0, 227, 228, 3, 10, 5, 0,
+		228, 229, 5, 51, 0, 0, 229, 230, 3, 34, 17, 0, 230, 232, 1, 0, 0, 0, 231,
+		226, 1, 0, 0, 0, 232, 235, 1, 0, 0, 0, 233, 231, 1, 0, 0, 0, 233, 234,
+		1, 0, 0, 0, 234, 238, 1, 0, 0, 0, 235, 233, 1, 0, 0, 0, 236, 237, 5, 39,
+		0, 0, 237, 239, 3, 34, 17, 0, 238, 236, 1, 0, 0, 0, 238, 239, 1, 0, 0,
+		0, 239, 240, 1, 0, 0, 0, 240, 241, 5, 41, 0, 0, 241, 37, 1, 0, 0, 0, 242,
+		243, 5, 43, 0, 0, 243, 244, 3, 52, 26, 0, 244, 245, 5, 34, 0, 0, 245, 246,
+		3, 10, 5, 0, 246, 247, 5, 38, 0, 0, 247, 248, 3, 34, 17, 0, 248, 249, 5,
+		41, 0, 0, 249, 265, 1, 0, 0, 0, 250, 251, 5, 43, 0, 0, 251, 252, 3, 52,
+		26, 0, 252, 253, 5, 1, 0, 0, 253, 254, 3, 10, 5, 0, 254, 255, 5, 23, 0,
+		0, 255, 258, 3, 10, 5, 0, 256, 257, 5, 23, 0, 0, 257, 259, 3, 10, 5, 0,
+		258, 256, 1, 0, 0, 0, 258, 259, 1, 0, 0, 0, 259, 260, 1, 0, 0, 0, 260,
+		261, 5, 38, 0, 0, 261, 262, 3, 34, 17, 0, 262, 263, 5, 41, 0, 0, 263, 265,
+		1, 0, 0, 0, 264, 242, 1, 0, 0, 0, 264, 250, 1, 0, 0, 0, 265, 39, 1, 0,
+		0, 0, 266, 267, 5, 54, 0, 0, 267, 268, 3, 10, 5, 0, 268, 269, 5, 38, 0,
+		0, 269, 270, 3, 34, 17, 0, 270, 271, 5, 41, 0, 0, 271, 41, 1, 0, 0, 0,
+		272, 286, 5, 24, 0, 0, 273, 278, 3, 44, 22, 0, 274, 275, 5, 23, 0, 0, 275,
+		277, 3, 44, 22, 0, 276, 274, 1, 0, 0, 0, 277, 280, 1, 0, 0, 0, 278, 276,
+		1, 0, 0, 0, 278, 279, 1, 0, 0, 0, 279, 283, 1, 0, 0, 0, 280, 278, 1, 0,
+		0, 0, 281, 282, 5, 23, 0, 0, 282, 284, 3, 72, 36, 0, 283, 281, 1, 0, 0,
+		0, 283, 284, 1, 0, 0, 0, 284, 287, 1, 0, 0, 0, 285, 287, 3, 72, 36, 0,
+		286, 273, 1, 0, 0, 0, 286, 285, 1, 0, 0, 0, 287, 288, 1, 0, 0, 0, 288,
+		289, 5, 25, 0, 0, 289, 43, 1, 0, 0, 0, 290, 291, 3, 52, 26, 0, 291, 292,
+		5, 1, 0, 0, 292, 293, 3, 10, 5, 0, 293, 296, 1, 0, 0, 0, 294, 296, 3, 10,
+		5, 0, 295, 290, 1, 0, 0, 0, 295, 294, 1, 0, 0, 0, 296, 45, 1, 0, 0, 0,
+		297, 298, 3, 52, 26, 0, 298, 299, 5, 26, 0, 0, 299, 300, 3, 10, 5, 0, 300,
+		301, 5, 27, 0, 0, 301, 307, 1, 0, 0, 0, 302, 303, 3, 52, 26, 0, 303, 304,
+		5, 28, 0, 0, 304, 305, 3, 52, 26, 0, 305, 307, 1, 0, 0, 0, 306, 297, 1,
+		0, 0, 0, 306, 302, 1, 0, 0, 0, 307, 47, 1, 0, 0, 0, 308, 309, 5, 29, 0,
+		0, 309, 49, 1, 0, 0, 0, 310, 311, 5, 35, 0, 0, 311, 312, 5, 2, 0, 0, 312,
+		313, 3, 10, 5, 0, 313, 314, 5, 3, 0, 0, 314, 51, 1, 0, 0, 0, 315, 319,
+		5, 62, 0, 0, 316, 318, 7, 5, 0, 0, 317, 316, 1, 0, 0, 0, 318, 321, 1, 0,
+		0, 0, 319, 317, 1, 0, 0, 0, 319, 320, 1, 0, 0, 0, 320, 53, 1, 0, 0, 0,
+		321, 319, 1, 0, 0, 0, 322, 323, 5, 49, 0, 0, 323, 324, 3, 34, 17, 0, 324,
+		325, 5, 53, 0, 0, 325, 327, 3, 10, 5, 0, 326, 328, 3, 6, 3, 0, 327, 326,
+		1, 0, 0, 0, 327, 328, 1, 0, 0, 0, 328, 55, 1, 0, 0, 0, 329, 334, 3, 52,
+		26, 0, 330, 331, 5, 23, 0, 0, 331, 333, 3, 52, 26, 0, 332, 330, 1, 0, 0,
+		0, 333, 336, 1, 0, 0, 0, 334, 332, 1, 0, 0, 0, 334, 335, 1, 0, 0, 0, 335,
+		57, 1, 0, 0, 0, 336, 334, 1, 0, 0, 0, 337, 342, 3, 10, 5, 0, 338, 339,
+		5, 23, 0, 0, 339, 341, 3, 10, 5, 0, 340, 338, 1, 0, 0, 0, 341, 344, 1,
+		0, 0, 0, 342, 340, 1, 0, 0, 0, 342, 343, 1, 0, 0, 0, 343, 59, 1, 0, 0,
+		0, 344, 342, 1, 0, 0, 0, 345, 354, 5, 50, 0, 0, 346, 351, 3, 10, 5, 0,
+		347, 348, 5, 23, 0, 0, 348, 350, 3, 10, 5, 0, 349, 347, 1, 0, 0, 0, 350,
+		353, 1, 0, 0, 0, 351, 349, 1, 0, 0, 0, 351, 352, 1, 0, 0, 0, 352, 355,
+		1, 0, 0, 0, 353, 351, 1, 0, 0, 0, 354, 346, 1, 0, 0, 0, 354, 355, 1, 0,
+		0, 0, 355, 356, 1, 0, 0, 0, 356, 357, 3, 6, 3, 0, 357, 61, 1, 0, 0, 0,
+		358, 359, 5, 37, 0, 0, 359, 360, 3, 6, 3, 0, 360, 63, 1, 0, 0, 0, 361,
+		362, 5, 44, 0, 0, 362, 363, 3, 52, 26, 0, 363, 364, 3, 6, 3, 0, 364, 65,
+		1, 0, 0, 0, 365, 366, 5, 31, 0, 0, 366, 367, 3, 52, 26, 0, 367, 368, 5,
+		31, 0, 0, 368, 67, 1, 0, 0, 0, 369, 370, 5, 56, 0, 0, 370, 379, 5, 2, 0,
+		0, 371, 376, 3, 52, 26, 0, 372, 373, 5, 23, 0, 0, 373, 375, 3, 52, 26,
+		0, 374, 372, 1, 0, 0, 0, 375, 378, 1, 0, 0, 0, 376, 374, 1, 0, 0, 0, 376,
+		377, 1, 0, 0, 0, 377, 380, 1, 0, 0, 0, 378, 376, 1, 0, 0, 0, 379, 371,
+		1, 0, 0, 0, 379, 380, 1, 0, 0, 0, 380, 381, 1, 0, 0, 0, 381, 382, 5, 3,
+		0, 0, 382, 383, 3, 34, 17, 0, 383, 384, 5, 41, 0, 0, 384, 69, 1, 0, 0,
+		0, 385, 386, 3, 52, 26, 0, 386, 387, 5, 21, 0, 0, 387, 388, 3, 52, 26,
+		0, 388, 397, 5, 2, 0, 0, 389, 394, 3, 10, 5, 0, 390, 391, 5, 23, 0, 0,
+		391, 393, 3, 10, 5, 0, 392, 390, 1, 0, 0, 0, 393, 396, 1, 0, 0, 0, 394,
+		392, 1, 0, 0, 0, 394, 395, 1, 0, 0, 0, 395, 398, 1, 0, 0, 0, 396, 394,
+		1, 0, 0, 0, 397, 389, 1, 0, 0, 0, 397, 398, 1, 0, 0, 0, 398, 399, 1, 0,
+		0, 0, 399, 400, 5, 3, 0, 0, 400, 71, 1, 0, 0, 0, 401, 402, 5, 32, 0, 0,
+		402, 403, 7, 6, 0, 0, 403, 404, 5, 1, 0, 0, 404, 405, 3, 10, 5, 0, 405,
+		73, 1, 0, 0, 0, 36, 77, 88, 95, 100, 118, 126, 134, 145, 151, 169, 173,
+		177, 188, 205, 208, 216, 220, 233, 238, 258, 264, 278, 283, 286, 295, 306,
+		319, 327, 334, 342, 351, 354, 376, 379, 394, 397,
 	}
 	deserializer := antlr.NewATNDeserializer(nil)
 	staticData.atn = deserializer.Deserialize(staticData.serializedATN)
@@ -211,61 +282,73 @@ func Newlua_grammar_antlr4Parser(input antlr.TokenStream) *lua_grammar_antlr4Par
 
 // lua_grammar_antlr4Parser tokens.
 const (
-	lua_grammar_antlr4ParserEOF         = antlr.TokenEOF
-	lua_grammar_antlr4ParserT__0        = 1
-	lua_grammar_antlr4ParserT__1        = 2
-	lua_grammar_antlr4ParserT__2        = 3
-	lua_grammar_antlr4ParserT__3        = 4
-	lua_grammar_antlr4ParserT__4        = 5
-	lua_grammar_antlr4ParserT__5        = 6
-	lua_grammar_antlr4ParserT__6        = 7
-	lua_grammar_antlr4ParserT__7        = 8
-	lua_grammar_antlr4ParserT__8        = 9
-	lua_grammar_antlr4ParserT__9        = 10
-	lua_grammar_antlr4ParserT__10       = 11
-	lua_grammar_antlr4ParserT__11       = 12
-	lua_grammar_antlr4ParserT__12       = 13
-	lua_grammar_antlr4ParserT__13       = 14
-	lua_grammar_antlr4ParserT__14       = 15
-	lua_grammar_antlr4ParserT__15       = 16
-	lua_grammar_antlr4ParserT__16       = 17
-	lua_grammar_antlr4ParserT__17       = 18
-	lua_grammar_antlr4ParserT__18       = 19
-	lua_grammar_antlr4ParserT__19       = 20
-	lua_grammar_antlr4ParserT__20       = 21
-	lua_grammar_antlr4ParserT__21       = 22
-	lua_grammar_antlr4ParserT__22       = 23
-	lua_grammar_antlr4ParserT__23       = 24
-	lua_grammar_antlr4ParserSEPARATOR   = 25
-	lua_grammar_antlr4ParserNEWLINE     = 26
-	lua_grammar_antlr4ParserKW_IN       = 27
-	lua_grammar_antlr4ParserKW_PRINT    = 28
-	lua_grammar_antlr4ParserKW_AND      = 29
-	lua_grammar_antlr4ParserKW_BREAK    = 30
-	lua_grammar_antlr4ParserKW_DO       = 31
-	lua_grammar_antlr4ParserKW_ELSE     = 32
-	lua_grammar_antlr4ParserKW_ELSEIF   = 33
-	lua_grammar_antlr4ParserKW_END      = 34
-	lua_grammar_antlr4ParserKW_FALSE    = 35
-	lua_grammar_antlr4ParserKW_FOR      = 36
-	lua_grammar_antlr4ParserKW_GOTO     = 37
-	lua_grammar_antlr4ParserKW_IF       = 38
-	lua_grammar_antlr4ParserKW_NIL      = 39
-	lua_grammar_antlr4ParserKW_NOT      = 40
-	lua_grammar_antlr4ParserKW_OR       = 41
-	lua_grammar_antlr4ParserKW_REPEAT   = 42
-	lua_grammar_antlr4ParserKW_RETURN   = 43
-	lua_grammar_antlr4ParserKW_THEN     = 44
-	lua_grammar_antlr4ParserKW_TRUE     = 45
-	lua_grammar_antlr4ParserKW_UNTIL    = 46
-	lua_grammar_antlr4ParserKW_WHILE    = 47
-	lua_grammar_antlr4ParserKW_LOCAL    = 48
-	lua_grammar_antlr4ParserKW_FUNCTION = 49
-	lua_grammar_antlr4ParserNUMBER      = 50
-	lua_grammar_antlr4ParserSTRING      = 51
-	lua_grammar_antlr4ParserLETTER      = 52
-	lua_grammar_antlr4ParserDIGIT       = 53
-	lua_grammar_antlr4ParserWS          = 54
+	lua_grammar_antlr4ParserEOF                 = antlr.TokenEOF
+	lua_grammar_antlr4ParserT__0                = 1
+	lua_grammar_antlr4ParserT__1                = 2
+	lua_grammar_antlr4ParserT__2                = 3
+	lua_grammar_antlr4ParserT__3                = 4
+	lua_grammar_antlr4ParserT__4                = 5
+	lua_grammar_antlr4ParserT__5                = 6
+	lua_grammar_antlr4ParserT__6                = 7
+	lua_grammar_antlr4ParserT__7                = 8
+	lua_grammar_antlr4ParserT__8                = 9
+	lua_grammar_antlr4ParserT__9                = 10
+	lua_grammar_antlr4ParserT__10               = 11
+	lua_grammar_antlr4ParserT__11               = 12
+	lua_grammar_antlr4ParserT__12               = 13
+	lua_grammar_antlr4ParserT__13               = 14
+	lua_grammar_antlr4ParserT__14               = 15
+	lua_grammar_antlr4ParserT__15               = 16
+	lua_grammar_antlr4ParserT__16               = 17
+	lua_grammar_antlr4ParserT__17               = 18
+	lua_grammar_antlr4ParserT__18               = 19
+	lua_grammar_antlr4ParserT__19               = 20
+	lua_grammar_antlr4ParserT__20               = 21
+	lua_grammar_antlr4ParserT__21               = 22
+	lua_grammar_antlr4ParserT__22               = 23
+	lua_grammar_antlr4ParserT__23               = 24
+	lua_grammar_antlr4ParserT__24               = 25
+	lua_grammar_antlr4ParserT__25               = 26
+	lua_grammar_antlr4ParserT__26               = 27
+	lua_grammar_antlr4ParserT__27               = 28
+	lua_grammar_antlr4ParserT__28               = 29
+	lua_grammar_antlr4ParserT__29               = 30
+	lua_grammar_antlr4ParserT__30               = 31
+	lua_grammar_antlr4ParserT__31               = 32
+	lua_grammar_antlr4ParserSEPARATOR           = 33
+	lua_grammar_antlr4ParserKW_IN               = 34
+	lua_grammar_antlr4ParserKW_PRINT            = 35
+	lua_grammar_antlr4ParserKW_AND              = 36
+	lua_grammar_antlr4ParserKW_BREAK            = 37
+	lua_grammar_antlr4ParserKW_DO               = 38
+	lua_grammar_antlr4ParserKW_ELSE             = 39
+	lua_grammar_antlr4ParserKW_ELSEIF           = 40
+	lua_grammar_antlr4ParserKW_END              = 41
+	lua_grammar_antlr4ParserKW_FALSE            = 42
+	lua_grammar_antlr4ParserKW_FOR              = 43
+	lua_grammar_antlr4ParserKW_GOTO             = 44
+	lua_grammar_antlr4ParserKW_IF               = 45
+	lua_grammar_antlr4ParserKW_NIL              = 46
+	lua_grammar_antlr4ParserKW_NOT              = 47
+	lua_grammar_antlr4ParserKW_OR               = 48
+	lua_grammar_antlr4ParserKW_REPEAT           = 49
+	lua_grammar_antlr4ParserKW_RETURN           = 50
+	lua_grammar_antlr4ParserKW_THEN             = 51
+	lua_grammar_antlr4ParserKW_TRUE             = 52
+	lua_grammar_antlr4ParserKW_UNTIL            = 53
+	lua_grammar_antlr4ParserKW_WHILE            = 54
+	lua_grammar_antlr4ParserKW_LOCAL            = 55
+	lua_grammar_antlr4ParserKW_FUNCTION         = 56
+	lua_grammar_antlr4ParserKW_INDEX            = 57
+	lua_grammar_antlr4ParserKW_NEWINDEX         = 58
+	lua_grammar_antlr4ParserKW_MODE             = 59
+	lua_grammar_antlr4ParserNUMBER              = 60
+	lua_grammar_antlr4ParserSTRING              = 61
+	lua_grammar_antlr4ParserLETTER              = 62
+	lua_grammar_antlr4ParserDIGIT               = 63
+	lua_grammar_antlr4ParserWS                  = 64
+	lua_grammar_antlr4ParserSINGLE_LINE_COMMENT = 65
+	lua_grammar_antlr4ParserMULTI_LINE_COMMENT  = 66
 )
 
 // lua_grammar_antlr4Parser rules.
@@ -276,26 +359,37 @@ const (
 	lua_grammar_antlr4ParserRULE_statement_terminator = 3
 	lua_grammar_antlr4ParserRULE_assignment           = 4
 	lua_grammar_antlr4ParserRULE_expression           = 5
-	lua_grammar_antlr4ParserRULE_operators            = 6
-	lua_grammar_antlr4ParserRULE_comparison_operator  = 7
-	lua_grammar_antlr4ParserRULE_arith_operator       = 8
-	lua_grammar_antlr4ParserRULE_logical_operator     = 9
-	lua_grammar_antlr4ParserRULE_comment              = 10
-	lua_grammar_antlr4ParserRULE_literal              = 11
-	lua_grammar_antlr4ParserRULE_function_call        = 12
-	lua_grammar_antlr4ParserRULE_table_insert         = 13
-	lua_grammar_antlr4ParserRULE_function_declaration = 14
-	lua_grammar_antlr4ParserRULE_block                = 15
-	lua_grammar_antlr4ParserRULE_if_statement         = 16
-	lua_grammar_antlr4ParserRULE_for_statement        = 17
-	lua_grammar_antlr4ParserRULE_while_statement      = 18
-	lua_grammar_antlr4ParserRULE_table                = 19
-	lua_grammar_antlr4ParserRULE_field                = 20
-	lua_grammar_antlr4ParserRULE_table_access         = 21
-	lua_grammar_antlr4ParserRULE_multi_line_comment   = 22
-	lua_grammar_antlr4ParserRULE_single_line_comment  = 23
-	lua_grammar_antlr4ParserRULE_print_statement      = 24
-	lua_grammar_antlr4ParserRULE_identifier           = 25
+	lua_grammar_antlr4ParserRULE_prefix_expression    = 6
+	lua_grammar_antlr4ParserRULE_primary_expression   = 7
+	lua_grammar_antlr4ParserRULE_operators            = 8
+	lua_grammar_antlr4ParserRULE_comparison_operator  = 9
+	lua_grammar_antlr4ParserRULE_arith_operator       = 10
+	lua_grammar_antlr4ParserRULE_logical_operator     = 11
+	lua_grammar_antlr4ParserRULE_bitwise_operator     = 12
+	lua_grammar_antlr4ParserRULE_literal              = 13
+	lua_grammar_antlr4ParserRULE_function_call        = 14
+	lua_grammar_antlr4ParserRULE_table_insert         = 15
+	lua_grammar_antlr4ParserRULE_function_declaration = 16
+	lua_grammar_antlr4ParserRULE_block                = 17
+	lua_grammar_antlr4ParserRULE_if_statement         = 18
+	lua_grammar_antlr4ParserRULE_for_statement        = 19
+	lua_grammar_antlr4ParserRULE_while_statement      = 20
+	lua_grammar_antlr4ParserRULE_table                = 21
+	lua_grammar_antlr4ParserRULE_field                = 22
+	lua_grammar_antlr4ParserRULE_table_access         = 23
+	lua_grammar_antlr4ParserRULE_single_line_comment  = 24
+	lua_grammar_antlr4ParserRULE_print_statement      = 25
+	lua_grammar_antlr4ParserRULE_identifier           = 26
+	lua_grammar_antlr4ParserRULE_repeat_statement     = 27
+	lua_grammar_antlr4ParserRULE_identifier_list      = 28
+	lua_grammar_antlr4ParserRULE_expression_list      = 29
+	lua_grammar_antlr4ParserRULE_return_statement     = 30
+	lua_grammar_antlr4ParserRULE_break_statement      = 31
+	lua_grammar_antlr4ParserRULE_goto_statement       = 32
+	lua_grammar_antlr4ParserRULE_label_statement      = 33
+	lua_grammar_antlr4ParserRULE_function_expression  = 34
+	lua_grammar_antlr4ParserRULE_method_call          = 35
+	lua_grammar_antlr4ParserRULE_metatable_field      = 36
 )
 
 // IProgramContext is an interface to support dynamic dispatch.
@@ -308,8 +402,6 @@ type IProgramContext interface {
 	// Getter signatures
 	AllStatement() []IStatementContext
 	Statement(i int) IStatementContext
-	AllComment() []ICommentContext
-	Comment(i int) ICommentContext
 
 	// IsProgramContext differentiates from other interfaces.
 	IsProgramContext()
@@ -388,47 +480,6 @@ func (s *ProgramContext) Statement(i int) IStatementContext {
 	return t.(IStatementContext)
 }
 
-func (s *ProgramContext) AllComment() []ICommentContext {
-	children := s.GetChildren()
-	len := 0
-	for _, ctx := range children {
-		if _, ok := ctx.(ICommentContext); ok {
-			len++
-		}
-	}
-
-	tst := make([]ICommentContext, len)
-	i := 0
-	for _, ctx := range children {
-		if t, ok := ctx.(ICommentContext); ok {
-			tst[i] = t.(ICommentContext)
-			i++
-		}
-	}
-
-	return tst
-}
-
-func (s *ProgramContext) Comment(i int) ICommentContext {
-	var t antlr.RuleContext
-	j := 0
-	for _, ctx := range s.GetChildren() {
-		if _, ok := ctx.(ICommentContext); ok {
-			if j == i {
-				t = ctx.(antlr.RuleContext)
-				break
-			}
-			j++
-		}
-	}
-
-	if t == nil {
-		return nil
-	}
-
-	return t.(ICommentContext)
-}
-
 func (s *ProgramContext) GetRuleContext() antlr.RuleContext {
 	return s
 }
@@ -465,39 +516,20 @@ func (p *lua_grammar_antlr4Parser) Program() (localctx IProgramContext) {
 	var _la int
 
 	p.EnterOuterAlt(localctx, 1)
-	p.SetState(56)
+	p.SetState(77)
 	p.GetErrorHandler().Sync(p)
 	if p.HasError() {
 		goto errorExit
 	}
 	_la = p.GetTokenStream().LA(1)
 
-	for (int64(_la) & ^0x3f) == 0 && ((int64(1)<<_la)&8902574129381380) != 0 {
-		p.SetState(54)
-		p.GetErrorHandler().Sync(p)
-		if p.HasError() {
-			goto errorExit
+	for (int64(_la) & ^0x3f) == 0 && ((int64(1)<<_la)&8202880284710928388) != 0 {
+		{
+			p.SetState(74)
+			p.Statement()
 		}
 
-		switch p.GetTokenStream().LA(1) {
-		case lua_grammar_antlr4ParserT__1, lua_grammar_antlr4ParserT__14, lua_grammar_antlr4ParserT__15, lua_grammar_antlr4ParserKW_PRINT, lua_grammar_antlr4ParserKW_FALSE, lua_grammar_antlr4ParserKW_FOR, lua_grammar_antlr4ParserKW_IF, lua_grammar_antlr4ParserKW_NIL, lua_grammar_antlr4ParserKW_TRUE, lua_grammar_antlr4ParserKW_WHILE, lua_grammar_antlr4ParserKW_LOCAL, lua_grammar_antlr4ParserKW_FUNCTION, lua_grammar_antlr4ParserNUMBER, lua_grammar_antlr4ParserSTRING, lua_grammar_antlr4ParserLETTER:
-			{
-				p.SetState(52)
-				p.Statement()
-			}
-
-		case lua_grammar_antlr4ParserT__19, lua_grammar_antlr4ParserT__22:
-			{
-				p.SetState(53)
-				p.Comment()
-			}
-
-		default:
-			p.SetError(antlr.NewNoViableAltException(p, nil, nil, nil, nil, nil))
-			goto errorExit
-		}
-
-		p.SetState(58)
+		p.SetState(79)
 		p.GetErrorHandler().Sync(p)
 		if p.HasError() {
 			goto errorExit
@@ -531,6 +563,9 @@ type IStatementContext interface {
 	Control_statement() IControl_statementContext
 	Function_declaration() IFunction_declarationContext
 	Function_call() IFunction_callContext
+	Return_statement() IReturn_statementContext
+	Break_statement() IBreak_statementContext
+	Label_statement() ILabel_statementContext
 
 	// IsStatementContext differentiates from other interfaces.
 	IsStatementContext()
@@ -648,6 +683,54 @@ func (s *StatementContext) Function_call() IFunction_callContext {
 	return t.(IFunction_callContext)
 }
 
+func (s *StatementContext) Return_statement() IReturn_statementContext {
+	var t antlr.RuleContext
+	for _, ctx := range s.GetChildren() {
+		if _, ok := ctx.(IReturn_statementContext); ok {
+			t = ctx.(antlr.RuleContext)
+			break
+		}
+	}
+
+	if t == nil {
+		return nil
+	}
+
+	return t.(IReturn_statementContext)
+}
+
+func (s *StatementContext) Break_statement() IBreak_statementContext {
+	var t antlr.RuleContext
+	for _, ctx := range s.GetChildren() {
+		if _, ok := ctx.(IBreak_statementContext); ok {
+			t = ctx.(antlr.RuleContext)
+			break
+		}
+	}
+
+	if t == nil {
+		return nil
+	}
+
+	return t.(IBreak_statementContext)
+}
+
+func (s *StatementContext) Label_statement() ILabel_statementContext {
+	var t antlr.RuleContext
+	for _, ctx := range s.GetChildren() {
+		if _, ok := ctx.(ILabel_statementContext); ok {
+			t = ctx.(antlr.RuleContext)
+			break
+		}
+	}
+
+	if t == nil {
+		return nil
+	}
+
+	return t.(ILabel_statementContext)
+}
+
 func (s *StatementContext) GetRuleContext() antlr.RuleContext {
 	return s
 }
@@ -681,46 +764,67 @@ func (s *StatementContext) Accept(visitor antlr.ParseTreeVisitor) interface{} {
 func (p *lua_grammar_antlr4Parser) Statement() (localctx IStatementContext) {
 	localctx = NewStatementContext(p, p.GetParserRuleContext(), p.GetState())
 	p.EnterRule(localctx, 2, lua_grammar_antlr4ParserRULE_statement)
-	p.SetState(64)
+	p.SetState(88)
 	p.GetErrorHandler().Sync(p)
 	if p.HasError() {
 		goto errorExit
 	}
 
-	switch p.GetInterpreter().AdaptivePredict(p.BaseParser, p.GetTokenStream(), 2, p.GetParserRuleContext()) {
+	switch p.GetInterpreter().AdaptivePredict(p.BaseParser, p.GetTokenStream(), 1, p.GetParserRuleContext()) {
 	case 1:
 		p.EnterOuterAlt(localctx, 1)
 		{
-			p.SetState(59)
+			p.SetState(80)
 			p.Assignment()
 		}
 
 	case 2:
 		p.EnterOuterAlt(localctx, 2)
 		{
-			p.SetState(60)
+			p.SetState(81)
 			p.expression(0)
 		}
 
 	case 3:
 		p.EnterOuterAlt(localctx, 3)
 		{
-			p.SetState(61)
+			p.SetState(82)
 			p.Control_statement()
 		}
 
 	case 4:
 		p.EnterOuterAlt(localctx, 4)
 		{
-			p.SetState(62)
+			p.SetState(83)
 			p.Function_declaration()
 		}
 
 	case 5:
 		p.EnterOuterAlt(localctx, 5)
 		{
-			p.SetState(63)
+			p.SetState(84)
 			p.Function_call()
+		}
+
+	case 6:
+		p.EnterOuterAlt(localctx, 6)
+		{
+			p.SetState(85)
+			p.Return_statement()
+		}
+
+	case 7:
+		p.EnterOuterAlt(localctx, 7)
+		{
+			p.SetState(86)
+			p.Break_statement()
+		}
+
+	case 8:
+		p.EnterOuterAlt(localctx, 8)
+		{
+			p.SetState(87)
+			p.Label_statement()
 		}
 
 	case antlr.ATNInvalidAltNumber:
@@ -751,6 +855,8 @@ type IControl_statementContext interface {
 	If_statement() IIf_statementContext
 	For_statement() IFor_statementContext
 	While_statement() IWhile_statementContext
+	Repeat_statement() IRepeat_statementContext
+	Goto_statement() IGoto_statementContext
 
 	// IsControl_statementContext differentiates from other interfaces.
 	IsControl_statementContext()
@@ -836,6 +942,38 @@ func (s *Control_statementContext) While_statement() IWhile_statementContext {
 	return t.(IWhile_statementContext)
 }
 
+func (s *Control_statementContext) Repeat_statement() IRepeat_statementContext {
+	var t antlr.RuleContext
+	for _, ctx := range s.GetChildren() {
+		if _, ok := ctx.(IRepeat_statementContext); ok {
+			t = ctx.(antlr.RuleContext)
+			break
+		}
+	}
+
+	if t == nil {
+		return nil
+	}
+
+	return t.(IRepeat_statementContext)
+}
+
+func (s *Control_statementContext) Goto_statement() IGoto_statementContext {
+	var t antlr.RuleContext
+	for _, ctx := range s.GetChildren() {
+		if _, ok := ctx.(IGoto_statementContext); ok {
+			t = ctx.(antlr.RuleContext)
+			break
+		}
+	}
+
+	if t == nil {
+		return nil
+	}
+
+	return t.(IGoto_statementContext)
+}
+
 func (s *Control_statementContext) GetRuleContext() antlr.RuleContext {
 	return s
 }
@@ -869,7 +1007,7 @@ func (s *Control_statementContext) Accept(visitor antlr.ParseTreeVisitor) interf
 func (p *lua_grammar_antlr4Parser) Control_statement() (localctx IControl_statementContext) {
 	localctx = NewControl_statementContext(p, p.GetParserRuleContext(), p.GetState())
 	p.EnterRule(localctx, 4, lua_grammar_antlr4ParserRULE_control_statement)
-	p.SetState(69)
+	p.SetState(95)
 	p.GetErrorHandler().Sync(p)
 	if p.HasError() {
 		goto errorExit
@@ -879,22 +1017,36 @@ func (p *lua_grammar_antlr4Parser) Control_statement() (localctx IControl_statem
 	case lua_grammar_antlr4ParserKW_IF:
 		p.EnterOuterAlt(localctx, 1)
 		{
-			p.SetState(66)
+			p.SetState(90)
 			p.If_statement()
 		}
 
 	case lua_grammar_antlr4ParserKW_FOR:
 		p.EnterOuterAlt(localctx, 2)
 		{
-			p.SetState(67)
+			p.SetState(91)
 			p.For_statement()
 		}
 
 	case lua_grammar_antlr4ParserKW_WHILE:
 		p.EnterOuterAlt(localctx, 3)
 		{
-			p.SetState(68)
+			p.SetState(92)
 			p.While_statement()
+		}
+
+	case lua_grammar_antlr4ParserKW_REPEAT:
+		p.EnterOuterAlt(localctx, 4)
+		{
+			p.SetState(93)
+			p.Repeat_statement()
+		}
+
+	case lua_grammar_antlr4ParserKW_GOTO:
+		p.EnterOuterAlt(localctx, 5)
+		{
+			p.SetState(94)
+			p.Goto_statement()
 		}
 
 	default:
@@ -1000,7 +1152,7 @@ func (p *lua_grammar_antlr4Parser) Statement_terminator() (localctx IStatement_t
 	p.EnterRule(localctx, 6, lua_grammar_antlr4ParserRULE_statement_terminator)
 	p.EnterOuterAlt(localctx, 1)
 	{
-		p.SetState(71)
+		p.SetState(97)
 		p.Match(lua_grammar_antlr4ParserSEPARATOR)
 		if p.HasError() {
 			// Recognition error - abort rule
@@ -1029,8 +1181,8 @@ type IAssignmentContext interface {
 	GetParser() antlr.Parser
 
 	// Getter signatures
-	Identifier() IIdentifierContext
-	Expression() IExpressionContext
+	Identifier_list() IIdentifier_listContext
+	Expression_list() IExpression_listContext
 	Statement_terminator() IStatement_terminatorContext
 	KW_LOCAL() antlr.TerminalNode
 
@@ -1070,10 +1222,10 @@ func NewAssignmentContext(parser antlr.Parser, parent antlr.ParserRuleContext, i
 
 func (s *AssignmentContext) GetParser() antlr.Parser { return s.parser }
 
-func (s *AssignmentContext) Identifier() IIdentifierContext {
+func (s *AssignmentContext) Identifier_list() IIdentifier_listContext {
 	var t antlr.RuleContext
 	for _, ctx := range s.GetChildren() {
-		if _, ok := ctx.(IIdentifierContext); ok {
+		if _, ok := ctx.(IIdentifier_listContext); ok {
 			t = ctx.(antlr.RuleContext)
 			break
 		}
@@ -1083,13 +1235,13 @@ func (s *AssignmentContext) Identifier() IIdentifierContext {
 		return nil
 	}
 
-	return t.(IIdentifierContext)
+	return t.(IIdentifier_listContext)
 }
 
-func (s *AssignmentContext) Expression() IExpressionContext {
+func (s *AssignmentContext) Expression_list() IExpression_listContext {
 	var t antlr.RuleContext
 	for _, ctx := range s.GetChildren() {
-		if _, ok := ctx.(IExpressionContext); ok {
+		if _, ok := ctx.(IExpression_listContext); ok {
 			t = ctx.(antlr.RuleContext)
 			break
 		}
@@ -1099,7 +1251,7 @@ func (s *AssignmentContext) Expression() IExpressionContext {
 		return nil
 	}
 
-	return t.(IExpressionContext)
+	return t.(IExpression_listContext)
 }
 
 func (s *AssignmentContext) Statement_terminator() IStatement_terminatorContext {
@@ -1158,7 +1310,7 @@ func (p *lua_grammar_antlr4Parser) Assignment() (localctx IAssignmentContext) {
 	var _la int
 
 	p.EnterOuterAlt(localctx, 1)
-	p.SetState(74)
+	p.SetState(100)
 	p.GetErrorHandler().Sync(p)
 	if p.HasError() {
 		goto errorExit
@@ -1167,7 +1319,7 @@ func (p *lua_grammar_antlr4Parser) Assignment() (localctx IAssignmentContext) {
 
 	if _la == lua_grammar_antlr4ParserKW_LOCAL {
 		{
-			p.SetState(73)
+			p.SetState(99)
 			p.Match(lua_grammar_antlr4ParserKW_LOCAL)
 			if p.HasError() {
 				// Recognition error - abort rule
@@ -1177,11 +1329,11 @@ func (p *lua_grammar_antlr4Parser) Assignment() (localctx IAssignmentContext) {
 
 	}
 	{
-		p.SetState(76)
-		p.Identifier()
+		p.SetState(102)
+		p.Identifier_list()
 	}
 	{
-		p.SetState(77)
+		p.SetState(103)
 		p.Match(lua_grammar_antlr4ParserT__0)
 		if p.HasError() {
 			// Recognition error - abort rule
@@ -1189,11 +1341,11 @@ func (p *lua_grammar_antlr4Parser) Assignment() (localctx IAssignmentContext) {
 		}
 	}
 	{
-		p.SetState(78)
-		p.expression(0)
+		p.SetState(104)
+		p.Expression_list()
 	}
 	{
-		p.SetState(79)
+		p.SetState(105)
 		p.Statement_terminator()
 	}
 
@@ -1225,6 +1377,7 @@ type IExpressionContext interface {
 	Function_call() IFunction_callContext
 	Table() ITableContext
 	Table_access() ITable_accessContext
+	Function_expression() IFunction_expressionContext
 	Operators() IOperatorsContext
 
 	// IsExpressionContext differentiates from other interfaces.
@@ -1384,6 +1537,22 @@ func (s *ExpressionContext) Table_access() ITable_accessContext {
 	return t.(ITable_accessContext)
 }
 
+func (s *ExpressionContext) Function_expression() IFunction_expressionContext {
+	var t antlr.RuleContext
+	for _, ctx := range s.GetChildren() {
+		if _, ok := ctx.(IFunction_expressionContext); ok {
+			t = ctx.(antlr.RuleContext)
+			break
+		}
+	}
+
+	if t == nil {
+		return nil
+	}
+
+	return t.(IFunction_expressionContext)
+}
+
 func (s *ExpressionContext) Operators() IOperatorsContext {
 	var t antlr.RuleContext
 	for _, ctx := range s.GetChildren() {
@@ -1446,28 +1615,28 @@ func (p *lua_grammar_antlr4Parser) expression(_p int) (localctx IExpressionConte
 	var _alt int
 
 	p.EnterOuterAlt(localctx, 1)
-	p.SetState(91)
+	p.SetState(118)
 	p.GetErrorHandler().Sync(p)
 	if p.HasError() {
 		goto errorExit
 	}
 
-	switch p.GetInterpreter().AdaptivePredict(p.BaseParser, p.GetTokenStream(), 5, p.GetParserRuleContext()) {
+	switch p.GetInterpreter().AdaptivePredict(p.BaseParser, p.GetTokenStream(), 4, p.GetParserRuleContext()) {
 	case 1:
 		{
-			p.SetState(82)
+			p.SetState(108)
 			p.Literal()
 		}
 
 	case 2:
 		{
-			p.SetState(83)
+			p.SetState(109)
 			p.Identifier()
 		}
 
 	case 3:
 		{
-			p.SetState(84)
+			p.SetState(110)
 			p.Match(lua_grammar_antlr4ParserT__1)
 			if p.HasError() {
 				// Recognition error - abort rule
@@ -1475,11 +1644,11 @@ func (p *lua_grammar_antlr4Parser) expression(_p int) (localctx IExpressionConte
 			}
 		}
 		{
-			p.SetState(85)
+			p.SetState(111)
 			p.expression(0)
 		}
 		{
-			p.SetState(86)
+			p.SetState(112)
 			p.Match(lua_grammar_antlr4ParserT__2)
 			if p.HasError() {
 				// Recognition error - abort rule
@@ -1489,32 +1658,38 @@ func (p *lua_grammar_antlr4Parser) expression(_p int) (localctx IExpressionConte
 
 	case 4:
 		{
-			p.SetState(88)
+			p.SetState(114)
 			p.Function_call()
 		}
 
 	case 5:
 		{
-			p.SetState(89)
+			p.SetState(115)
 			p.Table()
 		}
 
 	case 6:
 		{
-			p.SetState(90)
+			p.SetState(116)
 			p.Table_access()
+		}
+
+	case 7:
+		{
+			p.SetState(117)
+			p.Function_expression()
 		}
 
 	case antlr.ATNInvalidAltNumber:
 		goto errorExit
 	}
 	p.GetParserRuleContext().SetStop(p.GetTokenStream().LT(-1))
-	p.SetState(99)
+	p.SetState(126)
 	p.GetErrorHandler().Sync(p)
 	if p.HasError() {
 		goto errorExit
 	}
-	_alt = p.GetInterpreter().AdaptivePredict(p.BaseParser, p.GetTokenStream(), 6, p.GetParserRuleContext())
+	_alt = p.GetInterpreter().AdaptivePredict(p.BaseParser, p.GetTokenStream(), 5, p.GetParserRuleContext())
 	if p.HasError() {
 		goto errorExit
 	}
@@ -1526,28 +1701,28 @@ func (p *lua_grammar_antlr4Parser) expression(_p int) (localctx IExpressionConte
 			_prevctx = localctx
 			localctx = NewExpressionContext(p, _parentctx, _parentState)
 			p.PushNewRecursionContext(localctx, _startState, lua_grammar_antlr4ParserRULE_expression)
-			p.SetState(93)
+			p.SetState(120)
 
-			if !(p.Precpred(p.GetParserRuleContext(), 4)) {
-				p.SetError(antlr.NewFailedPredicateException(p, "p.Precpred(p.GetParserRuleContext(), 4)", ""))
+			if !(p.Precpred(p.GetParserRuleContext(), 5)) {
+				p.SetError(antlr.NewFailedPredicateException(p, "p.Precpred(p.GetParserRuleContext(), 5)", ""))
 				goto errorExit
 			}
 			{
-				p.SetState(94)
+				p.SetState(121)
 				p.Operators()
 			}
 			{
-				p.SetState(95)
-				p.expression(5)
+				p.SetState(122)
+				p.expression(6)
 			}
 
 		}
-		p.SetState(101)
+		p.SetState(128)
 		p.GetErrorHandler().Sync(p)
 		if p.HasError() {
 			goto errorExit
 		}
-		_alt = p.GetInterpreter().AdaptivePredict(p.BaseParser, p.GetTokenStream(), 6, p.GetParserRuleContext())
+		_alt = p.GetInterpreter().AdaptivePredict(p.BaseParser, p.GetTokenStream(), 5, p.GetParserRuleContext())
 		if p.HasError() {
 			goto errorExit
 		}
@@ -1566,6 +1741,447 @@ errorExit:
 	goto errorExit // Trick to prevent compiler error if the label is not used
 }
 
+// IPrefix_expressionContext is an interface to support dynamic dispatch.
+type IPrefix_expressionContext interface {
+	antlr.ParserRuleContext
+
+	// GetParser returns the parser.
+	GetParser() antlr.Parser
+
+	// Getter signatures
+	Primary_expression() IPrimary_expressionContext
+	KW_NOT() antlr.TerminalNode
+	Prefix_expression() IPrefix_expressionContext
+
+	// IsPrefix_expressionContext differentiates from other interfaces.
+	IsPrefix_expressionContext()
+}
+
+type Prefix_expressionContext struct {
+	antlr.BaseParserRuleContext
+	parser antlr.Parser
+}
+
+func NewEmptyPrefix_expressionContext() *Prefix_expressionContext {
+	var p = new(Prefix_expressionContext)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
+	p.RuleIndex = lua_grammar_antlr4ParserRULE_prefix_expression
+	return p
+}
+
+func InitEmptyPrefix_expressionContext(p *Prefix_expressionContext) {
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
+	p.RuleIndex = lua_grammar_antlr4ParserRULE_prefix_expression
+}
+
+func (*Prefix_expressionContext) IsPrefix_expressionContext() {}
+
+func NewPrefix_expressionContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *Prefix_expressionContext {
+	var p = new(Prefix_expressionContext)
+
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, parent, invokingState)
+
+	p.parser = parser
+	p.RuleIndex = lua_grammar_antlr4ParserRULE_prefix_expression
+
+	return p
+}
+
+func (s *Prefix_expressionContext) GetParser() antlr.Parser { return s.parser }
+
+func (s *Prefix_expressionContext) Primary_expression() IPrimary_expressionContext {
+	var t antlr.RuleContext
+	for _, ctx := range s.GetChildren() {
+		if _, ok := ctx.(IPrimary_expressionContext); ok {
+			t = ctx.(antlr.RuleContext)
+			break
+		}
+	}
+
+	if t == nil {
+		return nil
+	}
+
+	return t.(IPrimary_expressionContext)
+}
+
+func (s *Prefix_expressionContext) KW_NOT() antlr.TerminalNode {
+	return s.GetToken(lua_grammar_antlr4ParserKW_NOT, 0)
+}
+
+func (s *Prefix_expressionContext) Prefix_expression() IPrefix_expressionContext {
+	var t antlr.RuleContext
+	for _, ctx := range s.GetChildren() {
+		if _, ok := ctx.(IPrefix_expressionContext); ok {
+			t = ctx.(antlr.RuleContext)
+			break
+		}
+	}
+
+	if t == nil {
+		return nil
+	}
+
+	return t.(IPrefix_expressionContext)
+}
+
+func (s *Prefix_expressionContext) GetRuleContext() antlr.RuleContext {
+	return s
+}
+
+func (s *Prefix_expressionContext) ToStringTree(ruleNames []string, recog antlr.Recognizer) string {
+	return antlr.TreesStringTree(s, ruleNames, recog)
+}
+
+func (s *Prefix_expressionContext) EnterRule(listener antlr.ParseTreeListener) {
+	if listenerT, ok := listener.(lua_grammar_antlr4Listener); ok {
+		listenerT.EnterPrefix_expression(s)
+	}
+}
+
+func (s *Prefix_expressionContext) ExitRule(listener antlr.ParseTreeListener) {
+	if listenerT, ok := listener.(lua_grammar_antlr4Listener); ok {
+		listenerT.ExitPrefix_expression(s)
+	}
+}
+
+func (s *Prefix_expressionContext) Accept(visitor antlr.ParseTreeVisitor) interface{} {
+	switch t := visitor.(type) {
+	case lua_grammar_antlr4Visitor:
+		return t.VisitPrefix_expression(s)
+
+	default:
+		return t.VisitChildren(s)
+	}
+}
+
+func (p *lua_grammar_antlr4Parser) Prefix_expression() (localctx IPrefix_expressionContext) {
+	localctx = NewPrefix_expressionContext(p, p.GetParserRuleContext(), p.GetState())
+	p.EnterRule(localctx, 12, lua_grammar_antlr4ParserRULE_prefix_expression)
+	p.SetState(134)
+	p.GetErrorHandler().Sync(p)
+	if p.HasError() {
+		goto errorExit
+	}
+
+	switch p.GetTokenStream().LA(1) {
+	case lua_grammar_antlr4ParserT__1, lua_grammar_antlr4ParserT__21, lua_grammar_antlr4ParserT__23, lua_grammar_antlr4ParserKW_PRINT, lua_grammar_antlr4ParserKW_FALSE, lua_grammar_antlr4ParserKW_NIL, lua_grammar_antlr4ParserKW_TRUE, lua_grammar_antlr4ParserNUMBER, lua_grammar_antlr4ParserSTRING, lua_grammar_antlr4ParserLETTER:
+		p.EnterOuterAlt(localctx, 1)
+		{
+			p.SetState(129)
+			p.Primary_expression()
+		}
+
+	case lua_grammar_antlr4ParserKW_NOT:
+		p.EnterOuterAlt(localctx, 2)
+		{
+			p.SetState(130)
+			p.Match(lua_grammar_antlr4ParserKW_NOT)
+			if p.HasError() {
+				// Recognition error - abort rule
+				goto errorExit
+			}
+		}
+		{
+			p.SetState(131)
+			p.Prefix_expression()
+		}
+
+	case lua_grammar_antlr4ParserT__3:
+		p.EnterOuterAlt(localctx, 3)
+		{
+			p.SetState(132)
+			p.Match(lua_grammar_antlr4ParserT__3)
+			if p.HasError() {
+				// Recognition error - abort rule
+				goto errorExit
+			}
+		}
+		{
+			p.SetState(133)
+			p.Prefix_expression()
+		}
+
+	default:
+		p.SetError(antlr.NewNoViableAltException(p, nil, nil, nil, nil, nil))
+		goto errorExit
+	}
+
+errorExit:
+	if p.HasError() {
+		v := p.GetError()
+		localctx.SetException(v)
+		p.GetErrorHandler().ReportError(p, v)
+		p.GetErrorHandler().Recover(p, v)
+		p.SetError(nil)
+	}
+	p.ExitRule()
+	return localctx
+	goto errorExit // Trick to prevent compiler error if the label is not used
+}
+
+// IPrimary_expressionContext is an interface to support dynamic dispatch.
+type IPrimary_expressionContext interface {
+	antlr.ParserRuleContext
+
+	// GetParser returns the parser.
+	GetParser() antlr.Parser
+
+	// Getter signatures
+	Literal() ILiteralContext
+	Identifier() IIdentifierContext
+	Expression() IExpressionContext
+	Function_call() IFunction_callContext
+	Table() ITableContext
+	Table_access() ITable_accessContext
+
+	// IsPrimary_expressionContext differentiates from other interfaces.
+	IsPrimary_expressionContext()
+}
+
+type Primary_expressionContext struct {
+	antlr.BaseParserRuleContext
+	parser antlr.Parser
+}
+
+func NewEmptyPrimary_expressionContext() *Primary_expressionContext {
+	var p = new(Primary_expressionContext)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
+	p.RuleIndex = lua_grammar_antlr4ParserRULE_primary_expression
+	return p
+}
+
+func InitEmptyPrimary_expressionContext(p *Primary_expressionContext) {
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
+	p.RuleIndex = lua_grammar_antlr4ParserRULE_primary_expression
+}
+
+func (*Primary_expressionContext) IsPrimary_expressionContext() {}
+
+func NewPrimary_expressionContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *Primary_expressionContext {
+	var p = new(Primary_expressionContext)
+
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, parent, invokingState)
+
+	p.parser = parser
+	p.RuleIndex = lua_grammar_antlr4ParserRULE_primary_expression
+
+	return p
+}
+
+func (s *Primary_expressionContext) GetParser() antlr.Parser { return s.parser }
+
+func (s *Primary_expressionContext) Literal() ILiteralContext {
+	var t antlr.RuleContext
+	for _, ctx := range s.GetChildren() {
+		if _, ok := ctx.(ILiteralContext); ok {
+			t = ctx.(antlr.RuleContext)
+			break
+		}
+	}
+
+	if t == nil {
+		return nil
+	}
+
+	return t.(ILiteralContext)
+}
+
+func (s *Primary_expressionContext) Identifier() IIdentifierContext {
+	var t antlr.RuleContext
+	for _, ctx := range s.GetChildren() {
+		if _, ok := ctx.(IIdentifierContext); ok {
+			t = ctx.(antlr.RuleContext)
+			break
+		}
+	}
+
+	if t == nil {
+		return nil
+	}
+
+	return t.(IIdentifierContext)
+}
+
+func (s *Primary_expressionContext) Expression() IExpressionContext {
+	var t antlr.RuleContext
+	for _, ctx := range s.GetChildren() {
+		if _, ok := ctx.(IExpressionContext); ok {
+			t = ctx.(antlr.RuleContext)
+			break
+		}
+	}
+
+	if t == nil {
+		return nil
+	}
+
+	return t.(IExpressionContext)
+}
+
+func (s *Primary_expressionContext) Function_call() IFunction_callContext {
+	var t antlr.RuleContext
+	for _, ctx := range s.GetChildren() {
+		if _, ok := ctx.(IFunction_callContext); ok {
+			t = ctx.(antlr.RuleContext)
+			break
+		}
+	}
+
+	if t == nil {
+		return nil
+	}
+
+	return t.(IFunction_callContext)
+}
+
+func (s *Primary_expressionContext) Table() ITableContext {
+	var t antlr.RuleContext
+	for _, ctx := range s.GetChildren() {
+		if _, ok := ctx.(ITableContext); ok {
+			t = ctx.(antlr.RuleContext)
+			break
+		}
+	}
+
+	if t == nil {
+		return nil
+	}
+
+	return t.(ITableContext)
+}
+
+func (s *Primary_expressionContext) Table_access() ITable_accessContext {
+	var t antlr.RuleContext
+	for _, ctx := range s.GetChildren() {
+		if _, ok := ctx.(ITable_accessContext); ok {
+			t = ctx.(antlr.RuleContext)
+			break
+		}
+	}
+
+	if t == nil {
+		return nil
+	}
+
+	return t.(ITable_accessContext)
+}
+
+func (s *Primary_expressionContext) GetRuleContext() antlr.RuleContext {
+	return s
+}
+
+func (s *Primary_expressionContext) ToStringTree(ruleNames []string, recog antlr.Recognizer) string {
+	return antlr.TreesStringTree(s, ruleNames, recog)
+}
+
+func (s *Primary_expressionContext) EnterRule(listener antlr.ParseTreeListener) {
+	if listenerT, ok := listener.(lua_grammar_antlr4Listener); ok {
+		listenerT.EnterPrimary_expression(s)
+	}
+}
+
+func (s *Primary_expressionContext) ExitRule(listener antlr.ParseTreeListener) {
+	if listenerT, ok := listener.(lua_grammar_antlr4Listener); ok {
+		listenerT.ExitPrimary_expression(s)
+	}
+}
+
+func (s *Primary_expressionContext) Accept(visitor antlr.ParseTreeVisitor) interface{} {
+	switch t := visitor.(type) {
+	case lua_grammar_antlr4Visitor:
+		return t.VisitPrimary_expression(s)
+
+	default:
+		return t.VisitChildren(s)
+	}
+}
+
+func (p *lua_grammar_antlr4Parser) Primary_expression() (localctx IPrimary_expressionContext) {
+	localctx = NewPrimary_expressionContext(p, p.GetParserRuleContext(), p.GetState())
+	p.EnterRule(localctx, 14, lua_grammar_antlr4ParserRULE_primary_expression)
+	p.SetState(145)
+	p.GetErrorHandler().Sync(p)
+	if p.HasError() {
+		goto errorExit
+	}
+
+	switch p.GetInterpreter().AdaptivePredict(p.BaseParser, p.GetTokenStream(), 7, p.GetParserRuleContext()) {
+	case 1:
+		p.EnterOuterAlt(localctx, 1)
+		{
+			p.SetState(136)
+			p.Literal()
+		}
+
+	case 2:
+		p.EnterOuterAlt(localctx, 2)
+		{
+			p.SetState(137)
+			p.Identifier()
+		}
+
+	case 3:
+		p.EnterOuterAlt(localctx, 3)
+		{
+			p.SetState(138)
+			p.Match(lua_grammar_antlr4ParserT__1)
+			if p.HasError() {
+				// Recognition error - abort rule
+				goto errorExit
+			}
+		}
+		{
+			p.SetState(139)
+			p.expression(0)
+		}
+		{
+			p.SetState(140)
+			p.Match(lua_grammar_antlr4ParserT__2)
+			if p.HasError() {
+				// Recognition error - abort rule
+				goto errorExit
+			}
+		}
+
+	case 4:
+		p.EnterOuterAlt(localctx, 4)
+		{
+			p.SetState(142)
+			p.Function_call()
+		}
+
+	case 5:
+		p.EnterOuterAlt(localctx, 5)
+		{
+			p.SetState(143)
+			p.Table()
+		}
+
+	case 6:
+		p.EnterOuterAlt(localctx, 6)
+		{
+			p.SetState(144)
+			p.Table_access()
+		}
+
+	case antlr.ATNInvalidAltNumber:
+		goto errorExit
+	}
+
+errorExit:
+	if p.HasError() {
+		v := p.GetError()
+		localctx.SetException(v)
+		p.GetErrorHandler().ReportError(p, v)
+		p.GetErrorHandler().Recover(p, v)
+		p.SetError(nil)
+	}
+	p.ExitRule()
+	return localctx
+	goto errorExit // Trick to prevent compiler error if the label is not used
+}
+
 // IOperatorsContext is an interface to support dynamic dispatch.
 type IOperatorsContext interface {
 	antlr.ParserRuleContext
@@ -1577,6 +2193,7 @@ type IOperatorsContext interface {
 	Comparison_operator() IComparison_operatorContext
 	Arith_operator() IArith_operatorContext
 	Logical_operator() ILogical_operatorContext
+	Bitwise_operator() IBitwise_operatorContext
 
 	// IsOperatorsContext differentiates from other interfaces.
 	IsOperatorsContext()
@@ -1662,6 +2279,22 @@ func (s *OperatorsContext) Logical_operator() ILogical_operatorContext {
 	return t.(ILogical_operatorContext)
 }
 
+func (s *OperatorsContext) Bitwise_operator() IBitwise_operatorContext {
+	var t antlr.RuleContext
+	for _, ctx := range s.GetChildren() {
+		if _, ok := ctx.(IBitwise_operatorContext); ok {
+			t = ctx.(antlr.RuleContext)
+			break
+		}
+	}
+
+	if t == nil {
+		return nil
+	}
+
+	return t.(IBitwise_operatorContext)
+}
+
 func (s *OperatorsContext) GetRuleContext() antlr.RuleContext {
 	return s
 }
@@ -1694,33 +2327,40 @@ func (s *OperatorsContext) Accept(visitor antlr.ParseTreeVisitor) interface{} {
 
 func (p *lua_grammar_antlr4Parser) Operators() (localctx IOperatorsContext) {
 	localctx = NewOperatorsContext(p, p.GetParserRuleContext(), p.GetState())
-	p.EnterRule(localctx, 12, lua_grammar_antlr4ParserRULE_operators)
-	p.SetState(105)
+	p.EnterRule(localctx, 16, lua_grammar_antlr4ParserRULE_operators)
+	p.SetState(151)
 	p.GetErrorHandler().Sync(p)
 	if p.HasError() {
 		goto errorExit
 	}
 
 	switch p.GetTokenStream().LA(1) {
-	case lua_grammar_antlr4ParserT__3, lua_grammar_antlr4ParserT__4, lua_grammar_antlr4ParserT__5, lua_grammar_antlr4ParserT__6, lua_grammar_antlr4ParserT__7, lua_grammar_antlr4ParserT__8:
+	case lua_grammar_antlr4ParserT__4, lua_grammar_antlr4ParserT__5, lua_grammar_antlr4ParserT__6, lua_grammar_antlr4ParserT__7, lua_grammar_antlr4ParserT__8, lua_grammar_antlr4ParserT__9:
 		p.EnterOuterAlt(localctx, 1)
 		{
-			p.SetState(102)
+			p.SetState(147)
 			p.Comparison_operator()
 		}
 
-	case lua_grammar_antlr4ParserT__9, lua_grammar_antlr4ParserT__10, lua_grammar_antlr4ParserT__11, lua_grammar_antlr4ParserT__12:
+	case lua_grammar_antlr4ParserT__10, lua_grammar_antlr4ParserT__11, lua_grammar_antlr4ParserT__12, lua_grammar_antlr4ParserT__13, lua_grammar_antlr4ParserT__14:
 		p.EnterOuterAlt(localctx, 2)
 		{
-			p.SetState(103)
+			p.SetState(148)
 			p.Arith_operator()
 		}
 
 	case lua_grammar_antlr4ParserKW_AND, lua_grammar_antlr4ParserKW_OR:
 		p.EnterOuterAlt(localctx, 3)
 		{
-			p.SetState(104)
+			p.SetState(149)
 			p.Logical_operator()
+		}
+
+	case lua_grammar_antlr4ParserT__15, lua_grammar_antlr4ParserT__16, lua_grammar_antlr4ParserT__17, lua_grammar_antlr4ParserT__18, lua_grammar_antlr4ParserT__19:
+		p.EnterOuterAlt(localctx, 4)
+		{
+			p.SetState(150)
+			p.Bitwise_operator()
 		}
 
 	default:
@@ -1814,15 +2454,15 @@ func (s *Comparison_operatorContext) Accept(visitor antlr.ParseTreeVisitor) inte
 
 func (p *lua_grammar_antlr4Parser) Comparison_operator() (localctx IComparison_operatorContext) {
 	localctx = NewComparison_operatorContext(p, p.GetParserRuleContext(), p.GetState())
-	p.EnterRule(localctx, 14, lua_grammar_antlr4ParserRULE_comparison_operator)
+	p.EnterRule(localctx, 18, lua_grammar_antlr4ParserRULE_comparison_operator)
 	var _la int
 
 	p.EnterOuterAlt(localctx, 1)
 	{
-		p.SetState(107)
+		p.SetState(153)
 		_la = p.GetTokenStream().LA(1)
 
-		if !((int64(_la) & ^0x3f) == 0 && ((int64(1)<<_la)&1008) != 0) {
+		if !((int64(_la) & ^0x3f) == 0 && ((int64(1)<<_la)&2016) != 0) {
 			p.GetErrorHandler().RecoverInline(p)
 		} else {
 			p.GetErrorHandler().ReportMatch(p)
@@ -1916,15 +2556,15 @@ func (s *Arith_operatorContext) Accept(visitor antlr.ParseTreeVisitor) interface
 
 func (p *lua_grammar_antlr4Parser) Arith_operator() (localctx IArith_operatorContext) {
 	localctx = NewArith_operatorContext(p, p.GetParserRuleContext(), p.GetState())
-	p.EnterRule(localctx, 16, lua_grammar_antlr4ParserRULE_arith_operator)
+	p.EnterRule(localctx, 20, lua_grammar_antlr4ParserRULE_arith_operator)
 	var _la int
 
 	p.EnterOuterAlt(localctx, 1)
 	{
-		p.SetState(109)
+		p.SetState(155)
 		_la = p.GetTokenStream().LA(1)
 
-		if !((int64(_la) & ^0x3f) == 0 && ((int64(1)<<_la)&15360) != 0) {
+		if !((int64(_la) & ^0x3f) == 0 && ((int64(1)<<_la)&63488) != 0) {
 			p.GetErrorHandler().RecoverInline(p)
 		} else {
 			p.GetErrorHandler().ReportMatch(p)
@@ -2032,12 +2672,12 @@ func (s *Logical_operatorContext) Accept(visitor antlr.ParseTreeVisitor) interfa
 
 func (p *lua_grammar_antlr4Parser) Logical_operator() (localctx ILogical_operatorContext) {
 	localctx = NewLogical_operatorContext(p, p.GetParserRuleContext(), p.GetState())
-	p.EnterRule(localctx, 18, lua_grammar_antlr4ParserRULE_logical_operator)
+	p.EnterRule(localctx, 22, lua_grammar_antlr4ParserRULE_logical_operator)
 	var _la int
 
 	p.EnterOuterAlt(localctx, 1)
 	{
-		p.SetState(111)
+		p.SetState(157)
 		_la = p.GetTokenStream().LA(1)
 
 		if !(_la == lua_grammar_antlr4ParserKW_AND || _la == lua_grammar_antlr4ParserKW_OR) {
@@ -2061,142 +2701,93 @@ errorExit:
 	goto errorExit // Trick to prevent compiler error if the label is not used
 }
 
-// ICommentContext is an interface to support dynamic dispatch.
-type ICommentContext interface {
+// IBitwise_operatorContext is an interface to support dynamic dispatch.
+type IBitwise_operatorContext interface {
 	antlr.ParserRuleContext
 
 	// GetParser returns the parser.
 	GetParser() antlr.Parser
-
-	// Getter signatures
-	Single_line_comment() ISingle_line_commentContext
-	Multi_line_comment() IMulti_line_commentContext
-
-	// IsCommentContext differentiates from other interfaces.
-	IsCommentContext()
+	// IsBitwise_operatorContext differentiates from other interfaces.
+	IsBitwise_operatorContext()
 }
 
-type CommentContext struct {
+type Bitwise_operatorContext struct {
 	antlr.BaseParserRuleContext
 	parser antlr.Parser
 }
 
-func NewEmptyCommentContext() *CommentContext {
-	var p = new(CommentContext)
+func NewEmptyBitwise_operatorContext() *Bitwise_operatorContext {
+	var p = new(Bitwise_operatorContext)
 	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
-	p.RuleIndex = lua_grammar_antlr4ParserRULE_comment
+	p.RuleIndex = lua_grammar_antlr4ParserRULE_bitwise_operator
 	return p
 }
 
-func InitEmptyCommentContext(p *CommentContext) {
+func InitEmptyBitwise_operatorContext(p *Bitwise_operatorContext) {
 	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
-	p.RuleIndex = lua_grammar_antlr4ParserRULE_comment
+	p.RuleIndex = lua_grammar_antlr4ParserRULE_bitwise_operator
 }
 
-func (*CommentContext) IsCommentContext() {}
+func (*Bitwise_operatorContext) IsBitwise_operatorContext() {}
 
-func NewCommentContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *CommentContext {
-	var p = new(CommentContext)
+func NewBitwise_operatorContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *Bitwise_operatorContext {
+	var p = new(Bitwise_operatorContext)
 
 	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, parent, invokingState)
 
 	p.parser = parser
-	p.RuleIndex = lua_grammar_antlr4ParserRULE_comment
+	p.RuleIndex = lua_grammar_antlr4ParserRULE_bitwise_operator
 
 	return p
 }
 
-func (s *CommentContext) GetParser() antlr.Parser { return s.parser }
-
-func (s *CommentContext) Single_line_comment() ISingle_line_commentContext {
-	var t antlr.RuleContext
-	for _, ctx := range s.GetChildren() {
-		if _, ok := ctx.(ISingle_line_commentContext); ok {
-			t = ctx.(antlr.RuleContext)
-			break
-		}
-	}
-
-	if t == nil {
-		return nil
-	}
-
-	return t.(ISingle_line_commentContext)
-}
-
-func (s *CommentContext) Multi_line_comment() IMulti_line_commentContext {
-	var t antlr.RuleContext
-	for _, ctx := range s.GetChildren() {
-		if _, ok := ctx.(IMulti_line_commentContext); ok {
-			t = ctx.(antlr.RuleContext)
-			break
-		}
-	}
-
-	if t == nil {
-		return nil
-	}
-
-	return t.(IMulti_line_commentContext)
-}
-
-func (s *CommentContext) GetRuleContext() antlr.RuleContext {
+func (s *Bitwise_operatorContext) GetParser() antlr.Parser { return s.parser }
+func (s *Bitwise_operatorContext) GetRuleContext() antlr.RuleContext {
 	return s
 }
 
-func (s *CommentContext) ToStringTree(ruleNames []string, recog antlr.Recognizer) string {
+func (s *Bitwise_operatorContext) ToStringTree(ruleNames []string, recog antlr.Recognizer) string {
 	return antlr.TreesStringTree(s, ruleNames, recog)
 }
 
-func (s *CommentContext) EnterRule(listener antlr.ParseTreeListener) {
+func (s *Bitwise_operatorContext) EnterRule(listener antlr.ParseTreeListener) {
 	if listenerT, ok := listener.(lua_grammar_antlr4Listener); ok {
-		listenerT.EnterComment(s)
+		listenerT.EnterBitwise_operator(s)
 	}
 }
 
-func (s *CommentContext) ExitRule(listener antlr.ParseTreeListener) {
+func (s *Bitwise_operatorContext) ExitRule(listener antlr.ParseTreeListener) {
 	if listenerT, ok := listener.(lua_grammar_antlr4Listener); ok {
-		listenerT.ExitComment(s)
+		listenerT.ExitBitwise_operator(s)
 	}
 }
 
-func (s *CommentContext) Accept(visitor antlr.ParseTreeVisitor) interface{} {
+func (s *Bitwise_operatorContext) Accept(visitor antlr.ParseTreeVisitor) interface{} {
 	switch t := visitor.(type) {
 	case lua_grammar_antlr4Visitor:
-		return t.VisitComment(s)
+		return t.VisitBitwise_operator(s)
 
 	default:
 		return t.VisitChildren(s)
 	}
 }
 
-func (p *lua_grammar_antlr4Parser) Comment() (localctx ICommentContext) {
-	localctx = NewCommentContext(p, p.GetParserRuleContext(), p.GetState())
-	p.EnterRule(localctx, 20, lua_grammar_antlr4ParserRULE_comment)
-	p.SetState(115)
-	p.GetErrorHandler().Sync(p)
-	if p.HasError() {
-		goto errorExit
-	}
+func (p *lua_grammar_antlr4Parser) Bitwise_operator() (localctx IBitwise_operatorContext) {
+	localctx = NewBitwise_operatorContext(p, p.GetParserRuleContext(), p.GetState())
+	p.EnterRule(localctx, 24, lua_grammar_antlr4ParserRULE_bitwise_operator)
+	var _la int
 
-	switch p.GetTokenStream().LA(1) {
-	case lua_grammar_antlr4ParserT__22:
-		p.EnterOuterAlt(localctx, 1)
-		{
-			p.SetState(113)
-			p.Single_line_comment()
+	p.EnterOuterAlt(localctx, 1)
+	{
+		p.SetState(159)
+		_la = p.GetTokenStream().LA(1)
+
+		if !((int64(_la) & ^0x3f) == 0 && ((int64(1)<<_la)&2031616) != 0) {
+			p.GetErrorHandler().RecoverInline(p)
+		} else {
+			p.GetErrorHandler().ReportMatch(p)
+			p.Consume()
 		}
-
-	case lua_grammar_antlr4ParserT__19:
-		p.EnterOuterAlt(localctx, 2)
-		{
-			p.SetState(114)
-			p.Multi_line_comment()
-		}
-
-	default:
-		p.SetError(antlr.NewNoViableAltException(p, nil, nil, nil, nil, nil))
-		goto errorExit
 	}
 
 errorExit:
@@ -2314,15 +2905,15 @@ func (s *LiteralContext) Accept(visitor antlr.ParseTreeVisitor) interface{} {
 
 func (p *lua_grammar_antlr4Parser) Literal() (localctx ILiteralContext) {
 	localctx = NewLiteralContext(p, p.GetParserRuleContext(), p.GetState())
-	p.EnterRule(localctx, 22, lua_grammar_antlr4ParserRULE_literal)
+	p.EnterRule(localctx, 26, lua_grammar_antlr4ParserRULE_literal)
 	var _la int
 
 	p.EnterOuterAlt(localctx, 1)
 	{
-		p.SetState(117)
+		p.SetState(161)
 		_la = p.GetTokenStream().LA(1)
 
-		if !((int64(_la) & ^0x3f) == 0 && ((int64(1)<<_la)&3413468208168960) != 0) {
+		if !((int64(_la) & ^0x3f) == 0 && ((int64(1)<<_la)&3463342880238600192) != 0) {
 			p.GetErrorHandler().RecoverInline(p)
 		} else {
 			p.GetErrorHandler().ReportMatch(p)
@@ -2351,11 +2942,14 @@ type IFunction_callContext interface {
 	GetParser() antlr.Parser
 
 	// Getter signatures
-	Identifier() IIdentifierContext
-	AllExpression() []IExpressionContext
-	Expression(i int) IExpressionContext
+	AllIdentifier() []IIdentifierContext
+	Identifier(i int) IIdentifierContext
+	Table_access() ITable_accessContext
+	Expression() IExpressionContext
+	Expression_list() IExpression_listContext
 	Table_insert() ITable_insertContext
 	KW_PRINT() antlr.TerminalNode
+	Method_call() IMethod_callContext
 
 	// IsFunction_callContext differentiates from other interfaces.
 	IsFunction_callContext()
@@ -2393,36 +2987,20 @@ func NewFunction_callContext(parser antlr.Parser, parent antlr.ParserRuleContext
 
 func (s *Function_callContext) GetParser() antlr.Parser { return s.parser }
 
-func (s *Function_callContext) Identifier() IIdentifierContext {
-	var t antlr.RuleContext
-	for _, ctx := range s.GetChildren() {
-		if _, ok := ctx.(IIdentifierContext); ok {
-			t = ctx.(antlr.RuleContext)
-			break
-		}
-	}
-
-	if t == nil {
-		return nil
-	}
-
-	return t.(IIdentifierContext)
-}
-
-func (s *Function_callContext) AllExpression() []IExpressionContext {
+func (s *Function_callContext) AllIdentifier() []IIdentifierContext {
 	children := s.GetChildren()
 	len := 0
 	for _, ctx := range children {
-		if _, ok := ctx.(IExpressionContext); ok {
+		if _, ok := ctx.(IIdentifierContext); ok {
 			len++
 		}
 	}
 
-	tst := make([]IExpressionContext, len)
+	tst := make([]IIdentifierContext, len)
 	i := 0
 	for _, ctx := range children {
-		if t, ok := ctx.(IExpressionContext); ok {
-			tst[i] = t.(IExpressionContext)
+		if t, ok := ctx.(IIdentifierContext); ok {
+			tst[i] = t.(IIdentifierContext)
 			i++
 		}
 	}
@@ -2430,11 +3008,11 @@ func (s *Function_callContext) AllExpression() []IExpressionContext {
 	return tst
 }
 
-func (s *Function_callContext) Expression(i int) IExpressionContext {
+func (s *Function_callContext) Identifier(i int) IIdentifierContext {
 	var t antlr.RuleContext
 	j := 0
 	for _, ctx := range s.GetChildren() {
-		if _, ok := ctx.(IExpressionContext); ok {
+		if _, ok := ctx.(IIdentifierContext); ok {
 			if j == i {
 				t = ctx.(antlr.RuleContext)
 				break
@@ -2447,7 +3025,55 @@ func (s *Function_callContext) Expression(i int) IExpressionContext {
 		return nil
 	}
 
+	return t.(IIdentifierContext)
+}
+
+func (s *Function_callContext) Table_access() ITable_accessContext {
+	var t antlr.RuleContext
+	for _, ctx := range s.GetChildren() {
+		if _, ok := ctx.(ITable_accessContext); ok {
+			t = ctx.(antlr.RuleContext)
+			break
+		}
+	}
+
+	if t == nil {
+		return nil
+	}
+
+	return t.(ITable_accessContext)
+}
+
+func (s *Function_callContext) Expression() IExpressionContext {
+	var t antlr.RuleContext
+	for _, ctx := range s.GetChildren() {
+		if _, ok := ctx.(IExpressionContext); ok {
+			t = ctx.(antlr.RuleContext)
+			break
+		}
+	}
+
+	if t == nil {
+		return nil
+	}
+
 	return t.(IExpressionContext)
+}
+
+func (s *Function_callContext) Expression_list() IExpression_listContext {
+	var t antlr.RuleContext
+	for _, ctx := range s.GetChildren() {
+		if _, ok := ctx.(IExpression_listContext); ok {
+			t = ctx.(antlr.RuleContext)
+			break
+		}
+	}
+
+	if t == nil {
+		return nil
+	}
+
+	return t.(IExpression_listContext)
 }
 
 func (s *Function_callContext) Table_insert() ITable_insertContext {
@@ -2468,6 +3094,22 @@ func (s *Function_callContext) Table_insert() ITable_insertContext {
 
 func (s *Function_callContext) KW_PRINT() antlr.TerminalNode {
 	return s.GetToken(lua_grammar_antlr4ParserKW_PRINT, 0)
+}
+
+func (s *Function_callContext) Method_call() IMethod_callContext {
+	var t antlr.RuleContext
+	for _, ctx := range s.GetChildren() {
+		if _, ok := ctx.(IMethod_callContext); ok {
+			t = ctx.(antlr.RuleContext)
+			break
+		}
+	}
+
+	if t == nil {
+		return nil
+	}
+
+	return t.(IMethod_callContext)
 }
 
 func (s *Function_callContext) GetRuleContext() antlr.RuleContext {
@@ -2502,74 +3144,108 @@ func (s *Function_callContext) Accept(visitor antlr.ParseTreeVisitor) interface{
 
 func (p *lua_grammar_antlr4Parser) Function_call() (localctx IFunction_callContext) {
 	localctx = NewFunction_callContext(p, p.GetParserRuleContext(), p.GetState())
-	p.EnterRule(localctx, 24, lua_grammar_antlr4ParserRULE_function_call)
+	p.EnterRule(localctx, 28, lua_grammar_antlr4ParserRULE_function_call)
 	var _la int
 
-	p.SetState(139)
+	p.SetState(188)
 	p.GetErrorHandler().Sync(p)
 	if p.HasError() {
 		goto errorExit
 	}
 
-	switch p.GetTokenStream().LA(1) {
-	case lua_grammar_antlr4ParserLETTER:
+	switch p.GetInterpreter().AdaptivePredict(p.BaseParser, p.GetTokenStream(), 12, p.GetParserRuleContext()) {
+	case 1:
 		p.EnterOuterAlt(localctx, 1)
-		{
-			p.SetState(119)
-			p.Identifier()
+		p.SetState(169)
+		p.GetErrorHandler().Sync(p)
+		if p.HasError() {
+			goto errorExit
 		}
-		{
-			p.SetState(120)
-			p.Match(lua_grammar_antlr4ParserT__1)
-			if p.HasError() {
-				// Recognition error - abort rule
-				goto errorExit
+
+		switch p.GetInterpreter().AdaptivePredict(p.BaseParser, p.GetTokenStream(), 9, p.GetParserRuleContext()) {
+		case 1:
+			{
+				p.SetState(163)
+				p.Identifier()
 			}
+
+		case 2:
+			{
+				p.SetState(164)
+				p.Table_access()
+			}
+
+		case 3:
+			{
+				p.SetState(165)
+				p.Match(lua_grammar_antlr4ParserT__1)
+				if p.HasError() {
+					// Recognition error - abort rule
+					goto errorExit
+				}
+			}
+			{
+				p.SetState(166)
+				p.expression(0)
+			}
+			{
+				p.SetState(167)
+				p.Match(lua_grammar_antlr4ParserT__2)
+				if p.HasError() {
+					// Recognition error - abort rule
+					goto errorExit
+				}
+			}
+
+		case antlr.ATNInvalidAltNumber:
+			goto errorExit
 		}
-		p.SetState(129)
+		p.SetState(173)
 		p.GetErrorHandler().Sync(p)
 		if p.HasError() {
 			goto errorExit
 		}
 		_la = p.GetTokenStream().LA(1)
 
-		if (int64(_la) & ^0x3f) == 0 && ((int64(1)<<_la)&7917068104073220) != 0 {
+		if _la == lua_grammar_antlr4ParserT__20 {
 			{
-				p.SetState(121)
-				p.expression(0)
-			}
-			p.SetState(126)
-			p.GetErrorHandler().Sync(p)
-			if p.HasError() {
-				goto errorExit
-			}
-			_la = p.GetTokenStream().LA(1)
-
-			for _la == lua_grammar_antlr4ParserT__13 {
-				{
-					p.SetState(122)
-					p.Match(lua_grammar_antlr4ParserT__13)
-					if p.HasError() {
-						// Recognition error - abort rule
-						goto errorExit
-					}
-				}
-				{
-					p.SetState(123)
-					p.expression(0)
-				}
-
-				p.SetState(128)
-				p.GetErrorHandler().Sync(p)
+				p.SetState(171)
+				p.Match(lua_grammar_antlr4ParserT__20)
 				if p.HasError() {
+					// Recognition error - abort rule
 					goto errorExit
 				}
-				_la = p.GetTokenStream().LA(1)
+			}
+			{
+				p.SetState(172)
+				p.Identifier()
 			}
 
 		}
 		{
-			p.SetState(131)
+			p.SetState(175)
+			p.Match(lua_grammar_antlr4ParserT__1)
+			if p.HasError() {
+				// Recognition error - abort rule
+				goto errorExit
+			}
+		}
+		p.SetState(177)
+		p.GetErrorHandler().Sync(p)
+		if p.HasError() {
+			goto errorExit
+		}
+		_la = p.GetTokenStream().LA(1)
+
+		if (int64(_la) & ^0x3f) == 0 && ((int64(1)<<_la)&8147086527084625924) != 0 {
+			{
+				p.SetState(176)
+				p.Expression_list()
+			}
+
+		}
+		{
+			p.SetState(179)
 			p.Match(lua_grammar_antlr4ParserT__2)
 			if p.HasError() {
 				// Recognition error - abort rule
@@ -2577,17 +3253,17 @@ func (p *lua_grammar_antlr4Parser) Function_call() (localctx IFunction_callConte
 			}
 		}
 
-	case lua_grammar_antlr4ParserT__14:
+	case 2:
 		p.EnterOuterAlt(localctx, 2)
 		{
-			p.SetState(133)
+			p.SetState(181)
 			p.Table_insert()
 		}
 
-	case lua_grammar_antlr4ParserKW_PRINT:
+	case 3:
 		p.EnterOuterAlt(localctx, 3)
 		{
-			p.SetState(134)
+			p.SetState(182)
 			p.Match(lua_grammar_antlr4ParserKW_PRINT)
 			if p.HasError() {
 				// Recognition error - abort rule
@@ -2595,7 +3271,7 @@ func (p *lua_grammar_antlr4Parser) Function_call() (localctx IFunction_callConte
 			}
 		}
 		{
-			p.SetState(135)
+			p.SetState(183)
 			p.Match(lua_grammar_antlr4ParserT__1)
 			if p.HasError() {
 				// Recognition error - abort rule
@@ -2603,11 +3279,11 @@ func (p *lua_grammar_antlr4Parser) Function_call() (localctx IFunction_callConte
 			}
 		}
 		{
-			p.SetState(136)
-			p.expression(0)
+			p.SetState(184)
+			p.Expression_list()
 		}
 		{
-			p.SetState(137)
+			p.SetState(185)
 			p.Match(lua_grammar_antlr4ParserT__2)
 			if p.HasError() {
 				// Recognition error - abort rule
@@ -2615,8 +3291,14 @@ func (p *lua_grammar_antlr4Parser) Function_call() (localctx IFunction_callConte
 			}
 		}
 
-	default:
-		p.SetError(antlr.NewNoViableAltException(p, nil, nil, nil, nil, nil))
+	case 4:
+		p.EnterOuterAlt(localctx, 4)
+		{
+			p.SetState(187)
+			p.Method_call()
+		}
+
+	case antlr.ATNInvalidAltNumber:
 		goto errorExit
 	}
 
@@ -2744,18 +3426,18 @@ func (s *Table_insertContext) Accept(visitor antlr.ParseTreeVisitor) interface{}
 
 func (p *lua_grammar_antlr4Parser) Table_insert() (localctx ITable_insertContext) {
 	localctx = NewTable_insertContext(p, p.GetParserRuleContext(), p.GetState())
-	p.EnterRule(localctx, 26, lua_grammar_antlr4ParserRULE_table_insert)
+	p.EnterRule(localctx, 30, lua_grammar_antlr4ParserRULE_table_insert)
 	p.EnterOuterAlt(localctx, 1)
 	{
-		p.SetState(141)
-		p.Match(lua_grammar_antlr4ParserT__14)
+		p.SetState(190)
+		p.Match(lua_grammar_antlr4ParserT__21)
 		if p.HasError() {
 			// Recognition error - abort rule
 			goto errorExit
 		}
 	}
 	{
-		p.SetState(142)
+		p.SetState(191)
 		p.Match(lua_grammar_antlr4ParserT__1)
 		if p.HasError() {
 			// Recognition error - abort rule
@@ -2763,23 +3445,23 @@ func (p *lua_grammar_antlr4Parser) Table_insert() (localctx ITable_insertContext
 		}
 	}
 	{
-		p.SetState(143)
+		p.SetState(192)
 		p.Identifier()
 	}
 	{
-		p.SetState(144)
-		p.Match(lua_grammar_antlr4ParserT__13)
+		p.SetState(193)
+		p.Match(lua_grammar_antlr4ParserT__22)
 		if p.HasError() {
 			// Recognition error - abort rule
 			goto errorExit
 		}
 	}
 	{
-		p.SetState(145)
+		p.SetState(194)
 		p.expression(0)
 	}
 	{
-		p.SetState(146)
+		p.SetState(195)
 		p.Match(lua_grammar_antlr4ParserT__2)
 		if p.HasError() {
 			// Recognition error - abort rule
@@ -2947,12 +3629,12 @@ func (s *Function_declarationContext) Accept(visitor antlr.ParseTreeVisitor) int
 
 func (p *lua_grammar_antlr4Parser) Function_declaration() (localctx IFunction_declarationContext) {
 	localctx = NewFunction_declarationContext(p, p.GetParserRuleContext(), p.GetState())
-	p.EnterRule(localctx, 28, lua_grammar_antlr4ParserRULE_function_declaration)
+	p.EnterRule(localctx, 32, lua_grammar_antlr4ParserRULE_function_declaration)
 	var _la int
 
 	p.EnterOuterAlt(localctx, 1)
 	{
-		p.SetState(148)
+		p.SetState(197)
 		p.Match(lua_grammar_antlr4ParserKW_FUNCTION)
 		if p.HasError() {
 			// Recognition error - abort rule
@@ -2960,18 +3642,18 @@ func (p *lua_grammar_antlr4Parser) Function_declaration() (localctx IFunction_de
 		}
 	}
 	{
-		p.SetState(149)
+		p.SetState(198)
 		p.Identifier()
 	}
 	{
-		p.SetState(150)
+		p.SetState(199)
 		p.Match(lua_grammar_antlr4ParserT__1)
 		if p.HasError() {
 			// Recognition error - abort rule
 			goto errorExit
 		}
 	}
-	p.SetState(159)
+	p.SetState(208)
 	p.GetErrorHandler().Sync(p)
 	if p.HasError() {
 		goto errorExit
@@ -2980,31 +3662,31 @@ func (p *lua_grammar_antlr4Parser) Function_declaration() (localctx IFunction_de
 
 	if _la == lua_grammar_antlr4ParserLETTER {
 		{
-			p.SetState(151)
+			p.SetState(200)
 			p.Identifier()
 		}
-		p.SetState(156)
+		p.SetState(205)
 		p.GetErrorHandler().Sync(p)
 		if p.HasError() {
 			goto errorExit
 		}
 		_la = p.GetTokenStream().LA(1)
 
-		for _la == lua_grammar_antlr4ParserT__13 {
+		for _la == lua_grammar_antlr4ParserT__22 {
 			{
-				p.SetState(152)
-				p.Match(lua_grammar_antlr4ParserT__13)
+				p.SetState(201)
+				p.Match(lua_grammar_antlr4ParserT__22)
 				if p.HasError() {
 					// Recognition error - abort rule
 					goto errorExit
 				}
 			}
 			{
-				p.SetState(153)
+				p.SetState(202)
 				p.Identifier()
 			}
 
-			p.SetState(158)
+			p.SetState(207)
 			p.GetErrorHandler().Sync(p)
 			if p.HasError() {
 				goto errorExit
@@ -3014,7 +3696,7 @@ func (p *lua_grammar_antlr4Parser) Function_declaration() (localctx IFunction_de
 
 	}
 	{
-		p.SetState(161)
+		p.SetState(210)
 		p.Match(lua_grammar_antlr4ParserT__2)
 		if p.HasError() {
 			// Recognition error - abort rule
@@ -3022,11 +3704,11 @@ func (p *lua_grammar_antlr4Parser) Function_declaration() (localctx IFunction_de
 		}
 	}
 	{
-		p.SetState(162)
+		p.SetState(211)
 		p.Block()
 	}
 	{
-		p.SetState(163)
+		p.SetState(212)
 		p.Match(lua_grammar_antlr4ParserKW_END)
 		if p.HasError() {
 			// Recognition error - abort rule
@@ -3057,6 +3739,8 @@ type IBlockContext interface {
 	// Getter signatures
 	AllStatement() []IStatementContext
 	Statement(i int) IStatementContext
+	AllStatement_terminator() []IStatement_terminatorContext
+	Statement_terminator(i int) IStatement_terminatorContext
 
 	// IsBlockContext differentiates from other interfaces.
 	IsBlockContext()
@@ -3135,6 +3819,47 @@ func (s *BlockContext) Statement(i int) IStatementContext {
 	return t.(IStatementContext)
 }
 
+func (s *BlockContext) AllStatement_terminator() []IStatement_terminatorContext {
+	children := s.GetChildren()
+	len := 0
+	for _, ctx := range children {
+		if _, ok := ctx.(IStatement_terminatorContext); ok {
+			len++
+		}
+	}
+
+	tst := make([]IStatement_terminatorContext, len)
+	i := 0
+	for _, ctx := range children {
+		if t, ok := ctx.(IStatement_terminatorContext); ok {
+			tst[i] = t.(IStatement_terminatorContext)
+			i++
+		}
+	}
+
+	return tst
+}
+
+func (s *BlockContext) Statement_terminator(i int) IStatement_terminatorContext {
+	var t antlr.RuleContext
+	j := 0
+	for _, ctx := range s.GetChildren() {
+		if _, ok := ctx.(IStatement_terminatorContext); ok {
+			if j == i {
+				t = ctx.(antlr.RuleContext)
+				break
+			}
+			j++
+		}
+	}
+
+	if t == nil {
+		return nil
+	}
+
+	return t.(IStatement_terminatorContext)
+}
+
 func (s *BlockContext) GetRuleContext() antlr.RuleContext {
 	return s
 }
@@ -3167,24 +3892,38 @@ func (s *BlockContext) Accept(visitor antlr.ParseTreeVisitor) interface{} {
 
 func (p *lua_grammar_antlr4Parser) Block() (localctx IBlockContext) {
 	localctx = NewBlockContext(p, p.GetParserRuleContext(), p.GetState())
-	p.EnterRule(localctx, 30, lua_grammar_antlr4ParserRULE_block)
+	p.EnterRule(localctx, 34, lua_grammar_antlr4ParserRULE_block)
 	var _la int
 
 	p.EnterOuterAlt(localctx, 1)
-	p.SetState(166)
+	p.SetState(218)
 	p.GetErrorHandler().Sync(p)
 	if p.HasError() {
 		goto errorExit
 	}
 	_la = p.GetTokenStream().LA(1)
 
-	for ok := true; ok; ok = ((int64(_la) & ^0x3f) == 0 && ((int64(1)<<_la)&8902574119944196) != 0) {
+	for ok := true; ok; ok = ((int64(_la) & ^0x3f) == 0 && ((int64(1)<<_la)&8202880284710928388) != 0) {
 		{
-			p.SetState(165)
+			p.SetState(214)
 			p.Statement()
 		}
+		p.SetState(216)
+		p.GetErrorHandler().Sync(p)
+		if p.HasError() {
+			goto errorExit
+		}
+		_la = p.GetTokenStream().LA(1)
 
-		p.SetState(168)
+		if _la == lua_grammar_antlr4ParserSEPARATOR {
+			{
+				p.SetState(215)
+				p.Statement_terminator()
+			}
+
+		}
+
+		p.SetState(220)
 		p.GetErrorHandler().Sync(p)
 		if p.HasError() {
 			goto errorExit
@@ -3403,12 +4142,12 @@ func (s *If_statementContext) Accept(visitor antlr.ParseTreeVisitor) interface{}
 
 func (p *lua_grammar_antlr4Parser) If_statement() (localctx IIf_statementContext) {
 	localctx = NewIf_statementContext(p, p.GetParserRuleContext(), p.GetState())
-	p.EnterRule(localctx, 32, lua_grammar_antlr4ParserRULE_if_statement)
+	p.EnterRule(localctx, 36, lua_grammar_antlr4ParserRULE_if_statement)
 	var _la int
 
 	p.EnterOuterAlt(localctx, 1)
 	{
-		p.SetState(170)
+		p.SetState(222)
 		p.Match(lua_grammar_antlr4ParserKW_IF)
 		if p.HasError() {
 			// Recognition error - abort rule
@@ -3416,11 +4155,11 @@ func (p *lua_grammar_antlr4Parser) If_statement() (localctx IIf_statementContext
 		}
 	}
 	{
-		p.SetState(171)
+		p.SetState(223)
 		p.expression(0)
 	}
 	{
-		p.SetState(172)
+		p.SetState(224)
 		p.Match(lua_grammar_antlr4ParserKW_THEN)
 		if p.HasError() {
 			// Recognition error - abort rule
@@ -3428,10 +4167,10 @@ func (p *lua_grammar_antlr4Parser) If_statement() (localctx IIf_statementContext
 		}
 	}
 	{
-		p.SetState(173)
+		p.SetState(225)
 		p.Block()
 	}
-	p.SetState(181)
+	p.SetState(233)
 	p.GetErrorHandler().Sync(p)
 	if p.HasError() {
 		goto errorExit
@@ -3440,7 +4179,7 @@ func (p *lua_grammar_antlr4Parser) If_statement() (localctx IIf_statementContext
 
 	for _la == lua_grammar_antlr4ParserKW_ELSEIF {
 		{
-			p.SetState(174)
+			p.SetState(226)
 			p.Match(lua_grammar_antlr4ParserKW_ELSEIF)
 			if p.HasError() {
 				// Recognition error - abort rule
@@ -3448,11 +4187,11 @@ func (p *lua_grammar_antlr4Parser) If_statement() (localctx IIf_statementContext
 			}
 		}
 		{
-			p.SetState(175)
+			p.SetState(227)
 			p.expression(0)
 		}
 		{
-			p.SetState(176)
+			p.SetState(228)
 			p.Match(lua_grammar_antlr4ParserKW_THEN)
 			if p.HasError() {
 				// Recognition error - abort rule
@@ -3460,18 +4199,18 @@ func (p *lua_grammar_antlr4Parser) If_statement() (localctx IIf_statementContext
 			}
 		}
 		{
-			p.SetState(177)
+			p.SetState(229)
 			p.Block()
 		}
 
-		p.SetState(183)
+		p.SetState(235)
 		p.GetErrorHandler().Sync(p)
 		if p.HasError() {
 			goto errorExit
 		}
 		_la = p.GetTokenStream().LA(1)
 	}
-	p.SetState(186)
+	p.SetState(238)
 	p.GetErrorHandler().Sync(p)
 	if p.HasError() {
 		goto errorExit
@@ -3480,7 +4219,7 @@ func (p *lua_grammar_antlr4Parser) If_statement() (localctx IIf_statementContext
 
 	if _la == lua_grammar_antlr4ParserKW_ELSE {
 		{
-			p.SetState(184)
+			p.SetState(236)
 			p.Match(lua_grammar_antlr4ParserKW_ELSE)
 			if p.HasError() {
 				// Recognition error - abort rule
@@ -3488,13 +4227,13 @@ func (p *lua_grammar_antlr4Parser) If_statement() (localctx IIf_statementContext
 			}
 		}
 		{
-			p.SetState(185)
+			p.SetState(237)
 			p.Block()
 		}
 
 	}
 	{
-		p.SetState(188)
+		p.SetState(240)
 		p.Match(lua_grammar_antlr4ParserKW_END)
 		if p.HasError() {
 			// Recognition error - abort rule
@@ -3689,20 +4428,20 @@ func (s *For_statementContext) Accept(visitor antlr.ParseTreeVisitor) interface{
 
 func (p *lua_grammar_antlr4Parser) For_statement() (localctx IFor_statementContext) {
 	localctx = NewFor_statementContext(p, p.GetParserRuleContext(), p.GetState())
-	p.EnterRule(localctx, 34, lua_grammar_antlr4ParserRULE_for_statement)
+	p.EnterRule(localctx, 38, lua_grammar_antlr4ParserRULE_for_statement)
 	var _la int
 
-	p.SetState(212)
+	p.SetState(264)
 	p.GetErrorHandler().Sync(p)
 	if p.HasError() {
 		goto errorExit
 	}
 
-	switch p.GetInterpreter().AdaptivePredict(p.BaseParser, p.GetTokenStream(), 18, p.GetParserRuleContext()) {
+	switch p.GetInterpreter().AdaptivePredict(p.BaseParser, p.GetTokenStream(), 20, p.GetParserRuleContext()) {
 	case 1:
 		p.EnterOuterAlt(localctx, 1)
 		{
-			p.SetState(190)
+			p.SetState(242)
 			p.Match(lua_grammar_antlr4ParserKW_FOR)
 			if p.HasError() {
 				// Recognition error - abort rule
@@ -3710,11 +4449,11 @@ func (p *lua_grammar_antlr4Parser) For_statement() (localctx IFor_statementConte
 			}
 		}
 		{
-			p.SetState(191)
+			p.SetState(243)
 			p.Identifier()
 		}
 		{
-			p.SetState(192)
+			p.SetState(244)
 			p.Match(lua_grammar_antlr4ParserKW_IN)
 			if p.HasError() {
 				// Recognition error - abort rule
@@ -3722,11 +4461,11 @@ func (p *lua_grammar_antlr4Parser) For_statement() (localctx IFor_statementConte
 			}
 		}
 		{
-			p.SetState(193)
+			p.SetState(245)
 			p.expression(0)
 		}
 		{
-			p.SetState(194)
+			p.SetState(246)
 			p.Match(lua_grammar_antlr4ParserKW_DO)
 			if p.HasError() {
 				// Recognition error - abort rule
@@ -3734,11 +4473,11 @@ func (p *lua_grammar_antlr4Parser) For_statement() (localctx IFor_statementConte
 			}
 		}
 		{
-			p.SetState(195)
+			p.SetState(247)
 			p.Block()
 		}
 		{
-			p.SetState(196)
+			p.SetState(248)
 			p.Match(lua_grammar_antlr4ParserKW_END)
 			if p.HasError() {
 				// Recognition error - abort rule
@@ -3749,7 +4488,7 @@ func (p *lua_grammar_antlr4Parser) For_statement() (localctx IFor_statementConte
 	case 2:
 		p.EnterOuterAlt(localctx, 2)
 		{
-			p.SetState(198)
+			p.SetState(250)
 			p.Match(lua_grammar_antlr4ParserKW_FOR)
 			if p.HasError() {
 				// Recognition error - abort rule
@@ -3757,11 +4496,11 @@ func (p *lua_grammar_antlr4Parser) For_statement() (localctx IFor_statementConte
 			}
 		}
 		{
-			p.SetState(199)
+			p.SetState(251)
 			p.Identifier()
 		}
 		{
-			p.SetState(200)
+			p.SetState(252)
 			p.Match(lua_grammar_antlr4ParserT__0)
 			if p.HasError() {
 				// Recognition error - abort rule
@@ -3769,45 +4508,45 @@ func (p *lua_grammar_antlr4Parser) For_statement() (localctx IFor_statementConte
 			}
 		}
 		{
-			p.SetState(201)
+			p.SetState(253)
 			p.expression(0)
 		}
 		{
-			p.SetState(202)
-			p.Match(lua_grammar_antlr4ParserT__13)
+			p.SetState(254)
+			p.Match(lua_grammar_antlr4ParserT__22)
 			if p.HasError() {
 				// Recognition error - abort rule
 				goto errorExit
 			}
 		}
 		{
-			p.SetState(203)
+			p.SetState(255)
 			p.expression(0)
 		}
-		p.SetState(206)
+		p.SetState(258)
 		p.GetErrorHandler().Sync(p)
 		if p.HasError() {
 			goto errorExit
 		}
 		_la = p.GetTokenStream().LA(1)
 
-		if _la == lua_grammar_antlr4ParserT__13 {
+		if _la == lua_grammar_antlr4ParserT__22 {
 			{
-				p.SetState(204)
-				p.Match(lua_grammar_antlr4ParserT__13)
+				p.SetState(256)
+				p.Match(lua_grammar_antlr4ParserT__22)
 				if p.HasError() {
 					// Recognition error - abort rule
 					goto errorExit
 				}
 			}
 			{
-				p.SetState(205)
+				p.SetState(257)
 				p.expression(0)
 			}
 
 		}
 		{
-			p.SetState(208)
+			p.SetState(260)
 			p.Match(lua_grammar_antlr4ParserKW_DO)
 			if p.HasError() {
 				// Recognition error - abort rule
@@ -3815,11 +4554,11 @@ func (p *lua_grammar_antlr4Parser) For_statement() (localctx IFor_statementConte
 			}
 		}
 		{
-			p.SetState(209)
+			p.SetState(261)
 			p.Block()
 		}
 		{
-			p.SetState(210)
+			p.SetState(262)
 			p.Match(lua_grammar_antlr4ParserKW_END)
 			if p.HasError() {
 				// Recognition error - abort rule
@@ -3970,10 +4709,10 @@ func (s *While_statementContext) Accept(visitor antlr.ParseTreeVisitor) interfac
 
 func (p *lua_grammar_antlr4Parser) While_statement() (localctx IWhile_statementContext) {
 	localctx = NewWhile_statementContext(p, p.GetParserRuleContext(), p.GetState())
-	p.EnterRule(localctx, 36, lua_grammar_antlr4ParserRULE_while_statement)
+	p.EnterRule(localctx, 40, lua_grammar_antlr4ParserRULE_while_statement)
 	p.EnterOuterAlt(localctx, 1)
 	{
-		p.SetState(214)
+		p.SetState(266)
 		p.Match(lua_grammar_antlr4ParserKW_WHILE)
 		if p.HasError() {
 			// Recognition error - abort rule
@@ -3981,11 +4720,11 @@ func (p *lua_grammar_antlr4Parser) While_statement() (localctx IWhile_statementC
 		}
 	}
 	{
-		p.SetState(215)
+		p.SetState(267)
 		p.expression(0)
 	}
 	{
-		p.SetState(216)
+		p.SetState(268)
 		p.Match(lua_grammar_antlr4ParserKW_DO)
 		if p.HasError() {
 			// Recognition error - abort rule
@@ -3993,11 +4732,11 @@ func (p *lua_grammar_antlr4Parser) While_statement() (localctx IWhile_statementC
 		}
 	}
 	{
-		p.SetState(217)
+		p.SetState(269)
 		p.Block()
 	}
 	{
-		p.SetState(218)
+		p.SetState(270)
 		p.Match(lua_grammar_antlr4ParserKW_END)
 		if p.HasError() {
 			// Recognition error - abort rule
@@ -4028,6 +4767,7 @@ type ITableContext interface {
 	// Getter signatures
 	AllField() []IFieldContext
 	Field(i int) IFieldContext
+	Metatable_field() IMetatable_fieldContext
 
 	// IsTableContext differentiates from other interfaces.
 	IsTableContext()
@@ -4106,6 +4846,22 @@ func (s *TableContext) Field(i int) IFieldContext {
 	return t.(IFieldContext)
 }
 
+func (s *TableContext) Metatable_field() IMetatable_fieldContext {
+	var t antlr.RuleContext
+	for _, ctx := range s.GetChildren() {
+		if _, ok := ctx.(IMetatable_fieldContext); ok {
+			t = ctx.(antlr.RuleContext)
+			break
+		}
+	}
+
+	if t == nil {
+		return nil
+	}
+
+	return t.(IMetatable_fieldContext)
+}
+
 func (s *TableContext) GetRuleContext() antlr.RuleContext {
 	return s
 }
@@ -4138,63 +4894,103 @@ func (s *TableContext) Accept(visitor antlr.ParseTreeVisitor) interface{} {
 
 func (p *lua_grammar_antlr4Parser) Table() (localctx ITableContext) {
 	localctx = NewTableContext(p, p.GetParserRuleContext(), p.GetState())
-	p.EnterRule(localctx, 38, lua_grammar_antlr4ParserRULE_table)
+	p.EnterRule(localctx, 42, lua_grammar_antlr4ParserRULE_table)
 	var _la int
+
+	var _alt int
 
 	p.EnterOuterAlt(localctx, 1)
 	{
-		p.SetState(220)
-		p.Match(lua_grammar_antlr4ParserT__15)
+		p.SetState(272)
+		p.Match(lua_grammar_antlr4ParserT__23)
 		if p.HasError() {
 			// Recognition error - abort rule
 			goto errorExit
 		}
 	}
-	p.SetState(229)
+	p.SetState(286)
 	p.GetErrorHandler().Sync(p)
 	if p.HasError() {
 		goto errorExit
 	}
-	_la = p.GetTokenStream().LA(1)
 
-	if (int64(_la) & ^0x3f) == 0 && ((int64(1)<<_la)&7917068104073220) != 0 {
+	switch p.GetTokenStream().LA(1) {
+	case lua_grammar_antlr4ParserT__1, lua_grammar_antlr4ParserT__21, lua_grammar_antlr4ParserT__23, lua_grammar_antlr4ParserKW_PRINT, lua_grammar_antlr4ParserKW_FALSE, lua_grammar_antlr4ParserKW_NIL, lua_grammar_antlr4ParserKW_TRUE, lua_grammar_antlr4ParserKW_FUNCTION, lua_grammar_antlr4ParserNUMBER, lua_grammar_antlr4ParserSTRING, lua_grammar_antlr4ParserLETTER:
 		{
-			p.SetState(221)
+			p.SetState(273)
 			p.Field()
 		}
-		p.SetState(226)
+		p.SetState(278)
+		p.GetErrorHandler().Sync(p)
+		if p.HasError() {
+			goto errorExit
+		}
+		_alt = p.GetInterpreter().AdaptivePredict(p.BaseParser, p.GetTokenStream(), 21, p.GetParserRuleContext())
+		if p.HasError() {
+			goto errorExit
+		}
+		for _alt != 2 && _alt != antlr.ATNInvalidAltNumber {
+			if _alt == 1 {
+				{
+					p.SetState(274)
+					p.Match(lua_grammar_antlr4ParserT__22)
+					if p.HasError() {
+						// Recognition error - abort rule
+						goto errorExit
+					}
+				}
+				{
+					p.SetState(275)
+					p.Field()
+				}
+
+			}
+			p.SetState(280)
+			p.GetErrorHandler().Sync(p)
+			if p.HasError() {
+				goto errorExit
+			}
+			_alt = p.GetInterpreter().AdaptivePredict(p.BaseParser, p.GetTokenStream(), 21, p.GetParserRuleContext())
+			if p.HasError() {
+				goto errorExit
+			}
+		}
+		p.SetState(283)
 		p.GetErrorHandler().Sync(p)
 		if p.HasError() {
 			goto errorExit
 		}
 		_la = p.GetTokenStream().LA(1)
 
-		for _la == lua_grammar_antlr4ParserT__13 {
+		if _la == lua_grammar_antlr4ParserT__22 {
 			{
-				p.SetState(222)
-				p.Match(lua_grammar_antlr4ParserT__13)
+				p.SetState(281)
+				p.Match(lua_grammar_antlr4ParserT__22)
 				if p.HasError() {
 					// Recognition error - abort rule
 					goto errorExit
 				}
 			}
 			{
-				p.SetState(223)
-				p.Field()
+				p.SetState(282)
+				p.Metatable_field()
 			}
 
-			p.SetState(228)
-			p.GetErrorHandler().Sync(p)
-			if p.HasError() {
-				goto errorExit
-			}
-			_la = p.GetTokenStream().LA(1)
 		}
 
+	case lua_grammar_antlr4ParserT__31:
+		{
+			p.SetState(285)
+			p.Metatable_field()
+		}
+
+	default:
+		p.SetError(antlr.NewNoViableAltException(p, nil, nil, nil, nil, nil))
+		goto errorExit
 	}
 	{
-		p.SetState(231)
-		p.Match(lua_grammar_antlr4ParserT__16)
+		p.SetState(288)
+		p.Match(lua_grammar_antlr4ParserT__24)
 		if p.HasError() {
 			// Recognition error - abort rule
 			goto errorExit
@@ -4325,22 +5121,22 @@ func (s *FieldContext) Accept(visitor antlr.ParseTreeVisitor) interface{} {
 
 func (p *lua_grammar_antlr4Parser) Field() (localctx IFieldContext) {
 	localctx = NewFieldContext(p, p.GetParserRuleContext(), p.GetState())
-	p.EnterRule(localctx, 40, lua_grammar_antlr4ParserRULE_field)
-	p.SetState(238)
+	p.EnterRule(localctx, 44, lua_grammar_antlr4ParserRULE_field)
+	p.SetState(295)
 	p.GetErrorHandler().Sync(p)
 	if p.HasError() {
 		goto errorExit
 	}
 
-	switch p.GetInterpreter().AdaptivePredict(p.BaseParser, p.GetTokenStream(), 21, p.GetParserRuleContext()) {
+	switch p.GetInterpreter().AdaptivePredict(p.BaseParser, p.GetTokenStream(), 24, p.GetParserRuleContext()) {
 	case 1:
 		p.EnterOuterAlt(localctx, 1)
 		{
-			p.SetState(233)
+			p.SetState(290)
 			p.Identifier()
 		}
 		{
-			p.SetState(234)
+			p.SetState(291)
 			p.Match(lua_grammar_antlr4ParserT__0)
 			if p.HasError() {
 				// Recognition error - abort rule
@@ -4348,14 +5144,14 @@ func (p *lua_grammar_antlr4Parser) Field() (localctx IFieldContext) {
 			}
 		}
 		{
-			p.SetState(235)
+			p.SetState(292)
 			p.expression(0)
 		}
 
 	case 2:
 		p.EnterOuterAlt(localctx, 2)
 		{
-			p.SetState(237)
+			p.SetState(294)
 			p.expression(0)
 		}
 
@@ -4384,7 +5180,8 @@ type ITable_accessContext interface {
 	GetParser() antlr.Parser
 
 	// Getter signatures
-	Identifier() IIdentifierContext
+	AllIdentifier() []IIdentifierContext
+	Identifier(i int) IIdentifierContext
 	Expression() IExpressionContext
 
 	// IsTable_accessContext differentiates from other interfaces.
@@ -4423,12 +5220,37 @@ func NewTable_accessContext(parser antlr.Parser, parent antlr.ParserRuleContext,
 
 func (s *Table_accessContext) GetParser() antlr.Parser { return s.parser }
 
-func (s *Table_accessContext) Identifier() IIdentifierContext {
+func (s *Table_accessContext) AllIdentifier() []IIdentifierContext {
+	children := s.GetChildren()
+	len := 0
+	for _, ctx := range children {
+		if _, ok := ctx.(IIdentifierContext); ok {
+			len++
+		}
+	}
+
+	tst := make([]IIdentifierContext, len)
+	i := 0
+	for _, ctx := range children {
+		if t, ok := ctx.(IIdentifierContext); ok {
+			tst[i] = t.(IIdentifierContext)
+			i++
+		}
+	}
+
+	return tst
+}
+
+func (s *Table_accessContext) Identifier(i int) IIdentifierContext {
 	var t antlr.RuleContext
+	j := 0
 	for _, ctx := range s.GetChildren() {
 		if _, ok := ctx.(IIdentifierContext); ok {
-			t = ctx.(antlr.RuleContext)
-			break
+			if j == i {
+				t = ctx.(antlr.RuleContext)
+				break
+			}
+			j++
 		}
 	}
 
@@ -4487,174 +5309,62 @@ func (s *Table_accessContext) Accept(visitor antlr.ParseTreeVisitor) interface{}
 
 func (p *lua_grammar_antlr4Parser) Table_access() (localctx ITable_accessContext) {
 	localctx = NewTable_accessContext(p, p.GetParserRuleContext(), p.GetState())
-	p.EnterRule(localctx, 42, lua_grammar_antlr4ParserRULE_table_access)
-	p.EnterOuterAlt(localctx, 1)
-	{
-		p.SetState(240)
-		p.Identifier()
-	}
-	{
-		p.SetState(241)
-		p.Match(lua_grammar_antlr4ParserT__17)
-		if p.HasError() {
-			// Recognition error - abort rule
-			goto errorExit
-		}
-	}
-	{
-		p.SetState(242)
-		p.expression(0)
-	}
-	{
-		p.SetState(243)
-		p.Match(lua_grammar_antlr4ParserT__18)
-		if p.HasError() {
-			// Recognition error - abort rule
-			goto errorExit
-		}
-	}
-
-errorExit:
-	if p.HasError() {
-		v := p.GetError()
-		localctx.SetException(v)
-		p.GetErrorHandler().ReportError(p, v)
-		p.GetErrorHandler().Recover(p, v)
-		p.SetError(nil)
-	}
-	p.ExitRule()
-	return localctx
-	goto errorExit // Trick to prevent compiler error if the label is not used
-}
-
-// IMulti_line_commentContext is an interface to support dynamic dispatch.
-type IMulti_line_commentContext interface {
-	antlr.ParserRuleContext
-
-	// GetParser returns the parser.
-	GetParser() antlr.Parser
-	// IsMulti_line_commentContext differentiates from other interfaces.
-	IsMulti_line_commentContext()
-}
-
-type Multi_line_commentContext struct {
-	antlr.BaseParserRuleContext
-	parser antlr.Parser
-}
-
-func NewEmptyMulti_line_commentContext() *Multi_line_commentContext {
-	var p = new(Multi_line_commentContext)
-	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
-	p.RuleIndex = lua_grammar_antlr4ParserRULE_multi_line_comment
-	return p
-}
-
-func InitEmptyMulti_line_commentContext(p *Multi_line_commentContext) {
-	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
-	p.RuleIndex = lua_grammar_antlr4ParserRULE_multi_line_comment
-}
-
-func (*Multi_line_commentContext) IsMulti_line_commentContext() {}
-
-func NewMulti_line_commentContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *Multi_line_commentContext {
-	var p = new(Multi_line_commentContext)
-
-	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, parent, invokingState)
-
-	p.parser = parser
-	p.RuleIndex = lua_grammar_antlr4ParserRULE_multi_line_comment
-
-	return p
-}
-
-func (s *Multi_line_commentContext) GetParser() antlr.Parser { return s.parser }
-func (s *Multi_line_commentContext) GetRuleContext() antlr.RuleContext {
-	return s
-}
-
-func (s *Multi_line_commentContext) ToStringTree(ruleNames []string, recog antlr.Recognizer) string {
-	return antlr.TreesStringTree(s, ruleNames, recog)
-}
-
-func (s *Multi_line_commentContext) EnterRule(listener antlr.ParseTreeListener) {
-	if listenerT, ok := listener.(lua_grammar_antlr4Listener); ok {
-		listenerT.EnterMulti_line_comment(s)
-	}
-}
-
-func (s *Multi_line_commentContext) ExitRule(listener antlr.ParseTreeListener) {
-	if listenerT, ok := listener.(lua_grammar_antlr4Listener); ok {
-		listenerT.ExitMulti_line_comment(s)
-	}
-}
-
-func (s *Multi_line_commentContext) Accept(visitor antlr.ParseTreeVisitor) interface{} {
-	switch t := visitor.(type) {
-	case lua_grammar_antlr4Visitor:
-		return t.VisitMulti_line_comment(s)
-
-	default:
-		return t.VisitChildren(s)
-	}
-}
-
-func (p *lua_grammar_antlr4Parser) Multi_line_comment() (localctx IMulti_line_commentContext) {
-	localctx = NewMulti_line_commentContext(p, p.GetParserRuleContext(), p.GetState())
-	p.EnterRule(localctx, 44, lua_grammar_antlr4ParserRULE_multi_line_comment)
-	var _la int
-
-	var _alt int
-
-	p.EnterOuterAlt(localctx, 1)
-	{
-		p.SetState(245)
-		p.Match(lua_grammar_antlr4ParserT__19)
-		if p.HasError() {
-			// Recognition error - abort rule
-			goto errorExit
-		}
-	}
-	p.SetState(249)
+	p.EnterRule(localctx, 46, lua_grammar_antlr4ParserRULE_table_access)
+	p.SetState(306)
 	p.GetErrorHandler().Sync(p)
 	if p.HasError() {
 		goto errorExit
 	}
-	_alt = p.GetInterpreter().AdaptivePredict(p.BaseParser, p.GetTokenStream(), 22, p.GetParserRuleContext())
-	if p.HasError() {
-		goto errorExit
-	}
-	for _alt != 2 && _alt != antlr.ATNInvalidAltNumber {
-		if _alt == 1 {
-			{
-				p.SetState(246)
-				_la = p.GetTokenStream().LA(1)
 
-				if _la <= 0 || _la == lua_grammar_antlr4ParserT__20 {
-					p.GetErrorHandler().RecoverInline(p)
-				} else {
-					p.GetErrorHandler().ReportMatch(p)
-					p.Consume()
-				}
+	switch p.GetInterpreter().AdaptivePredict(p.BaseParser, p.GetTokenStream(), 25, p.GetParserRuleContext()) {
+	case 1:
+		p.EnterOuterAlt(localctx, 1)
+		{
+			p.SetState(297)
+			p.Identifier()
+		}
+		{
+			p.SetState(298)
+			p.Match(lua_grammar_antlr4ParserT__25)
+			if p.HasError() {
+				// Recognition error - abort rule
+				goto errorExit
 			}
+		}
+		{
+			p.SetState(299)
+			p.expression(0)
+		}
+		{
+			p.SetState(300)
+			p.Match(lua_grammar_antlr4ParserT__26)
+			if p.HasError() {
+				// Recognition error - abort rule
+				goto errorExit
+			}
+		}
 
+	case 2:
+		p.EnterOuterAlt(localctx, 2)
+		{
+			p.SetState(302)
+			p.Identifier()
 		}
-		p.SetState(251)
-		p.GetErrorHandler().Sync(p)
-		if p.HasError() {
-			goto errorExit
+		{
+			p.SetState(303)
+			p.Match(lua_grammar_antlr4ParserT__27)
+			if p.HasError() {
+				// Recognition error - abort rule
+				goto errorExit
+			}
 		}
-		_alt = p.GetInterpreter().AdaptivePredict(p.BaseParser, p.GetTokenStream(), 22, p.GetParserRuleContext())
-		if p.HasError() {
-			goto errorExit
+		{
+			p.SetState(304)
+			p.Identifier()
 		}
-	}
-	{
-		p.SetState(252)
-		p.Match(lua_grammar_antlr4ParserT__21)
-		if p.HasError() {
-			// Recognition error - abort rule
-			goto errorExit
-		}
+
+	case antlr.ATNInvalidAltNumber:
+		goto errorExit
 	}
 
 errorExit:
@@ -4743,11 +5453,11 @@ func (s *Single_line_commentContext) Accept(visitor antlr.ParseTreeVisitor) inte
 
 func (p *lua_grammar_antlr4Parser) Single_line_comment() (localctx ISingle_line_commentContext) {
 	localctx = NewSingle_line_commentContext(p, p.GetParserRuleContext(), p.GetState())
-	p.EnterRule(localctx, 46, lua_grammar_antlr4ParserRULE_single_line_comment)
+	p.EnterRule(localctx, 48, lua_grammar_antlr4ParserRULE_single_line_comment)
 	p.EnterOuterAlt(localctx, 1)
 	{
-		p.SetState(254)
-		p.Match(lua_grammar_antlr4ParserT__22)
+		p.SetState(308)
+		p.Match(lua_grammar_antlr4ParserT__28)
 		if p.HasError() {
 			// Recognition error - abort rule
 			goto errorExit
@@ -4866,10 +5576,10 @@ func (s *Print_statementContext) Accept(visitor antlr.ParseTreeVisitor) interfac
 
 func (p *lua_grammar_antlr4Parser) Print_statement() (localctx IPrint_statementContext) {
 	localctx = NewPrint_statementContext(p, p.GetParserRuleContext(), p.GetState())
-	p.EnterRule(localctx, 48, lua_grammar_antlr4ParserRULE_print_statement)
+	p.EnterRule(localctx, 50, lua_grammar_antlr4ParserRULE_print_statement)
 	p.EnterOuterAlt(localctx, 1)
 	{
-		p.SetState(256)
+		p.SetState(310)
 		p.Match(lua_grammar_antlr4ParserKW_PRINT)
 		if p.HasError() {
 			// Recognition error - abort rule
@@ -4877,7 +5587,7 @@ func (p *lua_grammar_antlr4Parser) Print_statement() (localctx IPrint_statementC
 		}
 	}
 	{
-		p.SetState(257)
+		p.SetState(311)
 		p.Match(lua_grammar_antlr4ParserT__1)
 		if p.HasError() {
 			// Recognition error - abort rule
@@ -4885,11 +5595,11 @@ func (p *lua_grammar_antlr4Parser) Print_statement() (localctx IPrint_statementC
 		}
 	}
 	{
-		p.SetState(258)
+		p.SetState(312)
 		p.expression(0)
 	}
 	{
-		p.SetState(259)
+		p.SetState(313)
 		p.Match(lua_grammar_antlr4ParserT__2)
 		if p.HasError() {
 			// Recognition error - abort rule
@@ -5007,36 +5717,36 @@ func (s *IdentifierContext) Accept(visitor antlr.ParseTreeVisitor) interface{} {
 
 func (p *lua_grammar_antlr4Parser) Identifier() (localctx IIdentifierContext) {
 	localctx = NewIdentifierContext(p, p.GetParserRuleContext(), p.GetState())
-	p.EnterRule(localctx, 50, lua_grammar_antlr4ParserRULE_identifier)
+	p.EnterRule(localctx, 52, lua_grammar_antlr4ParserRULE_identifier)
 	var _la int
 
 	var _alt int
 
 	p.EnterOuterAlt(localctx, 1)
 	{
-		p.SetState(261)
+		p.SetState(315)
 		p.Match(lua_grammar_antlr4ParserLETTER)
 		if p.HasError() {
 			// Recognition error - abort rule
 			goto errorExit
 		}
 	}
-	p.SetState(265)
+	p.SetState(319)
 	p.GetErrorHandler().Sync(p)
 	if p.HasError() {
 		goto errorExit
 	}
-	_alt = p.GetInterpreter().AdaptivePredict(p.BaseParser, p.GetTokenStream(), 23, p.GetParserRuleContext())
+	_alt = p.GetInterpreter().AdaptivePredict(p.BaseParser, p.GetTokenStream(), 26, p.GetParserRuleContext())
 	if p.HasError() {
 		goto errorExit
 	}
 	for _alt != 2 && _alt != antlr.ATNInvalidAltNumber {
 		if _alt == 1 {
 			{
-				p.SetState(262)
+				p.SetState(316)
 				_la = p.GetTokenStream().LA(1)
 
-				if !((int64(_la) & ^0x3f) == 0 && ((int64(1)<<_la)&13510798898888704) != 0) {
+				if !((int64(_la) & ^0x3f) == 0 && ((int64(1)<<_la)&-4611686017353646080) != 0) {
 					p.GetErrorHandler().RecoverInline(p)
 				} else {
 					p.GetErrorHandler().ReportMatch(p)
@@ -5045,15 +5755,1820 @@ func (p *lua_grammar_antlr4Parser) Identifier() (localctx IIdentifierContext) {
 			}
 
 		}
-		p.SetState(267)
+		p.SetState(321)
 		p.GetErrorHandler().Sync(p)
 		if p.HasError() {
 			goto errorExit
 		}
-		_alt = p.GetInterpreter().AdaptivePredict(p.BaseParser, p.GetTokenStream(), 23, p.GetParserRuleContext())
+		_alt = p.GetInterpreter().AdaptivePredict(p.BaseParser, p.GetTokenStream(), 26, p.GetParserRuleContext())
 		if p.HasError() {
 			goto errorExit
 		}
+	}
+
+errorExit:
+	if p.HasError() {
+		v := p.GetError()
+		localctx.SetException(v)
+		p.GetErrorHandler().ReportError(p, v)
+		p.GetErrorHandler().Recover(p, v)
+		p.SetError(nil)
+	}
+	p.ExitRule()
+	return localctx
+	goto errorExit // Trick to prevent compiler error if the label is not used
+}
+
+// IRepeat_statementContext is an interface to support dynamic dispatch.
+type IRepeat_statementContext interface {
+	antlr.ParserRuleContext
+
+	// GetParser returns the parser.
+	GetParser() antlr.Parser
+
+	// Getter signatures
+	KW_REPEAT() antlr.TerminalNode
+	Block() IBlockContext
+	KW_UNTIL() antlr.TerminalNode
+	Expression() IExpressionContext
+	Statement_terminator() IStatement_terminatorContext
+
+	// IsRepeat_statementContext differentiates from other interfaces.
+	IsRepeat_statementContext()
+}
+
+type Repeat_statementContext struct {
+	antlr.BaseParserRuleContext
+	parser antlr.Parser
+}
+
+func NewEmptyRepeat_statementContext() *Repeat_statementContext {
+	var p = new(Repeat_statementContext)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
+	p.RuleIndex = lua_grammar_antlr4ParserRULE_repeat_statement
+	return p
+}
+
+func InitEmptyRepeat_statementContext(p *Repeat_statementContext) {
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
+	p.RuleIndex = lua_grammar_antlr4ParserRULE_repeat_statement
+}
+
+func (*Repeat_statementContext) IsRepeat_statementContext() {}
+
+func NewRepeat_statementContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *Repeat_statementContext {
+	var p = new(Repeat_statementContext)
+
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, parent, invokingState)
+
+	p.parser = parser
+	p.RuleIndex = lua_grammar_antlr4ParserRULE_repeat_statement
+
+	return p
+}
+
+func (s *Repeat_statementContext) GetParser() antlr.Parser { return s.parser }
+
+func (s *Repeat_statementContext) KW_REPEAT() antlr.TerminalNode {
+	return s.GetToken(lua_grammar_antlr4ParserKW_REPEAT, 0)
+}
+
+func (s *Repeat_statementContext) Block() IBlockContext {
+	var t antlr.RuleContext
+	for _, ctx := range s.GetChildren() {
+		if _, ok := ctx.(IBlockContext); ok {
+			t = ctx.(antlr.RuleContext)
+			break
+		}
+	}
+
+	if t == nil {
+		return nil
+	}
+
+	return t.(IBlockContext)
+}
+
+func (s *Repeat_statementContext) KW_UNTIL() antlr.TerminalNode {
+	return s.GetToken(lua_grammar_antlr4ParserKW_UNTIL, 0)
+}
+
+func (s *Repeat_statementContext) Expression() IExpressionContext {
+	var t antlr.RuleContext
+	for _, ctx := range s.GetChildren() {
+		if _, ok := ctx.(IExpressionContext); ok {
+			t = ctx.(antlr.RuleContext)
+			break
+		}
+	}
+
+	if t == nil {
+		return nil
+	}
+
+	return t.(IExpressionContext)
+}
+
+func (s *Repeat_statementContext) Statement_terminator() IStatement_terminatorContext {
+	var t antlr.RuleContext
+	for _, ctx := range s.GetChildren() {
+		if _, ok := ctx.(IStatement_terminatorContext); ok {
+			t = ctx.(antlr.RuleContext)
+			break
+		}
+	}
+
+	if t == nil {
+		return nil
+	}
+
+	return t.(IStatement_terminatorContext)
+}
+
+func (s *Repeat_statementContext) GetRuleContext() antlr.RuleContext {
+	return s
+}
+
+func (s *Repeat_statementContext) ToStringTree(ruleNames []string, recog antlr.Recognizer) string {
+	return antlr.TreesStringTree(s, ruleNames, recog)
+}
+
+func (s *Repeat_statementContext) EnterRule(listener antlr.ParseTreeListener) {
+	if listenerT, ok := listener.(lua_grammar_antlr4Listener); ok {
+		listenerT.EnterRepeat_statement(s)
+	}
+}
+
+func (s *Repeat_statementContext) ExitRule(listener antlr.ParseTreeListener) {
+	if listenerT, ok := listener.(lua_grammar_antlr4Listener); ok {
+		listenerT.ExitRepeat_statement(s)
+	}
+}
+
+func (s *Repeat_statementContext) Accept(visitor antlr.ParseTreeVisitor) interface{} {
+	switch t := visitor.(type) {
+	case lua_grammar_antlr4Visitor:
+		return t.VisitRepeat_statement(s)
+
+	default:
+		return t.VisitChildren(s)
+	}
+}
+
+func (p *lua_grammar_antlr4Parser) Repeat_statement() (localctx IRepeat_statementContext) {
+	localctx = NewRepeat_statementContext(p, p.GetParserRuleContext(), p.GetState())
+	p.EnterRule(localctx, 54, lua_grammar_antlr4ParserRULE_repeat_statement)
+	p.EnterOuterAlt(localctx, 1)
+	{
+		p.SetState(322)
+		p.Match(lua_grammar_antlr4ParserKW_REPEAT)
+		if p.HasError() {
+			// Recognition error - abort rule
+			goto errorExit
+		}
+	}
+	{
+		p.SetState(323)
+		p.Block()
+	}
+	{
+		p.SetState(324)
+		p.Match(lua_grammar_antlr4ParserKW_UNTIL)
+		if p.HasError() {
+			// Recognition error - abort rule
+			goto errorExit
+		}
+	}
+	{
+		p.SetState(325)
+		p.expression(0)
+	}
+	p.SetState(327)
+	p.GetErrorHandler().Sync(p)
+
+	if p.GetInterpreter().AdaptivePredict(p.BaseParser, p.GetTokenStream(), 27, p.GetParserRuleContext()) == 1 {
+		{
+			p.SetState(326)
+			p.Statement_terminator()
+		}
+
+	} else if p.HasError() { // JIM
+		goto errorExit
+	}
+
+errorExit:
+	if p.HasError() {
+		v := p.GetError()
+		localctx.SetException(v)
+		p.GetErrorHandler().ReportError(p, v)
+		p.GetErrorHandler().Recover(p, v)
+		p.SetError(nil)
+	}
+	p.ExitRule()
+	return localctx
+	goto errorExit // Trick to prevent compiler error if the label is not used
+}
+
+// IIdentifier_listContext is an interface to support dynamic dispatch.
+type IIdentifier_listContext interface {
+	antlr.ParserRuleContext
+
+	// GetParser returns the parser.
+	GetParser() antlr.Parser
+
+	// Getter signatures
+	AllIdentifier() []IIdentifierContext
+	Identifier(i int) IIdentifierContext
+
+	// IsIdentifier_listContext differentiates from other interfaces.
+	IsIdentifier_listContext()
+}
+
+type Identifier_listContext struct {
+	antlr.BaseParserRuleContext
+	parser antlr.Parser
+}
+
+func NewEmptyIdentifier_listContext() *Identifier_listContext {
+	var p = new(Identifier_listContext)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
+	p.RuleIndex = lua_grammar_antlr4ParserRULE_identifier_list
+	return p
+}
+
+func InitEmptyIdentifier_listContext(p *Identifier_listContext) {
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
+	p.RuleIndex = lua_grammar_antlr4ParserRULE_identifier_list
+}
+
+func (*Identifier_listContext) IsIdentifier_listContext() {}
+
+func NewIdentifier_listContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *Identifier_listContext {
+	var p = new(Identifier_listContext)
+
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, parent, invokingState)
+
+	p.parser = parser
+	p.RuleIndex = lua_grammar_antlr4ParserRULE_identifier_list
+
+	return p
+}
+
+func (s *Identifier_listContext) GetParser() antlr.Parser { return s.parser }
+
+func (s *Identifier_listContext) AllIdentifier() []IIdentifierContext {
+	children := s.GetChildren()
+	len := 0
+	for _, ctx := range children {
+		if _, ok := ctx.(IIdentifierContext); ok {
+			len++
+		}
+	}
+
+	tst := make([]IIdentifierContext, len)
+	i := 0
+	for _, ctx := range children {
+		if t, ok := ctx.(IIdentifierContext); ok {
+			tst[i] = t.(IIdentifierContext)
+			i++
+		}
+	}
+
+	return tst
+}
+
+func (s *Identifier_listContext) Identifier(i int) IIdentifierContext {
+	var t antlr.RuleContext
+	j := 0
+	for _, ctx := range s.GetChildren() {
+		if _, ok := ctx.(IIdentifierContext); ok {
+			if j == i {
+				t = ctx.(antlr.RuleContext)
+				break
+			}
+			j++
+		}
+	}
+
+	if t == nil {
+		return nil
+	}
+
+	return t.(IIdentifierContext)
+}
+
+func (s *Identifier_listContext) GetRuleContext() antlr.RuleContext {
+	return s
+}
+
+func (s *Identifier_listContext) ToStringTree(ruleNames []string, recog antlr.Recognizer) string {
+	return antlr.TreesStringTree(s, ruleNames, recog)
+}
+
+func (s *Identifier_listContext) EnterRule(listener antlr.ParseTreeListener) {
+	if listenerT, ok := listener.(lua_grammar_antlr4Listener); ok {
+		listenerT.EnterIdentifier_list(s)
+	}
+}
+
+func (s *Identifier_listContext) ExitRule(listener antlr.ParseTreeListener) {
+	if listenerT, ok := listener.(lua_grammar_antlr4Listener); ok {
+		listenerT.ExitIdentifier_list(s)
+	}
+}
+
+func (s *Identifier_listContext) Accept(visitor antlr.ParseTreeVisitor) interface{} {
+	switch t := visitor.(type) {
+	case lua_grammar_antlr4Visitor:
+		return t.VisitIdentifier_list(s)
+
+	default:
+		return t.VisitChildren(s)
+	}
+}
+
+func (p *lua_grammar_antlr4Parser) Identifier_list() (localctx IIdentifier_listContext) {
+	localctx = NewIdentifier_listContext(p, p.GetParserRuleContext(), p.GetState())
+	p.EnterRule(localctx, 56, lua_grammar_antlr4ParserRULE_identifier_list)
+	var _la int
+
+	p.EnterOuterAlt(localctx, 1)
+	{
+		p.SetState(329)
+		p.Identifier()
+	}
+	p.SetState(334)
+	p.GetErrorHandler().Sync(p)
+	if p.HasError() {
+		goto errorExit
+	}
+	_la = p.GetTokenStream().LA(1)
+
+	for _la == lua_grammar_antlr4ParserT__22 {
+		{
+			p.SetState(330)
+			p.Match(lua_grammar_antlr4ParserT__22)
+			if p.HasError() {
+				// Recognition error - abort rule
+				goto errorExit
+			}
+		}
+		{
+			p.SetState(331)
+			p.Identifier()
+		}
+
+		p.SetState(336)
+		p.GetErrorHandler().Sync(p)
+		if p.HasError() {
+			goto errorExit
+		}
+		_la = p.GetTokenStream().LA(1)
+	}
+
+errorExit:
+	if p.HasError() {
+		v := p.GetError()
+		localctx.SetException(v)
+		p.GetErrorHandler().ReportError(p, v)
+		p.GetErrorHandler().Recover(p, v)
+		p.SetError(nil)
+	}
+	p.ExitRule()
+	return localctx
+	goto errorExit // Trick to prevent compiler error if the label is not used
+}
+
+// IExpression_listContext is an interface to support dynamic dispatch.
+type IExpression_listContext interface {
+	antlr.ParserRuleContext
+
+	// GetParser returns the parser.
+	GetParser() antlr.Parser
+
+	// Getter signatures
+	AllExpression() []IExpressionContext
+	Expression(i int) IExpressionContext
+
+	// IsExpression_listContext differentiates from other interfaces.
+	IsExpression_listContext()
+}
+
+type Expression_listContext struct {
+	antlr.BaseParserRuleContext
+	parser antlr.Parser
+}
+
+func NewEmptyExpression_listContext() *Expression_listContext {
+	var p = new(Expression_listContext)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
+	p.RuleIndex = lua_grammar_antlr4ParserRULE_expression_list
+	return p
+}
+
+func InitEmptyExpression_listContext(p *Expression_listContext) {
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
+	p.RuleIndex = lua_grammar_antlr4ParserRULE_expression_list
+}
+
+func (*Expression_listContext) IsExpression_listContext() {}
+
+func NewExpression_listContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *Expression_listContext {
+	var p = new(Expression_listContext)
+
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, parent, invokingState)
+
+	p.parser = parser
+	p.RuleIndex = lua_grammar_antlr4ParserRULE_expression_list
+
+	return p
+}
+
+func (s *Expression_listContext) GetParser() antlr.Parser { return s.parser }
+
+func (s *Expression_listContext) AllExpression() []IExpressionContext {
+	children := s.GetChildren()
+	len := 0
+	for _, ctx := range children {
+		if _, ok := ctx.(IExpressionContext); ok {
+			len++
+		}
+	}
+
+	tst := make([]IExpressionContext, len)
+	i := 0
+	for _, ctx := range children {
+		if t, ok := ctx.(IExpressionContext); ok {
+			tst[i] = t.(IExpressionContext)
+			i++
+		}
+	}
+
+	return tst
+}
+
+func (s *Expression_listContext) Expression(i int) IExpressionContext {
+	var t antlr.RuleContext
+	j := 0
+	for _, ctx := range s.GetChildren() {
+		if _, ok := ctx.(IExpressionContext); ok {
+			if j == i {
+				t = ctx.(antlr.RuleContext)
+				break
+			}
+			j++
+		}
+	}
+
+	if t == nil {
+		return nil
+	}
+
+	return t.(IExpressionContext)
+}
+
+func (s *Expression_listContext) GetRuleContext() antlr.RuleContext {
+	return s
+}
+
+func (s *Expression_listContext) ToStringTree(ruleNames []string, recog antlr.Recognizer) string {
+	return antlr.TreesStringTree(s, ruleNames, recog)
+}
+
+func (s *Expression_listContext) EnterRule(listener antlr.ParseTreeListener) {
+	if listenerT, ok := listener.(lua_grammar_antlr4Listener); ok {
+		listenerT.EnterExpression_list(s)
+	}
+}
+
+func (s *Expression_listContext) ExitRule(listener antlr.ParseTreeListener) {
+	if listenerT, ok := listener.(lua_grammar_antlr4Listener); ok {
+		listenerT.ExitExpression_list(s)
+	}
+}
+
+func (s *Expression_listContext) Accept(visitor antlr.ParseTreeVisitor) interface{} {
+	switch t := visitor.(type) {
+	case lua_grammar_antlr4Visitor:
+		return t.VisitExpression_list(s)
+
+	default:
+		return t.VisitChildren(s)
+	}
+}
+
+func (p *lua_grammar_antlr4Parser) Expression_list() (localctx IExpression_listContext) {
+	localctx = NewExpression_listContext(p, p.GetParserRuleContext(), p.GetState())
+	p.EnterRule(localctx, 58, lua_grammar_antlr4ParserRULE_expression_list)
+	var _la int
+
+	p.EnterOuterAlt(localctx, 1)
+	{
+		p.SetState(337)
+		p.expression(0)
+	}
+	p.SetState(342)
+	p.GetErrorHandler().Sync(p)
+	if p.HasError() {
+		goto errorExit
+	}
+	_la = p.GetTokenStream().LA(1)
+
+	for _la == lua_grammar_antlr4ParserT__22 {
+		{
+			p.SetState(338)
+			p.Match(lua_grammar_antlr4ParserT__22)
+			if p.HasError() {
+				// Recognition error - abort rule
+				goto errorExit
+			}
+		}
+		{
+			p.SetState(339)
+			p.expression(0)
+		}
+
+		p.SetState(344)
+		p.GetErrorHandler().Sync(p)
+		if p.HasError() {
+			goto errorExit
+		}
+		_la = p.GetTokenStream().LA(1)
+	}
+
+errorExit:
+	if p.HasError() {
+		v := p.GetError()
+		localctx.SetException(v)
+		p.GetErrorHandler().ReportError(p, v)
+		p.GetErrorHandler().Recover(p, v)
+		p.SetError(nil)
+	}
+	p.ExitRule()
+	return localctx
+	goto errorExit // Trick to prevent compiler error if the label is not used
+}
+
+// IReturn_statementContext is an interface to support dynamic dispatch.
+type IReturn_statementContext interface {
+	antlr.ParserRuleContext
+
+	// GetParser returns the parser.
+	GetParser() antlr.Parser
+
+	// Getter signatures
+	KW_RETURN() antlr.TerminalNode
+	Statement_terminator() IStatement_terminatorContext
+	AllExpression() []IExpressionContext
+	Expression(i int) IExpressionContext
+
+	// IsReturn_statementContext differentiates from other interfaces.
+	IsReturn_statementContext()
+}
+
+type Return_statementContext struct {
+	antlr.BaseParserRuleContext
+	parser antlr.Parser
+}
+
+func NewEmptyReturn_statementContext() *Return_statementContext {
+	var p = new(Return_statementContext)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
+	p.RuleIndex = lua_grammar_antlr4ParserRULE_return_statement
+	return p
+}
+
+func InitEmptyReturn_statementContext(p *Return_statementContext) {
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
+	p.RuleIndex = lua_grammar_antlr4ParserRULE_return_statement
+}
+
+func (*Return_statementContext) IsReturn_statementContext() {}
+
+func NewReturn_statementContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *Return_statementContext {
+	var p = new(Return_statementContext)
+
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, parent, invokingState)
+
+	p.parser = parser
+	p.RuleIndex = lua_grammar_antlr4ParserRULE_return_statement
+
+	return p
+}
+
+func (s *Return_statementContext) GetParser() antlr.Parser { return s.parser }
+
+func (s *Return_statementContext) KW_RETURN() antlr.TerminalNode {
+	return s.GetToken(lua_grammar_antlr4ParserKW_RETURN, 0)
+}
+
+func (s *Return_statementContext) Statement_terminator() IStatement_terminatorContext {
+	var t antlr.RuleContext
+	for _, ctx := range s.GetChildren() {
+		if _, ok := ctx.(IStatement_terminatorContext); ok {
+			t = ctx.(antlr.RuleContext)
+			break
+		}
+	}
+
+	if t == nil {
+		return nil
+	}
+
+	return t.(IStatement_terminatorContext)
+}
+
+func (s *Return_statementContext) AllExpression() []IExpressionContext {
+	children := s.GetChildren()
+	len := 0
+	for _, ctx := range children {
+		if _, ok := ctx.(IExpressionContext); ok {
+			len++
+		}
+	}
+
+	tst := make([]IExpressionContext, len)
+	i := 0
+	for _, ctx := range children {
+		if t, ok := ctx.(IExpressionContext); ok {
+			tst[i] = t.(IExpressionContext)
+			i++
+		}
+	}
+
+	return tst
+}
+
+func (s *Return_statementContext) Expression(i int) IExpressionContext {
+	var t antlr.RuleContext
+	j := 0
+	for _, ctx := range s.GetChildren() {
+		if _, ok := ctx.(IExpressionContext); ok {
+			if j == i {
+				t = ctx.(antlr.RuleContext)
+				break
+			}
+			j++
+		}
+	}
+
+	if t == nil {
+		return nil
+	}
+
+	return t.(IExpressionContext)
+}
+
+func (s *Return_statementContext) GetRuleContext() antlr.RuleContext {
+	return s
+}
+
+func (s *Return_statementContext) ToStringTree(ruleNames []string, recog antlr.Recognizer) string {
+	return antlr.TreesStringTree(s, ruleNames, recog)
+}
+
+func (s *Return_statementContext) EnterRule(listener antlr.ParseTreeListener) {
+	if listenerT, ok := listener.(lua_grammar_antlr4Listener); ok {
+		listenerT.EnterReturn_statement(s)
+	}
+}
+
+func (s *Return_statementContext) ExitRule(listener antlr.ParseTreeListener) {
+	if listenerT, ok := listener.(lua_grammar_antlr4Listener); ok {
+		listenerT.ExitReturn_statement(s)
+	}
+}
+
+func (s *Return_statementContext) Accept(visitor antlr.ParseTreeVisitor) interface{} {
+	switch t := visitor.(type) {
+	case lua_grammar_antlr4Visitor:
+		return t.VisitReturn_statement(s)
+
+	default:
+		return t.VisitChildren(s)
+	}
+}
+
+func (p *lua_grammar_antlr4Parser) Return_statement() (localctx IReturn_statementContext) {
+	localctx = NewReturn_statementContext(p, p.GetParserRuleContext(), p.GetState())
+	p.EnterRule(localctx, 60, lua_grammar_antlr4ParserRULE_return_statement)
+	var _la int
+
+	p.EnterOuterAlt(localctx, 1)
+	{
+		p.SetState(345)
+		p.Match(lua_grammar_antlr4ParserKW_RETURN)
+		if p.HasError() {
+			// Recognition error - abort rule
+			goto errorExit
+		}
+	}
+	p.SetState(354)
+	p.GetErrorHandler().Sync(p)
+	if p.HasError() {
+		goto errorExit
+	}
+	_la = p.GetTokenStream().LA(1)
+
+	if (int64(_la) & ^0x3f) == 0 && ((int64(1)<<_la)&8147086527084625924) != 0 {
+		{
+			p.SetState(346)
+			p.expression(0)
+		}
+		p.SetState(351)
+		p.GetErrorHandler().Sync(p)
+		if p.HasError() {
+			goto errorExit
+		}
+		_la = p.GetTokenStream().LA(1)
+
+		for _la == lua_grammar_antlr4ParserT__22 {
+			{
+				p.SetState(347)
+				p.Match(lua_grammar_antlr4ParserT__22)
+				if p.HasError() {
+					// Recognition error - abort rule
+					goto errorExit
+				}
+			}
+			{
+				p.SetState(348)
+				p.expression(0)
+			}
+
+			p.SetState(353)
+			p.GetErrorHandler().Sync(p)
+			if p.HasError() {
+				goto errorExit
+			}
+			_la = p.GetTokenStream().LA(1)
+		}
+
+	}
+	{
+		p.SetState(356)
+		p.Statement_terminator()
+	}
+
+errorExit:
+	if p.HasError() {
+		v := p.GetError()
+		localctx.SetException(v)
+		p.GetErrorHandler().ReportError(p, v)
+		p.GetErrorHandler().Recover(p, v)
+		p.SetError(nil)
+	}
+	p.ExitRule()
+	return localctx
+	goto errorExit // Trick to prevent compiler error if the label is not used
+}
+
+// IBreak_statementContext is an interface to support dynamic dispatch.
+type IBreak_statementContext interface {
+	antlr.ParserRuleContext
+
+	// GetParser returns the parser.
+	GetParser() antlr.Parser
+
+	// Getter signatures
+	KW_BREAK() antlr.TerminalNode
+	Statement_terminator() IStatement_terminatorContext
+
+	// IsBreak_statementContext differentiates from other interfaces.
+	IsBreak_statementContext()
+}
+
+type Break_statementContext struct {
+	antlr.BaseParserRuleContext
+	parser antlr.Parser
+}
+
+func NewEmptyBreak_statementContext() *Break_statementContext {
+	var p = new(Break_statementContext)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
+	p.RuleIndex = lua_grammar_antlr4ParserRULE_break_statement
+	return p
+}
+
+func InitEmptyBreak_statementContext(p *Break_statementContext) {
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
+	p.RuleIndex = lua_grammar_antlr4ParserRULE_break_statement
+}
+
+func (*Break_statementContext) IsBreak_statementContext() {}
+
+func NewBreak_statementContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *Break_statementContext {
+	var p = new(Break_statementContext)
+
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, parent, invokingState)
+
+	p.parser = parser
+	p.RuleIndex = lua_grammar_antlr4ParserRULE_break_statement
+
+	return p
+}
+
+func (s *Break_statementContext) GetParser() antlr.Parser { return s.parser }
+
+func (s *Break_statementContext) KW_BREAK() antlr.TerminalNode {
+	return s.GetToken(lua_grammar_antlr4ParserKW_BREAK, 0)
+}
+
+func (s *Break_statementContext) Statement_terminator() IStatement_terminatorContext {
+	var t antlr.RuleContext
+	for _, ctx := range s.GetChildren() {
+		if _, ok := ctx.(IStatement_terminatorContext); ok {
+			t = ctx.(antlr.RuleContext)
+			break
+		}
+	}
+
+	if t == nil {
+		return nil
+	}
+
+	return t.(IStatement_terminatorContext)
+}
+
+func (s *Break_statementContext) GetRuleContext() antlr.RuleContext {
+	return s
+}
+
+func (s *Break_statementContext) ToStringTree(ruleNames []string, recog antlr.Recognizer) string {
+	return antlr.TreesStringTree(s, ruleNames, recog)
+}
+
+func (s *Break_statementContext) EnterRule(listener antlr.ParseTreeListener) {
+	if listenerT, ok := listener.(lua_grammar_antlr4Listener); ok {
+		listenerT.EnterBreak_statement(s)
+	}
+}
+
+func (s *Break_statementContext) ExitRule(listener antlr.ParseTreeListener) {
+	if listenerT, ok := listener.(lua_grammar_antlr4Listener); ok {
+		listenerT.ExitBreak_statement(s)
+	}
+}
+
+func (s *Break_statementContext) Accept(visitor antlr.ParseTreeVisitor) interface{} {
+	switch t := visitor.(type) {
+	case lua_grammar_antlr4Visitor:
+		return t.VisitBreak_statement(s)
+
+	default:
+		return t.VisitChildren(s)
+	}
+}
+
+func (p *lua_grammar_antlr4Parser) Break_statement() (localctx IBreak_statementContext) {
+	localctx = NewBreak_statementContext(p, p.GetParserRuleContext(), p.GetState())
+	p.EnterRule(localctx, 62, lua_grammar_antlr4ParserRULE_break_statement)
+	p.EnterOuterAlt(localctx, 1)
+	{
+		p.SetState(358)
+		p.Match(lua_grammar_antlr4ParserKW_BREAK)
+		if p.HasError() {
+			// Recognition error - abort rule
+			goto errorExit
+		}
+	}
+	{
+		p.SetState(359)
+		p.Statement_terminator()
+	}
+
+errorExit:
+	if p.HasError() {
+		v := p.GetError()
+		localctx.SetException(v)
+		p.GetErrorHandler().ReportError(p, v)
+		p.GetErrorHandler().Recover(p, v)
+		p.SetError(nil)
+	}
+	p.ExitRule()
+	return localctx
+	goto errorExit // Trick to prevent compiler error if the label is not used
+}
+
+// IGoto_statementContext is an interface to support dynamic dispatch.
+type IGoto_statementContext interface {
+	antlr.ParserRuleContext
+
+	// GetParser returns the parser.
+	GetParser() antlr.Parser
+
+	// Getter signatures
+	KW_GOTO() antlr.TerminalNode
+	Identifier() IIdentifierContext
+	Statement_terminator() IStatement_terminatorContext
+
+	// IsGoto_statementContext differentiates from other interfaces.
+	IsGoto_statementContext()
+}
+
+type Goto_statementContext struct {
+	antlr.BaseParserRuleContext
+	parser antlr.Parser
+}
+
+func NewEmptyGoto_statementContext() *Goto_statementContext {
+	var p = new(Goto_statementContext)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
+	p.RuleIndex = lua_grammar_antlr4ParserRULE_goto_statement
+	return p
+}
+
+func InitEmptyGoto_statementContext(p *Goto_statementContext) {
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
+	p.RuleIndex = lua_grammar_antlr4ParserRULE_goto_statement
+}
+
+func (*Goto_statementContext) IsGoto_statementContext() {}
+
+func NewGoto_statementContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *Goto_statementContext {
+	var p = new(Goto_statementContext)
+
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, parent, invokingState)
+
+	p.parser = parser
+	p.RuleIndex = lua_grammar_antlr4ParserRULE_goto_statement
+
+	return p
+}
+
+func (s *Goto_statementContext) GetParser() antlr.Parser { return s.parser }
+
+func (s *Goto_statementContext) KW_GOTO() antlr.TerminalNode {
+	return s.GetToken(lua_grammar_antlr4ParserKW_GOTO, 0)
+}
+
+func (s *Goto_statementContext) Identifier() IIdentifierContext {
+	var t antlr.RuleContext
+	for _, ctx := range s.GetChildren() {
+		if _, ok := ctx.(IIdentifierContext); ok {
+			t = ctx.(antlr.RuleContext)
+			break
+		}
+	}
+
+	if t == nil {
+		return nil
+	}
+
+	return t.(IIdentifierContext)
+}
+
+func (s *Goto_statementContext) Statement_terminator() IStatement_terminatorContext {
+	var t antlr.RuleContext
+	for _, ctx := range s.GetChildren() {
+		if _, ok := ctx.(IStatement_terminatorContext); ok {
+			t = ctx.(antlr.RuleContext)
+			break
+		}
+	}
+
+	if t == nil {
+		return nil
+	}
+
+	return t.(IStatement_terminatorContext)
+}
+
+func (s *Goto_statementContext) GetRuleContext() antlr.RuleContext {
+	return s
+}
+
+func (s *Goto_statementContext) ToStringTree(ruleNames []string, recog antlr.Recognizer) string {
+	return antlr.TreesStringTree(s, ruleNames, recog)
+}
+
+func (s *Goto_statementContext) EnterRule(listener antlr.ParseTreeListener) {
+	if listenerT, ok := listener.(lua_grammar_antlr4Listener); ok {
+		listenerT.EnterGoto_statement(s)
+	}
+}
+
+func (s *Goto_statementContext) ExitRule(listener antlr.ParseTreeListener) {
+	if listenerT, ok := listener.(lua_grammar_antlr4Listener); ok {
+		listenerT.ExitGoto_statement(s)
+	}
+}
+
+func (s *Goto_statementContext) Accept(visitor antlr.ParseTreeVisitor) interface{} {
+	switch t := visitor.(type) {
+	case lua_grammar_antlr4Visitor:
+		return t.VisitGoto_statement(s)
+
+	default:
+		return t.VisitChildren(s)
+	}
+}
+
+func (p *lua_grammar_antlr4Parser) Goto_statement() (localctx IGoto_statementContext) {
+	localctx = NewGoto_statementContext(p, p.GetParserRuleContext(), p.GetState())
+	p.EnterRule(localctx, 64, lua_grammar_antlr4ParserRULE_goto_statement)
+	p.EnterOuterAlt(localctx, 1)
+	{
+		p.SetState(361)
+		p.Match(lua_grammar_antlr4ParserKW_GOTO)
+		if p.HasError() {
+			// Recognition error - abort rule
+			goto errorExit
+		}
+	}
+	{
+		p.SetState(362)
+		p.Identifier()
+	}
+	{
+		p.SetState(363)
+		p.Statement_terminator()
+	}
+
+errorExit:
+	if p.HasError() {
+		v := p.GetError()
+		localctx.SetException(v)
+		p.GetErrorHandler().ReportError(p, v)
+		p.GetErrorHandler().Recover(p, v)
+		p.SetError(nil)
+	}
+	p.ExitRule()
+	return localctx
+	goto errorExit // Trick to prevent compiler error if the label is not used
+}
+
+// ILabel_statementContext is an interface to support dynamic dispatch.
+type ILabel_statementContext interface {
+	antlr.ParserRuleContext
+
+	// GetParser returns the parser.
+	GetParser() antlr.Parser
+
+	// Getter signatures
+	Identifier() IIdentifierContext
+
+	// IsLabel_statementContext differentiates from other interfaces.
+	IsLabel_statementContext()
+}
+
+type Label_statementContext struct {
+	antlr.BaseParserRuleContext
+	parser antlr.Parser
+}
+
+func NewEmptyLabel_statementContext() *Label_statementContext {
+	var p = new(Label_statementContext)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
+	p.RuleIndex = lua_grammar_antlr4ParserRULE_label_statement
+	return p
+}
+
+func InitEmptyLabel_statementContext(p *Label_statementContext) {
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
+	p.RuleIndex = lua_grammar_antlr4ParserRULE_label_statement
+}
+
+func (*Label_statementContext) IsLabel_statementContext() {}
+
+func NewLabel_statementContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *Label_statementContext {
+	var p = new(Label_statementContext)
+
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, parent, invokingState)
+
+	p.parser = parser
+	p.RuleIndex = lua_grammar_antlr4ParserRULE_label_statement
+
+	return p
+}
+
+func (s *Label_statementContext) GetParser() antlr.Parser { return s.parser }
+
+func (s *Label_statementContext) Identifier() IIdentifierContext {
+	var t antlr.RuleContext
+	for _, ctx := range s.GetChildren() {
+		if _, ok := ctx.(IIdentifierContext); ok {
+			t = ctx.(antlr.RuleContext)
+			break
+		}
+	}
+
+	if t == nil {
+		return nil
+	}
+
+	return t.(IIdentifierContext)
+}
+
+func (s *Label_statementContext) GetRuleContext() antlr.RuleContext {
+	return s
+}
+
+func (s *Label_statementContext) ToStringTree(ruleNames []string, recog antlr.Recognizer) string {
+	return antlr.TreesStringTree(s, ruleNames, recog)
+}
+
+func (s *Label_statementContext) EnterRule(listener antlr.ParseTreeListener) {
+	if listenerT, ok := listener.(lua_grammar_antlr4Listener); ok {
+		listenerT.EnterLabel_statement(s)
+	}
+}
+
+func (s *Label_statementContext) ExitRule(listener antlr.ParseTreeListener) {
+	if listenerT, ok := listener.(lua_grammar_antlr4Listener); ok {
+		listenerT.ExitLabel_statement(s)
+	}
+}
+
+func (s *Label_statementContext) Accept(visitor antlr.ParseTreeVisitor) interface{} {
+	switch t := visitor.(type) {
+	case lua_grammar_antlr4Visitor:
+		return t.VisitLabel_statement(s)
+
+	default:
+		return t.VisitChildren(s)
+	}
+}
+
+func (p *lua_grammar_antlr4Parser) Label_statement() (localctx ILabel_statementContext) {
+	localctx = NewLabel_statementContext(p, p.GetParserRuleContext(), p.GetState())
+	p.EnterRule(localctx, 66, lua_grammar_antlr4ParserRULE_label_statement)
+	p.EnterOuterAlt(localctx, 1)
+	{
+		p.SetState(365)
+		p.Match(lua_grammar_antlr4ParserT__30)
+		if p.HasError() {
+			// Recognition error - abort rule
+			goto errorExit
+		}
+	}
+	{
+		p.SetState(366)
+		p.Identifier()
+	}
+	{
+		p.SetState(367)
+		p.Match(lua_grammar_antlr4ParserT__30)
+		if p.HasError() {
+			// Recognition error - abort rule
+			goto errorExit
+		}
+	}
+
+errorExit:
+	if p.HasError() {
+		v := p.GetError()
+		localctx.SetException(v)
+		p.GetErrorHandler().ReportError(p, v)
+		p.GetErrorHandler().Recover(p, v)
+		p.SetError(nil)
+	}
+	p.ExitRule()
+	return localctx
+	goto errorExit // Trick to prevent compiler error if the label is not used
+}
+
+// IFunction_expressionContext is an interface to support dynamic dispatch.
+type IFunction_expressionContext interface {
+	antlr.ParserRuleContext
+
+	// GetParser returns the parser.
+	GetParser() antlr.Parser
+
+	// Getter signatures
+	KW_FUNCTION() antlr.TerminalNode
+	Block() IBlockContext
+	KW_END() antlr.TerminalNode
+	AllIdentifier() []IIdentifierContext
+	Identifier(i int) IIdentifierContext
+
+	// IsFunction_expressionContext differentiates from other interfaces.
+	IsFunction_expressionContext()
+}
+
+type Function_expressionContext struct {
+	antlr.BaseParserRuleContext
+	parser antlr.Parser
+}
+
+func NewEmptyFunction_expressionContext() *Function_expressionContext {
+	var p = new(Function_expressionContext)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
+	p.RuleIndex = lua_grammar_antlr4ParserRULE_function_expression
+	return p
+}
+
+func InitEmptyFunction_expressionContext(p *Function_expressionContext) {
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
+	p.RuleIndex = lua_grammar_antlr4ParserRULE_function_expression
+}
+
+func (*Function_expressionContext) IsFunction_expressionContext() {}
+
+func NewFunction_expressionContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *Function_expressionContext {
+	var p = new(Function_expressionContext)
+
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, parent, invokingState)
+
+	p.parser = parser
+	p.RuleIndex = lua_grammar_antlr4ParserRULE_function_expression
+
+	return p
+}
+
+func (s *Function_expressionContext) GetParser() antlr.Parser { return s.parser }
+
+func (s *Function_expressionContext) KW_FUNCTION() antlr.TerminalNode {
+	return s.GetToken(lua_grammar_antlr4ParserKW_FUNCTION, 0)
+}
+
+func (s *Function_expressionContext) Block() IBlockContext {
+	var t antlr.RuleContext
+	for _, ctx := range s.GetChildren() {
+		if _, ok := ctx.(IBlockContext); ok {
+			t = ctx.(antlr.RuleContext)
+			break
+		}
+	}
+
+	if t == nil {
+		return nil
+	}
+
+	return t.(IBlockContext)
+}
+
+func (s *Function_expressionContext) KW_END() antlr.TerminalNode {
+	return s.GetToken(lua_grammar_antlr4ParserKW_END, 0)
+}
+
+func (s *Function_expressionContext) AllIdentifier() []IIdentifierContext {
+	children := s.GetChildren()
+	len := 0
+	for _, ctx := range children {
+		if _, ok := ctx.(IIdentifierContext); ok {
+			len++
+		}
+	}
+
+	tst := make([]IIdentifierContext, len)
+	i := 0
+	for _, ctx := range children {
+		if t, ok := ctx.(IIdentifierContext); ok {
+			tst[i] = t.(IIdentifierContext)
+			i++
+		}
+	}
+
+	return tst
+}
+
+func (s *Function_expressionContext) Identifier(i int) IIdentifierContext {
+	var t antlr.RuleContext
+	j := 0
+	for _, ctx := range s.GetChildren() {
+		if _, ok := ctx.(IIdentifierContext); ok {
+			if j == i {
+				t = ctx.(antlr.RuleContext)
+				break
+			}
+			j++
+		}
+	}
+
+	if t == nil {
+		return nil
+	}
+
+	return t.(IIdentifierContext)
+}
+
+func (s *Function_expressionContext) GetRuleContext() antlr.RuleContext {
+	return s
+}
+
+func (s *Function_expressionContext) ToStringTree(ruleNames []string, recog antlr.Recognizer) string {
+	return antlr.TreesStringTree(s, ruleNames, recog)
+}
+
+func (s *Function_expressionContext) EnterRule(listener antlr.ParseTreeListener) {
+	if listenerT, ok := listener.(lua_grammar_antlr4Listener); ok {
+		listenerT.EnterFunction_expression(s)
+	}
+}
+
+func (s *Function_expressionContext) ExitRule(listener antlr.ParseTreeListener) {
+	if listenerT, ok := listener.(lua_grammar_antlr4Listener); ok {
+		listenerT.ExitFunction_expression(s)
+	}
+}
+
+func (s *Function_expressionContext) Accept(visitor antlr.ParseTreeVisitor) interface{} {
+	switch t := visitor.(type) {
+	case lua_grammar_antlr4Visitor:
+		return t.VisitFunction_expression(s)
+
+	default:
+		return t.VisitChildren(s)
+	}
+}
+
+func (p *lua_grammar_antlr4Parser) Function_expression() (localctx IFunction_expressionContext) {
+	localctx = NewFunction_expressionContext(p, p.GetParserRuleContext(), p.GetState())
+	p.EnterRule(localctx, 68, lua_grammar_antlr4ParserRULE_function_expression)
+	var _la int
+
+	p.EnterOuterAlt(localctx, 1)
+	{
+		p.SetState(369)
+		p.Match(lua_grammar_antlr4ParserKW_FUNCTION)
+		if p.HasError() {
+			// Recognition error - abort rule
+			goto errorExit
+		}
+	}
+	{
+		p.SetState(370)
+		p.Match(lua_grammar_antlr4ParserT__1)
+		if p.HasError() {
+			// Recognition error - abort rule
+			goto errorExit
+		}
+	}
+	p.SetState(379)
+	p.GetErrorHandler().Sync(p)
+	if p.HasError() {
+		goto errorExit
+	}
+	_la = p.GetTokenStream().LA(1)
+
+	if _la == lua_grammar_antlr4ParserLETTER {
+		{
+			p.SetState(371)
+			p.Identifier()
+		}
+		p.SetState(376)
+		p.GetErrorHandler().Sync(p)
+		if p.HasError() {
+			goto errorExit
+		}
+		_la = p.GetTokenStream().LA(1)
+
+		for _la == lua_grammar_antlr4ParserT__22 {
+			{
+				p.SetState(372)
+				p.Match(lua_grammar_antlr4ParserT__22)
+				if p.HasError() {
+					// Recognition error - abort rule
+					goto errorExit
+				}
+			}
+			{
+				p.SetState(373)
+				p.Identifier()
+			}
+
+			p.SetState(378)
+			p.GetErrorHandler().Sync(p)
+			if p.HasError() {
+				goto errorExit
+			}
+			_la = p.GetTokenStream().LA(1)
+		}
+
+	}
+	{
+		p.SetState(381)
+		p.Match(lua_grammar_antlr4ParserT__2)
+		if p.HasError() {
+			// Recognition error - abort rule
+			goto errorExit
+		}
+	}
+	{
+		p.SetState(382)
+		p.Block()
+	}
+	{
+		p.SetState(383)
+		p.Match(lua_grammar_antlr4ParserKW_END)
+		if p.HasError() {
+			// Recognition error - abort rule
+			goto errorExit
+		}
+	}
+
+errorExit:
+	if p.HasError() {
+		v := p.GetError()
+		localctx.SetException(v)
+		p.GetErrorHandler().ReportError(p, v)
+		p.GetErrorHandler().Recover(p, v)
+		p.SetError(nil)
+	}
+	p.ExitRule()
+	return localctx
+	goto errorExit // Trick to prevent compiler error if the label is not used
+}
+
+// IMethod_callContext is an interface to support dynamic dispatch.
+type IMethod_callContext interface {
+	antlr.ParserRuleContext
+
+	// GetParser returns the parser.
+	GetParser() antlr.Parser
+
+	// Getter signatures
+	AllIdentifier() []IIdentifierContext
+	Identifier(i int) IIdentifierContext
+	AllExpression() []IExpressionContext
+	Expression(i int) IExpressionContext
+
+	// IsMethod_callContext differentiates from other interfaces.
+	IsMethod_callContext()
+}
+
+type Method_callContext struct {
+	antlr.BaseParserRuleContext
+	parser antlr.Parser
+}
+
+func NewEmptyMethod_callContext() *Method_callContext {
+	var p = new(Method_callContext)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
+	p.RuleIndex = lua_grammar_antlr4ParserRULE_method_call
+	return p
+}
+
+func InitEmptyMethod_callContext(p *Method_callContext) {
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
+	p.RuleIndex = lua_grammar_antlr4ParserRULE_method_call
+}
+
+func (*Method_callContext) IsMethod_callContext() {}
+
+func NewMethod_callContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *Method_callContext {
+	var p = new(Method_callContext)
+
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, parent, invokingState)
+
+	p.parser = parser
+	p.RuleIndex = lua_grammar_antlr4ParserRULE_method_call
+
+	return p
+}
+
+func (s *Method_callContext) GetParser() antlr.Parser { return s.parser }
+
+func (s *Method_callContext) AllIdentifier() []IIdentifierContext {
+	children := s.GetChildren()
+	len := 0
+	for _, ctx := range children {
+		if _, ok := ctx.(IIdentifierContext); ok {
+			len++
+		}
+	}
+
+	tst := make([]IIdentifierContext, len)
+	i := 0
+	for _, ctx := range children {
+		if t, ok := ctx.(IIdentifierContext); ok {
+			tst[i] = t.(IIdentifierContext)
+			i++
+		}
+	}
+
+	return tst
+}
+
+func (s *Method_callContext) Identifier(i int) IIdentifierContext {
+	var t antlr.RuleContext
+	j := 0
+	for _, ctx := range s.GetChildren() {
+		if _, ok := ctx.(IIdentifierContext); ok {
+			if j == i {
+				t = ctx.(antlr.RuleContext)
+				break
+			}
+			j++
+		}
+	}
+
+	if t == nil {
+		return nil
+	}
+
+	return t.(IIdentifierContext)
+}
+
+func (s *Method_callContext) AllExpression() []IExpressionContext {
+	children := s.GetChildren()
+	len := 0
+	for _, ctx := range children {
+		if _, ok := ctx.(IExpressionContext); ok {
+			len++
+		}
+	}
+
+	tst := make([]IExpressionContext, len)
+	i := 0
+	for _, ctx := range children {
+		if t, ok := ctx.(IExpressionContext); ok {
+			tst[i] = t.(IExpressionContext)
+			i++
+		}
+	}
+
+	return tst
+}
+
+func (s *Method_callContext) Expression(i int) IExpressionContext {
+	var t antlr.RuleContext
+	j := 0
+	for _, ctx := range s.GetChildren() {
+		if _, ok := ctx.(IExpressionContext); ok {
+			if j == i {
+				t = ctx.(antlr.RuleContext)
+				break
+			}
+			j++
+		}
+	}
+
+	if t == nil {
+		return nil
+	}
+
+	return t.(IExpressionContext)
+}
+
+func (s *Method_callContext) GetRuleContext() antlr.RuleContext {
+	return s
+}
+
+func (s *Method_callContext) ToStringTree(ruleNames []string, recog antlr.Recognizer) string {
+	return antlr.TreesStringTree(s, ruleNames, recog)
+}
+
+func (s *Method_callContext) EnterRule(listener antlr.ParseTreeListener) {
+	if listenerT, ok := listener.(lua_grammar_antlr4Listener); ok {
+		listenerT.EnterMethod_call(s)
+	}
+}
+
+func (s *Method_callContext) ExitRule(listener antlr.ParseTreeListener) {
+	if listenerT, ok := listener.(lua_grammar_antlr4Listener); ok {
+		listenerT.ExitMethod_call(s)
+	}
+}
+
+func (s *Method_callContext) Accept(visitor antlr.ParseTreeVisitor) interface{} {
+	switch t := visitor.(type) {
+	case lua_grammar_antlr4Visitor:
+		return t.VisitMethod_call(s)
+
+	default:
+		return t.VisitChildren(s)
+	}
+}
+
+func (p *lua_grammar_antlr4Parser) Method_call() (localctx IMethod_callContext) {
+	localctx = NewMethod_callContext(p, p.GetParserRuleContext(), p.GetState())
+	p.EnterRule(localctx, 70, lua_grammar_antlr4ParserRULE_method_call)
+	var _la int
+
+	p.EnterOuterAlt(localctx, 1)
+	{
+		p.SetState(385)
+		p.Identifier()
+	}
+	{
+		p.SetState(386)
+		p.Match(lua_grammar_antlr4ParserT__20)
+		if p.HasError() {
+			// Recognition error - abort rule
+			goto errorExit
+		}
+	}
+	{
+		p.SetState(387)
+		p.Identifier()
+	}
+	{
+		p.SetState(388)
+		p.Match(lua_grammar_antlr4ParserT__1)
+		if p.HasError() {
+			// Recognition error - abort rule
+			goto errorExit
+		}
+	}
+	p.SetState(397)
+	p.GetErrorHandler().Sync(p)
+	if p.HasError() {
+		goto errorExit
+	}
+	_la = p.GetTokenStream().LA(1)
+
+	if (int64(_la) & ^0x3f) == 0 && ((int64(1)<<_la)&8147086527084625924) != 0 {
+		{
+			p.SetState(389)
+			p.expression(0)
+		}
+		p.SetState(394)
+		p.GetErrorHandler().Sync(p)
+		if p.HasError() {
+			goto errorExit
+		}
+		_la = p.GetTokenStream().LA(1)
+
+		for _la == lua_grammar_antlr4ParserT__22 {
+			{
+				p.SetState(390)
+				p.Match(lua_grammar_antlr4ParserT__22)
+				if p.HasError() {
+					// Recognition error - abort rule
+					goto errorExit
+				}
+			}
+			{
+				p.SetState(391)
+				p.expression(0)
+			}
+
+			p.SetState(396)
+			p.GetErrorHandler().Sync(p)
+			if p.HasError() {
+				goto errorExit
+			}
+			_la = p.GetTokenStream().LA(1)
+		}
+
+	}
+	{
+		p.SetState(399)
+		p.Match(lua_grammar_antlr4ParserT__2)
+		if p.HasError() {
+			// Recognition error - abort rule
+			goto errorExit
+		}
+	}
+
+errorExit:
+	if p.HasError() {
+		v := p.GetError()
+		localctx.SetException(v)
+		p.GetErrorHandler().ReportError(p, v)
+		p.GetErrorHandler().Recover(p, v)
+		p.SetError(nil)
+	}
+	p.ExitRule()
+	return localctx
+	goto errorExit // Trick to prevent compiler error if the label is not used
+}
+
+// IMetatable_fieldContext is an interface to support dynamic dispatch.
+type IMetatable_fieldContext interface {
+	antlr.ParserRuleContext
+
+	// GetParser returns the parser.
+	GetParser() antlr.Parser
+
+	// Getter signatures
+	Expression() IExpressionContext
+	KW_INDEX() antlr.TerminalNode
+	KW_NEWINDEX() antlr.TerminalNode
+	KW_MODE() antlr.TerminalNode
+
+	// IsMetatable_fieldContext differentiates from other interfaces.
+	IsMetatable_fieldContext()
+}
+
+type Metatable_fieldContext struct {
+	antlr.BaseParserRuleContext
+	parser antlr.Parser
+}
+
+func NewEmptyMetatable_fieldContext() *Metatable_fieldContext {
+	var p = new(Metatable_fieldContext)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
+	p.RuleIndex = lua_grammar_antlr4ParserRULE_metatable_field
+	return p
+}
+
+func InitEmptyMetatable_fieldContext(p *Metatable_fieldContext) {
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
+	p.RuleIndex = lua_grammar_antlr4ParserRULE_metatable_field
+}
+
+func (*Metatable_fieldContext) IsMetatable_fieldContext() {}
+
+func NewMetatable_fieldContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *Metatable_fieldContext {
+	var p = new(Metatable_fieldContext)
+
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, parent, invokingState)
+
+	p.parser = parser
+	p.RuleIndex = lua_grammar_antlr4ParserRULE_metatable_field
+
+	return p
+}
+
+func (s *Metatable_fieldContext) GetParser() antlr.Parser { return s.parser }
+
+func (s *Metatable_fieldContext) Expression() IExpressionContext {
+	var t antlr.RuleContext
+	for _, ctx := range s.GetChildren() {
+		if _, ok := ctx.(IExpressionContext); ok {
+			t = ctx.(antlr.RuleContext)
+			break
+		}
+	}
+
+	if t == nil {
+		return nil
+	}
+
+	return t.(IExpressionContext)
+}
+
+func (s *Metatable_fieldContext) KW_INDEX() antlr.TerminalNode {
+	return s.GetToken(lua_grammar_antlr4ParserKW_INDEX, 0)
+}
+
+func (s *Metatable_fieldContext) KW_NEWINDEX() antlr.TerminalNode {
+	return s.GetToken(lua_grammar_antlr4ParserKW_NEWINDEX, 0)
+}
+
+func (s *Metatable_fieldContext) KW_MODE() antlr.TerminalNode {
+	return s.GetToken(lua_grammar_antlr4ParserKW_MODE, 0)
+}
+
+func (s *Metatable_fieldContext) GetRuleContext() antlr.RuleContext {
+	return s
+}
+
+func (s *Metatable_fieldContext) ToStringTree(ruleNames []string, recog antlr.Recognizer) string {
+	return antlr.TreesStringTree(s, ruleNames, recog)
+}
+
+func (s *Metatable_fieldContext) EnterRule(listener antlr.ParseTreeListener) {
+	if listenerT, ok := listener.(lua_grammar_antlr4Listener); ok {
+		listenerT.EnterMetatable_field(s)
+	}
+}
+
+func (s *Metatable_fieldContext) ExitRule(listener antlr.ParseTreeListener) {
+	if listenerT, ok := listener.(lua_grammar_antlr4Listener); ok {
+		listenerT.ExitMetatable_field(s)
+	}
+}
+
+func (s *Metatable_fieldContext) Accept(visitor antlr.ParseTreeVisitor) interface{} {
+	switch t := visitor.(type) {
+	case lua_grammar_antlr4Visitor:
+		return t.VisitMetatable_field(s)
+
+	default:
+		return t.VisitChildren(s)
+	}
+}
+
+func (p *lua_grammar_antlr4Parser) Metatable_field() (localctx IMetatable_fieldContext) {
+	localctx = NewMetatable_fieldContext(p, p.GetParserRuleContext(), p.GetState())
+	p.EnterRule(localctx, 72, lua_grammar_antlr4ParserRULE_metatable_field)
+	var _la int
+
+	p.EnterOuterAlt(localctx, 1)
+	{
+		p.SetState(401)
+		p.Match(lua_grammar_antlr4ParserT__31)
+		if p.HasError() {
+			// Recognition error - abort rule
+			goto errorExit
+		}
+	}
+	{
+		p.SetState(402)
+		_la = p.GetTokenStream().LA(1)
+
+		if !((int64(_la) & ^0x3f) == 0 && ((int64(1)<<_la)&1008806316530991104) != 0) {
+			p.GetErrorHandler().RecoverInline(p)
+		} else {
+			p.GetErrorHandler().ReportMatch(p)
+			p.Consume()
+		}
+	}
+	{
+		p.SetState(403)
+		p.Match(lua_grammar_antlr4ParserT__0)
+		if p.HasError() {
+			// Recognition error - abort rule
+			goto errorExit
+		}
+	}
+	{
+		p.SetState(404)
+		p.expression(0)
 	}
 
 errorExit:
@@ -5086,7 +7601,7 @@ func (p *lua_grammar_antlr4Parser) Sempred(localctx antlr.RuleContext, ruleIndex
 func (p *lua_grammar_antlr4Parser) Expression_Sempred(localctx antlr.RuleContext, predIndex int) bool {
 	switch predIndex {
 	case 0:
-		return p.Precpred(p.GetParserRuleContext(), 4)
+		return p.Precpred(p.GetParserRuleContext(), 5)
 
 	default:
 		panic("No predicate with index: " + fmt.Sprint(predIndex))

@@ -26,6 +26,12 @@ type lua_grammar_antlr4Visitor interface {
 	// Visit a parse tree produced by lua_grammar_antlr4Parser#expression.
 	VisitExpression(ctx *ExpressionContext) interface{}
 
+	// Visit a parse tree produced by lua_grammar_antlr4Parser#prefix_expression.
+	VisitPrefix_expression(ctx *Prefix_expressionContext) interface{}
+
+	// Visit a parse tree produced by lua_grammar_antlr4Parser#primary_expression.
+	VisitPrimary_expression(ctx *Primary_expressionContext) interface{}
+
 	// Visit a parse tree produced by lua_grammar_antlr4Parser#operators.
 	VisitOperators(ctx *OperatorsContext) interface{}
 
@@ -38,8 +44,8 @@ type lua_grammar_antlr4Visitor interface {
 	// Visit a parse tree produced by lua_grammar_antlr4Parser#logical_operator.
 	VisitLogical_operator(ctx *Logical_operatorContext) interface{}
 
-	// Visit a parse tree produced by lua_grammar_antlr4Parser#comment.
-	VisitComment(ctx *CommentContext) interface{}
+	// Visit a parse tree produced by lua_grammar_antlr4Parser#bitwise_operator.
+	VisitBitwise_operator(ctx *Bitwise_operatorContext) interface{}
 
 	// Visit a parse tree produced by lua_grammar_antlr4Parser#literal.
 	VisitLiteral(ctx *LiteralContext) interface{}
@@ -74,9 +80,6 @@ type lua_grammar_antlr4Visitor interface {
 	// Visit a parse tree produced by lua_grammar_antlr4Parser#table_access.
 	VisitTable_access(ctx *Table_accessContext) interface{}
 
-	// Visit a parse tree produced by lua_grammar_antlr4Parser#multi_line_comment.
-	VisitMulti_line_comment(ctx *Multi_line_commentContext) interface{}
-
 	// Visit a parse tree produced by lua_grammar_antlr4Parser#single_line_comment.
 	VisitSingle_line_comment(ctx *Single_line_commentContext) interface{}
 
@@ -85,4 +88,34 @@ type lua_grammar_antlr4Visitor interface {
 
 	// Visit a parse tree produced by lua_grammar_antlr4Parser#identifier.
 	VisitIdentifier(ctx *IdentifierContext) interface{}
+
+	// Visit a parse tree produced by lua_grammar_antlr4Parser#repeat_statement.
+	VisitRepeat_statement(ctx *Repeat_statementContext) interface{}
+
+	// Visit a parse tree produced by lua_grammar_antlr4Parser#identifier_list.
+	VisitIdentifier_list(ctx *Identifier_listContext) interface{}
+
+	// Visit a parse tree produced by lua_grammar_antlr4Parser#expression_list.
+	VisitExpression_list(ctx *Expression_listContext) interface{}
+
+	// Visit a parse tree produced by lua_grammar_antlr4Parser#return_statement.
+	VisitReturn_statement(ctx *Return_statementContext) interface{}
+
+	// Visit a parse tree produced by lua_grammar_antlr4Parser#break_statement.
+	VisitBreak_statement(ctx *Break_statementContext) interface{}
+
+	// Visit a parse tree produced by lua_grammar_antlr4Parser#goto_statement.
+	VisitGoto_statement(ctx *Goto_statementContext) interface{}
+
+	// Visit a parse tree produced by lua_grammar_antlr4Parser#label_statement.
+	VisitLabel_statement(ctx *Label_statementContext) interface{}
+
+	// Visit a parse tree produced by lua_grammar_antlr4Parser#function_expression.
+	VisitFunction_expression(ctx *Function_expressionContext) interface{}
+
+	// Visit a parse tree produced by lua_grammar_antlr4Parser#method_call.
+	VisitMethod_call(ctx *Method_callContext) interface{}
+
+	// Visit a parse tree produced by lua_grammar_antlr4Parser#metatable_field.
+	VisitMetatable_field(ctx *Metatable_fieldContext) interface{}
 }

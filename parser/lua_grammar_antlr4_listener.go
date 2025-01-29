@@ -26,6 +26,12 @@ type lua_grammar_antlr4Listener interface {
 	// EnterExpression is called when entering the expression production.
 	EnterExpression(c *ExpressionContext)
 
+	// EnterPrefix_expression is called when entering the prefix_expression production.
+	EnterPrefix_expression(c *Prefix_expressionContext)
+
+	// EnterPrimary_expression is called when entering the primary_expression production.
+	EnterPrimary_expression(c *Primary_expressionContext)
+
 	// EnterOperators is called when entering the operators production.
 	EnterOperators(c *OperatorsContext)
 
@@ -38,8 +44,8 @@ type lua_grammar_antlr4Listener interface {
 	// EnterLogical_operator is called when entering the logical_operator production.
 	EnterLogical_operator(c *Logical_operatorContext)
 
-	// EnterComment is called when entering the comment production.
-	EnterComment(c *CommentContext)
+	// EnterBitwise_operator is called when entering the bitwise_operator production.
+	EnterBitwise_operator(c *Bitwise_operatorContext)
 
 	// EnterLiteral is called when entering the literal production.
 	EnterLiteral(c *LiteralContext)
@@ -74,9 +80,6 @@ type lua_grammar_antlr4Listener interface {
 	// EnterTable_access is called when entering the table_access production.
 	EnterTable_access(c *Table_accessContext)
 
-	// EnterMulti_line_comment is called when entering the multi_line_comment production.
-	EnterMulti_line_comment(c *Multi_line_commentContext)
-
 	// EnterSingle_line_comment is called when entering the single_line_comment production.
 	EnterSingle_line_comment(c *Single_line_commentContext)
 
@@ -85,6 +88,36 @@ type lua_grammar_antlr4Listener interface {
 
 	// EnterIdentifier is called when entering the identifier production.
 	EnterIdentifier(c *IdentifierContext)
+
+	// EnterRepeat_statement is called when entering the repeat_statement production.
+	EnterRepeat_statement(c *Repeat_statementContext)
+
+	// EnterIdentifier_list is called when entering the identifier_list production.
+	EnterIdentifier_list(c *Identifier_listContext)
+
+	// EnterExpression_list is called when entering the expression_list production.
+	EnterExpression_list(c *Expression_listContext)
+
+	// EnterReturn_statement is called when entering the return_statement production.
+	EnterReturn_statement(c *Return_statementContext)
+
+	// EnterBreak_statement is called when entering the break_statement production.
+	EnterBreak_statement(c *Break_statementContext)
+
+	// EnterGoto_statement is called when entering the goto_statement production.
+	EnterGoto_statement(c *Goto_statementContext)
+
+	// EnterLabel_statement is called when entering the label_statement production.
+	EnterLabel_statement(c *Label_statementContext)
+
+	// EnterFunction_expression is called when entering the function_expression production.
+	EnterFunction_expression(c *Function_expressionContext)
+
+	// EnterMethod_call is called when entering the method_call production.
+	EnterMethod_call(c *Method_callContext)
+
+	// EnterMetatable_field is called when entering the metatable_field production.
+	EnterMetatable_field(c *Metatable_fieldContext)
 
 	// ExitProgram is called when exiting the program production.
 	ExitProgram(c *ProgramContext)
@@ -104,6 +137,12 @@ type lua_grammar_antlr4Listener interface {
 	// ExitExpression is called when exiting the expression production.
 	ExitExpression(c *ExpressionContext)
 
+	// ExitPrefix_expression is called when exiting the prefix_expression production.
+	ExitPrefix_expression(c *Prefix_expressionContext)
+
+	// ExitPrimary_expression is called when exiting the primary_expression production.
+	ExitPrimary_expression(c *Primary_expressionContext)
+
 	// ExitOperators is called when exiting the operators production.
 	ExitOperators(c *OperatorsContext)
 
@@ -116,8 +155,8 @@ type lua_grammar_antlr4Listener interface {
 	// ExitLogical_operator is called when exiting the logical_operator production.
 	ExitLogical_operator(c *Logical_operatorContext)
 
-	// ExitComment is called when exiting the comment production.
-	ExitComment(c *CommentContext)
+	// ExitBitwise_operator is called when exiting the bitwise_operator production.
+	ExitBitwise_operator(c *Bitwise_operatorContext)
 
 	// ExitLiteral is called when exiting the literal production.
 	ExitLiteral(c *LiteralContext)
@@ -152,9 +191,6 @@ type lua_grammar_antlr4Listener interface {
 	// ExitTable_access is called when exiting the table_access production.
 	ExitTable_access(c *Table_accessContext)
 
-	// ExitMulti_line_comment is called when exiting the multi_line_comment production.
-	ExitMulti_line_comment(c *Multi_line_commentContext)
-
 	// ExitSingle_line_comment is called when exiting the single_line_comment production.
 	ExitSingle_line_comment(c *Single_line_commentContext)
 
@@ -163,4 +199,34 @@ type lua_grammar_antlr4Listener interface {
 
 	// ExitIdentifier is called when exiting the identifier production.
 	ExitIdentifier(c *IdentifierContext)
+
+	// ExitRepeat_statement is called when exiting the repeat_statement production.
+	ExitRepeat_statement(c *Repeat_statementContext)
+
+	// ExitIdentifier_list is called when exiting the identifier_list production.
+	ExitIdentifier_list(c *Identifier_listContext)
+
+	// ExitExpression_list is called when exiting the expression_list production.
+	ExitExpression_list(c *Expression_listContext)
+
+	// ExitReturn_statement is called when exiting the return_statement production.
+	ExitReturn_statement(c *Return_statementContext)
+
+	// ExitBreak_statement is called when exiting the break_statement production.
+	ExitBreak_statement(c *Break_statementContext)
+
+	// ExitGoto_statement is called when exiting the goto_statement production.
+	ExitGoto_statement(c *Goto_statementContext)
+
+	// ExitLabel_statement is called when exiting the label_statement production.
+	ExitLabel_statement(c *Label_statementContext)
+
+	// ExitFunction_expression is called when exiting the function_expression production.
+	ExitFunction_expression(c *Function_expressionContext)
+
+	// ExitMethod_call is called when exiting the method_call production.
+	ExitMethod_call(c *Method_callContext)
+
+	// ExitMetatable_field is called when exiting the metatable_field production.
+	ExitMetatable_field(c *Metatable_fieldContext)
 }
