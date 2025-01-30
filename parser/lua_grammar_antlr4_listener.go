@@ -47,6 +47,9 @@ type lua_grammar_antlr4Listener interface {
 	// EnterBitwise_operator is called when entering the bitwise_operator production.
 	EnterBitwise_operator(c *Bitwise_operatorContext)
 
+	// EnterConcat_operator is called when entering the concat_operator production.
+	EnterConcat_operator(c *Concat_operatorContext)
+
 	// EnterLiteral is called when entering the literal production.
 	EnterLiteral(c *LiteralContext)
 
@@ -119,6 +122,12 @@ type lua_grammar_antlr4Listener interface {
 	// EnterMetatable_field is called when entering the metatable_field production.
 	EnterMetatable_field(c *Metatable_fieldContext)
 
+	// EnterMetamethod is called when entering the metamethod production.
+	EnterMetamethod(c *MetamethodContext)
+
+	// EnterCoroutine_statement is called when entering the coroutine_statement production.
+	EnterCoroutine_statement(c *Coroutine_statementContext)
+
 	// ExitProgram is called when exiting the program production.
 	ExitProgram(c *ProgramContext)
 
@@ -157,6 +166,9 @@ type lua_grammar_antlr4Listener interface {
 
 	// ExitBitwise_operator is called when exiting the bitwise_operator production.
 	ExitBitwise_operator(c *Bitwise_operatorContext)
+
+	// ExitConcat_operator is called when exiting the concat_operator production.
+	ExitConcat_operator(c *Concat_operatorContext)
 
 	// ExitLiteral is called when exiting the literal production.
 	ExitLiteral(c *LiteralContext)
@@ -229,4 +241,10 @@ type lua_grammar_antlr4Listener interface {
 
 	// ExitMetatable_field is called when exiting the metatable_field production.
 	ExitMetatable_field(c *Metatable_fieldContext)
+
+	// ExitMetamethod is called when exiting the metamethod production.
+	ExitMetamethod(c *MetamethodContext)
+
+	// ExitCoroutine_statement is called when exiting the coroutine_statement production.
+	ExitCoroutine_statement(c *Coroutine_statementContext)
 }

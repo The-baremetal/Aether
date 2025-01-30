@@ -60,6 +60,10 @@ func (v *Baselua_grammar_antlr4Visitor) VisitBitwise_operator(ctx *Bitwise_opera
 	return v.VisitChildren(ctx)
 }
 
+func (v *Baselua_grammar_antlr4Visitor) VisitConcat_operator(ctx *Concat_operatorContext) interface{} {
+	return v.VisitChildren(ctx)
+}
+
 func (v *Baselua_grammar_antlr4Visitor) VisitLiteral(ctx *LiteralContext) interface{} {
 	return v.VisitChildren(ctx)
 }
@@ -153,5 +157,13 @@ func (v *Baselua_grammar_antlr4Visitor) VisitMethod_call(ctx *Method_callContext
 }
 
 func (v *Baselua_grammar_antlr4Visitor) VisitMetatable_field(ctx *Metatable_fieldContext) interface{} {
+	return v.VisitChildren(ctx)
+}
+
+func (v *Baselua_grammar_antlr4Visitor) VisitMetamethod(ctx *MetamethodContext) interface{} {
+	return v.VisitChildren(ctx)
+}
+
+func (v *Baselua_grammar_antlr4Visitor) VisitCoroutine_statement(ctx *Coroutine_statementContext) interface{} {
 	return v.VisitChildren(ctx)
 }

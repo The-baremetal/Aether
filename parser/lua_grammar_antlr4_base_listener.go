@@ -100,6 +100,12 @@ func (s *Baselua_grammar_antlr4Listener) EnterBitwise_operator(ctx *Bitwise_oper
 // ExitBitwise_operator is called when production bitwise_operator is exited.
 func (s *Baselua_grammar_antlr4Listener) ExitBitwise_operator(ctx *Bitwise_operatorContext) {}
 
+// EnterConcat_operator is called when production concat_operator is entered.
+func (s *Baselua_grammar_antlr4Listener) EnterConcat_operator(ctx *Concat_operatorContext) {}
+
+// ExitConcat_operator is called when production concat_operator is exited.
+func (s *Baselua_grammar_antlr4Listener) ExitConcat_operator(ctx *Concat_operatorContext) {}
+
 // EnterLiteral is called when production literal is entered.
 func (s *Baselua_grammar_antlr4Listener) EnterLiteral(ctx *LiteralContext) {}
 
@@ -244,3 +250,15 @@ func (s *Baselua_grammar_antlr4Listener) EnterMetatable_field(ctx *Metatable_fie
 
 // ExitMetatable_field is called when production metatable_field is exited.
 func (s *Baselua_grammar_antlr4Listener) ExitMetatable_field(ctx *Metatable_fieldContext) {}
+
+// EnterMetamethod is called when production metamethod is entered.
+func (s *Baselua_grammar_antlr4Listener) EnterMetamethod(ctx *MetamethodContext) {}
+
+// ExitMetamethod is called when production metamethod is exited.
+func (s *Baselua_grammar_antlr4Listener) ExitMetamethod(ctx *MetamethodContext) {}
+
+// EnterCoroutine_statement is called when production coroutine_statement is entered.
+func (s *Baselua_grammar_antlr4Listener) EnterCoroutine_statement(ctx *Coroutine_statementContext) {}
+
+// ExitCoroutine_statement is called when production coroutine_statement is exited.
+func (s *Baselua_grammar_antlr4Listener) ExitCoroutine_statement(ctx *Coroutine_statementContext) {}

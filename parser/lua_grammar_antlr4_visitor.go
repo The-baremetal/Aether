@@ -47,6 +47,9 @@ type lua_grammar_antlr4Visitor interface {
 	// Visit a parse tree produced by lua_grammar_antlr4Parser#bitwise_operator.
 	VisitBitwise_operator(ctx *Bitwise_operatorContext) interface{}
 
+	// Visit a parse tree produced by lua_grammar_antlr4Parser#concat_operator.
+	VisitConcat_operator(ctx *Concat_operatorContext) interface{}
+
 	// Visit a parse tree produced by lua_grammar_antlr4Parser#literal.
 	VisitLiteral(ctx *LiteralContext) interface{}
 
@@ -118,4 +121,10 @@ type lua_grammar_antlr4Visitor interface {
 
 	// Visit a parse tree produced by lua_grammar_antlr4Parser#metatable_field.
 	VisitMetatable_field(ctx *Metatable_fieldContext) interface{}
+
+	// Visit a parse tree produced by lua_grammar_antlr4Parser#metamethod.
+	VisitMetamethod(ctx *MetamethodContext) interface{}
+
+	// Visit a parse tree produced by lua_grammar_antlr4Parser#coroutine_statement.
+	VisitCoroutine_statement(ctx *Coroutine_statementContext) interface{}
 }

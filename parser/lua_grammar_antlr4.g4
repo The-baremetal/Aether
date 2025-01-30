@@ -19,6 +19,7 @@ control_statement
     | while_statement
     | repeat_statement
     | goto_statement
+    | coroutine_statement
     ;
 
 statement_terminator: SEPARATOR;
@@ -56,12 +57,14 @@ operators
     | arith_operator
     | logical_operator
     | bitwise_operator
+    | concat_operator
     ;
 
 comparison_operator: '>' | '<' | '>=' | '==' | '<=' | '~=';
 arith_operator: '*' | '/' | '+' | '-' | '//';
 logical_operator: KW_AND | KW_OR;
-bitwise_operator: '&' | '|' | '~' | '<<' | '>>';
+bitwise_operator: '&' | '|' | '~' | '<<' | '>>' | '~';
+concat_operator: '..';
 
 literal
     : NUMBER
@@ -69,21 +72,25 @@ literal
     | KW_TRUE
     | KW_FALSE
     | KW_NIL
+    | KW_NAN
+    | KW_INF
     ;
 
 function_call: 
-    (identifier | table_access | '(' expression ')') 
-    (':' identifier)? '(' expression_list? ')'  // Changed to use expression_list
+    (KW_PCALL | KW_XPCALL) '(' expression_list ')'
+    | (identifier | table_access | '(' expression ')') 
+    (':' identifier)? '(' expression_list? ')'
     | table_insert
-    | KW_PRINT '(' expression_list ')'  // Allow multiple arguments
+    | KW_PRINT '(' expression_list ')'
     | method_call
     ;
 
 table_insert: 'table.insert' '(' identifier ',' expression ')';
 
-function_declaration: KW_FUNCTION identifier '(' (identifier (',' identifier)*)? ')' block KW_END;
+function_declaration: 
+    (KW_LOCAL)? KW_FUNCTION identifier '(' (identifier (',' identifier)* | VARARG)? ')' block KW_END;
 
-block: (statement statement_terminator?)+;  // Make terminators optional between statements
+block: (statement_terminator* statement statement_terminator?)+;
 
 if_statement: KW_IF expression KW_THEN block (KW_ELSEIF expression KW_THEN block)* (KW_ELSE block)? KW_END;
 for_statement
@@ -100,7 +107,7 @@ table_access: identifier '[' expression ']' | identifier '.' identifier;
 
 single_line_comment: '--';
 
-SEPARATOR: ';' | ('\r'? '\n' | '\r');  // Fix newline handling
+SEPARATOR: ';' | ('\r'? '\n' | '\r');
 
 print_statement: KW_PRINT '(' expression ')';
 
@@ -130,6 +137,16 @@ KW_FUNCTION: 'function';
 KW_INDEX: 'index';
 KW_NEWINDEX: 'newindex';
 KW_MODE: 'mode';
+KW_PCALL: 'pcall';
+KW_XPCALL: 'xpcall';
+KW_COROUTINE: 'coroutine';
+KW_CREATE: 'create';
+KW_RESUME: 'resume';
+KW_YIELD: 'yield';
+KW_STATUS: 'status';
+KW_NAN: 'nan';
+KW_INF: 'inf';
+
 identifier: LETTER (LETTER | DIGIT | '_')*;
 
 NUMBER: [0-9]+ ('.' [0-9]+)?;
@@ -144,10 +161,10 @@ DIGIT: [0-9];
 
 WS: [ \t]+ -> skip;
 
-repeat_statement: KW_REPEAT block KW_UNTIL expression statement_terminator?;  // Add optional terminator
+repeat_statement: KW_REPEAT block KW_UNTIL expression (statement_terminator | EOF);
 
 identifier_list: identifier (',' identifier)*;
-expression_list: expression (',' expression)*;
+expression_list: expression (',' expression)* | VARARG;
 
 return_statement: KW_RETURN (expression (',' expression)*)? statement_terminator;
 
@@ -162,5 +179,12 @@ method_call: identifier ':' identifier '(' (expression (',' expression)*)? ')';
 
 metatable_field: '__' (KW_INDEX | KW_NEWINDEX | KW_MODE) '=' expression;
 
+metamethod: '__add' | '__sub' | '__mul' | '__div' | '__mod' | '__pow' 
+          | '__unm' | '__concat' | '__len' | '__eq' | '__lt' | '__le';
+
+coroutine_statement: KW_COROUTINE '.' (KW_CREATE | KW_RESUME | KW_YIELD | KW_STATUS);
+
 SINGLE_LINE_COMMENT: '--' ~[\r\n]* -> skip;
 MULTI_LINE_COMMENT: '--[[' .*? ']]' -> skip;
+
+VARARG: '...';
