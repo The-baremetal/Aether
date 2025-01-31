@@ -20,6 +20,7 @@ control_statement
     | repeat_statement
     | goto_statement
     | coroutine_statement
+    | do_statement
     ;
 
 statement_terminator: SEPARATOR;
@@ -41,6 +42,8 @@ prefix_expression
     : primary_expression
     | KW_NOT prefix_expression
     | '#' prefix_expression
+    | '-' prefix_expression
+    | '~' prefix_expression
     ;
 
 primary_expression
@@ -63,7 +66,7 @@ operators
 comparison_operator: '>' | '<' | '>=' | '==' | '<=' | '~=';
 arith_operator: '*' | '/' | '+' | '-' | '//';
 logical_operator: KW_AND | KW_OR;
-bitwise_operator: '&' | '|' | '~' | '<<' | '>>' | '~';
+bitwise_operator: '&' | '|' | '~' | '<<' | '>>' | '//';
 concat_operator: '..';
 
 literal
@@ -78,6 +81,7 @@ literal
 
 function_call: 
     (KW_PCALL | KW_XPCALL) '(' expression_list ')'
+    | (KW_ERROR | KW_ASSERT) '(' expression_list ')'
     | (identifier | table_access | '(' expression ')') 
     (':' identifier)? '(' expression_list? ')'
     | table_insert
@@ -88,18 +92,24 @@ function_call:
 table_insert: 'table.insert' '(' identifier ',' expression ')';
 
 function_declaration: 
-    (KW_LOCAL)? KW_FUNCTION identifier '(' (identifier (',' identifier)* | VARARG)? ')' block KW_END;
+    (KW_LOCAL)? KW_FUNCTION (identifier '.' identifier)? 
+    identifier '(' (identifier (',' identifier)* | VARARG)? ')' block KW_END;
 
 block: (statement_terminator* statement statement_terminator?)+;
 
-if_statement: KW_IF expression KW_THEN block (KW_ELSEIF expression KW_THEN block)* (KW_ELSE block)? KW_END;
+if_statement: KW_IF expression KW_THEN block 
+    (KW_ELSEIF expression KW_THEN block)* 
+    (KW_ELSE block)? 
+    KW_END;
 for_statement
     : KW_FOR identifier KW_IN expression KW_DO block KW_END
     | KW_FOR identifier '=' expression ',' expression (',' expression)? KW_DO block KW_END
     ;
 while_statement: KW_WHILE expression KW_DO block KW_END;
+do_statement: KW_DO block KW_END;
 
-table: '{' (field (',' field)* (',' metatable_field)? | metatable_field) '}';
+table: '{' (field (field_separator field)* field_separator?)? '}';
+field_separator: ',' | ';';
 
 field: identifier '=' expression | expression;
 
@@ -146,6 +156,10 @@ KW_YIELD: 'yield';
 KW_STATUS: 'status';
 KW_NAN: 'nan';
 KW_INF: 'inf';
+KW_ERROR: 'error';
+KW_ASSERT: 'assert';
+KW_PAIRS: 'pairs';
+KW_IPAIRS: 'ipairs';
 
 identifier: LETTER (LETTER | DIGIT | '_')*;
 
@@ -177,10 +191,11 @@ function_expression: KW_FUNCTION '(' (identifier (',' identifier)*)? ')' block K
 
 method_call: identifier ':' identifier '(' (expression (',' expression)*)? ')';
 
-metatable_field: '__' (KW_INDEX | KW_NEWINDEX | KW_MODE) '=' expression;
+metatable_field: '__' (metamethod | identifier) '=' expression;
 
 metamethod: '__add' | '__sub' | '__mul' | '__div' | '__mod' | '__pow' 
-          | '__unm' | '__concat' | '__len' | '__eq' | '__lt' | '__le';
+          | '__unm' | '__concat' | '__len' | '__eq' | '__lt' | '__le'
+          | '__tostring' | '__pairs' | '__ipairs';
 
 coroutine_statement: KW_COROUTINE '.' (KW_CREATE | KW_RESUME | KW_YIELD | KW_STATUS);
 
