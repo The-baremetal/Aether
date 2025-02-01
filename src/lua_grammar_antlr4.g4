@@ -19,7 +19,6 @@ control_statement
     | while_statement
     | repeat_statement
     | goto_statement
-    | coroutine_statement
     | do_statement
     ;
 
@@ -30,6 +29,8 @@ assignment: (KW_LOCAL)? identifier_list '=' expression_list statement_terminator
 expression
     : literal
     | identifier
+    | prefix_expression
+    | expression '^' expression
     | '(' expression ')'
     | expression operators expression
     | function_call
@@ -66,7 +67,7 @@ operators
 comparison_operator: '>' | '<' | '>=' | '==' | '<=' | '~=';
 arith_operator: '*' | '/' | '+' | '-' | '//';
 logical_operator: KW_AND | KW_OR;
-bitwise_operator: '&' | '|' | '~' | '<<' | '>>' | '//';
+bitwise_operator: '&' | '|' | '~' | '<<' | '>>' ;
 concat_operator: '..';
 
 literal
@@ -111,7 +112,10 @@ do_statement: KW_DO block KW_END;
 table: '{' (field (field_separator field)* field_separator?)? '}';
 field_separator: ',' | ';';
 
-field: identifier '=' expression | expression;
+field: 
+    identifier '=' expression 
+    | '[' expression ']' '=' expression
+    | expression;
 
 table_access: identifier '[' expression ']' | identifier '.' identifier;
 
@@ -165,7 +169,10 @@ identifier: LETTER (LETTER | DIGIT | '_')*;
 
 NUMBER: [0-9]+ ('.' [0-9]+)?;
 
-STRING: '"' (ESC | ~["\\])* '"';
+STRING: 
+    '"' (ESC | ~["\\])* '"' 
+    | '\'' (ESC | ~['\\])* '\''
+    | '[' '='* '[' .*? ']' '='* ']';
 
 fragment ESC: '\\' ["\\/bfnrt];
 
@@ -195,7 +202,7 @@ metatable_field: '__' (metamethod | identifier) '=' expression;
 
 metamethod: '__add' | '__sub' | '__mul' | '__div' | '__mod' | '__pow' 
           | '__unm' | '__concat' | '__len' | '__eq' | '__lt' | '__le'
-          | '__tostring' | '__pairs' | '__ipairs';
+          | '__tostring' | '__pairs' | '__ipairs' | '__call';
 
 coroutine_statement: KW_COROUTINE '.' (KW_CREATE | KW_RESUME | KW_YIELD | KW_STATUS);
 
