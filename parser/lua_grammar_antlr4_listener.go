@@ -62,6 +62,9 @@ type lua_grammar_antlr4Listener interface {
 	// EnterFunction_declaration is called when entering the function_declaration production.
 	EnterFunction_declaration(c *Function_declarationContext)
 
+	// EnterParameter is called when entering the parameter production.
+	EnterParameter(c *ParameterContext)
+
 	// EnterBlock is called when entering the block production.
 	EnterBlock(c *BlockContext)
 
@@ -74,8 +77,14 @@ type lua_grammar_antlr4Listener interface {
 	// EnterWhile_statement is called when entering the while_statement production.
 	EnterWhile_statement(c *While_statementContext)
 
+	// EnterDo_statement is called when entering the do_statement production.
+	EnterDo_statement(c *Do_statementContext)
+
 	// EnterTable is called when entering the table production.
 	EnterTable(c *TableContext)
+
+	// EnterField_separator is called when entering the field_separator production.
+	EnterField_separator(c *Field_separatorContext)
 
 	// EnterField is called when entering the field production.
 	EnterField(c *FieldContext)
@@ -182,6 +191,9 @@ type lua_grammar_antlr4Listener interface {
 	// ExitFunction_declaration is called when exiting the function_declaration production.
 	ExitFunction_declaration(c *Function_declarationContext)
 
+	// ExitParameter is called when exiting the parameter production.
+	ExitParameter(c *ParameterContext)
+
 	// ExitBlock is called when exiting the block production.
 	ExitBlock(c *BlockContext)
 
@@ -194,8 +206,14 @@ type lua_grammar_antlr4Listener interface {
 	// ExitWhile_statement is called when exiting the while_statement production.
 	ExitWhile_statement(c *While_statementContext)
 
+	// ExitDo_statement is called when exiting the do_statement production.
+	ExitDo_statement(c *Do_statementContext)
+
 	// ExitTable is called when exiting the table production.
 	ExitTable(c *TableContext)
+
+	// ExitField_separator is called when exiting the field_separator production.
+	ExitField_separator(c *Field_separatorContext)
 
 	// ExitField is called when exiting the field production.
 	ExitField(c *FieldContext)

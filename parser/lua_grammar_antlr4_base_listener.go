@@ -131,6 +131,12 @@ func (s *Baselua_grammar_antlr4Listener) EnterFunction_declaration(ctx *Function
 // ExitFunction_declaration is called when production function_declaration is exited.
 func (s *Baselua_grammar_antlr4Listener) ExitFunction_declaration(ctx *Function_declarationContext) {}
 
+// EnterParameter is called when production parameter is entered.
+func (s *Baselua_grammar_antlr4Listener) EnterParameter(ctx *ParameterContext) {}
+
+// ExitParameter is called when production parameter is exited.
+func (s *Baselua_grammar_antlr4Listener) ExitParameter(ctx *ParameterContext) {}
+
 // EnterBlock is called when production block is entered.
 func (s *Baselua_grammar_antlr4Listener) EnterBlock(ctx *BlockContext) {}
 
@@ -155,11 +161,23 @@ func (s *Baselua_grammar_antlr4Listener) EnterWhile_statement(ctx *While_stateme
 // ExitWhile_statement is called when production while_statement is exited.
 func (s *Baselua_grammar_antlr4Listener) ExitWhile_statement(ctx *While_statementContext) {}
 
+// EnterDo_statement is called when production do_statement is entered.
+func (s *Baselua_grammar_antlr4Listener) EnterDo_statement(ctx *Do_statementContext) {}
+
+// ExitDo_statement is called when production do_statement is exited.
+func (s *Baselua_grammar_antlr4Listener) ExitDo_statement(ctx *Do_statementContext) {}
+
 // EnterTable is called when production table is entered.
 func (s *Baselua_grammar_antlr4Listener) EnterTable(ctx *TableContext) {}
 
 // ExitTable is called when production table is exited.
 func (s *Baselua_grammar_antlr4Listener) ExitTable(ctx *TableContext) {}
+
+// EnterField_separator is called when production field_separator is entered.
+func (s *Baselua_grammar_antlr4Listener) EnterField_separator(ctx *Field_separatorContext) {}
+
+// ExitField_separator is called when production field_separator is exited.
+func (s *Baselua_grammar_antlr4Listener) ExitField_separator(ctx *Field_separatorContext) {}
 
 // EnterField is called when production field is entered.
 func (s *Baselua_grammar_antlr4Listener) EnterField(ctx *FieldContext) {}

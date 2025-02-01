@@ -24,7 +24,7 @@ control_statement
 
 statement_terminator: SEPARATOR;
 
-assignment: (KW_LOCAL)? identifier_list '=' expression_list statement_terminator;
+assignment: (KW_LOCAL)? identifier_list ('=' | '+=' | '-=' | '*=' | '/=' | '//=' | '^=') expression_list statement_terminator;
 
 expression
     : literal
@@ -37,6 +37,11 @@ expression
     | table
     | table_access
     | function_expression
+    | expression '??' expression
+    | expression '++'
+    | '++' expression
+    | expression '--'
+    | '--' expression
     ;
 
 prefix_expression
@@ -45,6 +50,8 @@ prefix_expression
     | '#' prefix_expression
     | '-' prefix_expression
     | '~' prefix_expression
+    | INCREMENT prefix_expression
+    | DECREMENT prefix_expression
     ;
 
 primary_expression
@@ -54,6 +61,8 @@ primary_expression
     | function_call
     | table
     | table_access
+    | primary_expression INCREMENT
+    | primary_expression DECREMENT
     ;
 
 operators
@@ -67,7 +76,7 @@ operators
 comparison_operator: '>' | '<' | '>=' | '==' | '<=' | '~=';
 arith_operator: '*' | '/' | '+' | '-' | '//';
 logical_operator: KW_AND | KW_OR;
-bitwise_operator: '&' | '|' | '~' | '<<' | '>>' ;
+bitwise_operator: '&' | '|' | '~' | '<<' | '>>' | '>>>';
 concat_operator: '..';
 
 literal
@@ -94,7 +103,9 @@ table_insert: 'table.insert' '(' identifier ',' expression ')';
 
 function_declaration: 
     (KW_LOCAL)? KW_FUNCTION (identifier '.' identifier)? 
-    identifier '(' (identifier (',' identifier)* | VARARG)? ')' block KW_END;
+    identifier '(' (parameter (',' parameter)* | VARARG)? ')' block KW_END;
+
+parameter: identifier ('=' expression)?;
 
 block: (statement_terminator* statement statement_terminator?)+;
 
@@ -210,3 +221,15 @@ SINGLE_LINE_COMMENT: '--' ~[\r\n]* -> skip;
 MULTI_LINE_COMMENT: '--[[' .*? ']]' -> skip;
 
 VARARG: '...';
+
+// New operators
+INCREMENT: '++';
+DECREMENT: '--';
+PLUS_ASSIGN: '+=';
+MINUS_ASSIGN: '-=';
+MULT_ASSIGN: '*=';
+DIV_ASSIGN: '/=';
+FLOOR_DIV_ASSIGN: '//=';
+EXP_ASSIGN: '^=';
+CONCAT_ASSIGN: '..=';
+NULL_COALESCE: '??';

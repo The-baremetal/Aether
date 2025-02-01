@@ -80,6 +80,10 @@ func (v *Baselua_grammar_antlr4Visitor) VisitFunction_declaration(ctx *Function_
 	return v.VisitChildren(ctx)
 }
 
+func (v *Baselua_grammar_antlr4Visitor) VisitParameter(ctx *ParameterContext) interface{} {
+	return v.VisitChildren(ctx)
+}
+
 func (v *Baselua_grammar_antlr4Visitor) VisitBlock(ctx *BlockContext) interface{} {
 	return v.VisitChildren(ctx)
 }
@@ -96,7 +100,15 @@ func (v *Baselua_grammar_antlr4Visitor) VisitWhile_statement(ctx *While_statemen
 	return v.VisitChildren(ctx)
 }
 
+func (v *Baselua_grammar_antlr4Visitor) VisitDo_statement(ctx *Do_statementContext) interface{} {
+	return v.VisitChildren(ctx)
+}
+
 func (v *Baselua_grammar_antlr4Visitor) VisitTable(ctx *TableContext) interface{} {
+	return v.VisitChildren(ctx)
+}
+
+func (v *Baselua_grammar_antlr4Visitor) VisitField_separator(ctx *Field_separatorContext) interface{} {
 	return v.VisitChildren(ctx)
 }
 

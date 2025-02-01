@@ -62,6 +62,9 @@ type lua_grammar_antlr4Visitor interface {
 	// Visit a parse tree produced by lua_grammar_antlr4Parser#function_declaration.
 	VisitFunction_declaration(ctx *Function_declarationContext) interface{}
 
+	// Visit a parse tree produced by lua_grammar_antlr4Parser#parameter.
+	VisitParameter(ctx *ParameterContext) interface{}
+
 	// Visit a parse tree produced by lua_grammar_antlr4Parser#block.
 	VisitBlock(ctx *BlockContext) interface{}
 
@@ -74,8 +77,14 @@ type lua_grammar_antlr4Visitor interface {
 	// Visit a parse tree produced by lua_grammar_antlr4Parser#while_statement.
 	VisitWhile_statement(ctx *While_statementContext) interface{}
 
+	// Visit a parse tree produced by lua_grammar_antlr4Parser#do_statement.
+	VisitDo_statement(ctx *Do_statementContext) interface{}
+
 	// Visit a parse tree produced by lua_grammar_antlr4Parser#table.
 	VisitTable(ctx *TableContext) interface{}
+
+	// Visit a parse tree produced by lua_grammar_antlr4Parser#field_separator.
+	VisitField_separator(ctx *Field_separatorContext) interface{}
 
 	// Visit a parse tree produced by lua_grammar_antlr4Parser#field.
 	VisitField(ctx *FieldContext) interface{}
