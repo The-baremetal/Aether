@@ -33,24 +33,11 @@ func (s *Baselua_grammar_antlr4Listener) EnterStatement(ctx *StatementContext) {
 // ExitStatement is called when production statement is exited.
 func (s *Baselua_grammar_antlr4Listener) ExitStatement(ctx *StatementContext) {}
 
-// EnterControl_statement is called when production control_statement is entered.
-func (s *Baselua_grammar_antlr4Listener) EnterControl_statement(ctx *Control_statementContext) {}
+// EnterAssignStatement is called when production assignStatement is entered.
+func (s *Baselua_grammar_antlr4Listener) EnterAssignStatement(ctx *AssignStatementContext) {}
 
-// ExitControl_statement is called when production control_statement is exited.
-func (s *Baselua_grammar_antlr4Listener) ExitControl_statement(ctx *Control_statementContext) {}
-
-// EnterStatement_terminator is called when production statement_terminator is entered.
-func (s *Baselua_grammar_antlr4Listener) EnterStatement_terminator(ctx *Statement_terminatorContext) {
-}
-
-// ExitStatement_terminator is called when production statement_terminator is exited.
-func (s *Baselua_grammar_antlr4Listener) ExitStatement_terminator(ctx *Statement_terminatorContext) {}
-
-// EnterAssignment is called when production assignment is entered.
-func (s *Baselua_grammar_antlr4Listener) EnterAssignment(ctx *AssignmentContext) {}
-
-// ExitAssignment is called when production assignment is exited.
-func (s *Baselua_grammar_antlr4Listener) ExitAssignment(ctx *AssignmentContext) {}
+// ExitAssignStatement is called when production assignStatement is exited.
+func (s *Baselua_grammar_antlr4Listener) ExitAssignStatement(ctx *AssignStatementContext) {}
 
 // EnterExpression is called when production expression is entered.
 func (s *Baselua_grammar_antlr4Listener) EnterExpression(ctx *ExpressionContext) {}
@@ -58,53 +45,11 @@ func (s *Baselua_grammar_antlr4Listener) EnterExpression(ctx *ExpressionContext)
 // ExitExpression is called when production expression is exited.
 func (s *Baselua_grammar_antlr4Listener) ExitExpression(ctx *ExpressionContext) {}
 
-// EnterPrefix_expression is called when production prefix_expression is entered.
-func (s *Baselua_grammar_antlr4Listener) EnterPrefix_expression(ctx *Prefix_expressionContext) {}
+// EnterPrimaryExpression is called when production primaryExpression is entered.
+func (s *Baselua_grammar_antlr4Listener) EnterPrimaryExpression(ctx *PrimaryExpressionContext) {}
 
-// ExitPrefix_expression is called when production prefix_expression is exited.
-func (s *Baselua_grammar_antlr4Listener) ExitPrefix_expression(ctx *Prefix_expressionContext) {}
-
-// EnterPrimary_expression is called when production primary_expression is entered.
-func (s *Baselua_grammar_antlr4Listener) EnterPrimary_expression(ctx *Primary_expressionContext) {}
-
-// ExitPrimary_expression is called when production primary_expression is exited.
-func (s *Baselua_grammar_antlr4Listener) ExitPrimary_expression(ctx *Primary_expressionContext) {}
-
-// EnterOperators is called when production operators is entered.
-func (s *Baselua_grammar_antlr4Listener) EnterOperators(ctx *OperatorsContext) {}
-
-// ExitOperators is called when production operators is exited.
-func (s *Baselua_grammar_antlr4Listener) ExitOperators(ctx *OperatorsContext) {}
-
-// EnterComparison_operator is called when production comparison_operator is entered.
-func (s *Baselua_grammar_antlr4Listener) EnterComparison_operator(ctx *Comparison_operatorContext) {}
-
-// ExitComparison_operator is called when production comparison_operator is exited.
-func (s *Baselua_grammar_antlr4Listener) ExitComparison_operator(ctx *Comparison_operatorContext) {}
-
-// EnterArith_operator is called when production arith_operator is entered.
-func (s *Baselua_grammar_antlr4Listener) EnterArith_operator(ctx *Arith_operatorContext) {}
-
-// ExitArith_operator is called when production arith_operator is exited.
-func (s *Baselua_grammar_antlr4Listener) ExitArith_operator(ctx *Arith_operatorContext) {}
-
-// EnterLogical_operator is called when production logical_operator is entered.
-func (s *Baselua_grammar_antlr4Listener) EnterLogical_operator(ctx *Logical_operatorContext) {}
-
-// ExitLogical_operator is called when production logical_operator is exited.
-func (s *Baselua_grammar_antlr4Listener) ExitLogical_operator(ctx *Logical_operatorContext) {}
-
-// EnterBitwise_operator is called when production bitwise_operator is entered.
-func (s *Baselua_grammar_antlr4Listener) EnterBitwise_operator(ctx *Bitwise_operatorContext) {}
-
-// ExitBitwise_operator is called when production bitwise_operator is exited.
-func (s *Baselua_grammar_antlr4Listener) ExitBitwise_operator(ctx *Bitwise_operatorContext) {}
-
-// EnterConcat_operator is called when production concat_operator is entered.
-func (s *Baselua_grammar_antlr4Listener) EnterConcat_operator(ctx *Concat_operatorContext) {}
-
-// ExitConcat_operator is called when production concat_operator is exited.
-func (s *Baselua_grammar_antlr4Listener) ExitConcat_operator(ctx *Concat_operatorContext) {}
+// ExitPrimaryExpression is called when production primaryExpression is exited.
+func (s *Baselua_grammar_antlr4Listener) ExitPrimaryExpression(ctx *PrimaryExpressionContext) {}
 
 // EnterLiteral is called when production literal is entered.
 func (s *Baselua_grammar_antlr4Listener) EnterLiteral(ctx *LiteralContext) {}
@@ -112,162 +57,41 @@ func (s *Baselua_grammar_antlr4Listener) EnterLiteral(ctx *LiteralContext) {}
 // ExitLiteral is called when production literal is exited.
 func (s *Baselua_grammar_antlr4Listener) ExitLiteral(ctx *LiteralContext) {}
 
-// EnterFunction_call is called when production function_call is entered.
-func (s *Baselua_grammar_antlr4Listener) EnterFunction_call(ctx *Function_callContext) {}
+// EnterVariable is called when production variable is entered.
+func (s *Baselua_grammar_antlr4Listener) EnterVariable(ctx *VariableContext) {}
 
-// ExitFunction_call is called when production function_call is exited.
-func (s *Baselua_grammar_antlr4Listener) ExitFunction_call(ctx *Function_callContext) {}
+// ExitVariable is called when production variable is exited.
+func (s *Baselua_grammar_antlr4Listener) ExitVariable(ctx *VariableContext) {}
 
-// EnterTable_insert is called when production table_insert is entered.
-func (s *Baselua_grammar_antlr4Listener) EnterTable_insert(ctx *Table_insertContext) {}
+// EnterFunctionCall is called when production functionCall is entered.
+func (s *Baselua_grammar_antlr4Listener) EnterFunctionCall(ctx *FunctionCallContext) {}
 
-// ExitTable_insert is called when production table_insert is exited.
-func (s *Baselua_grammar_antlr4Listener) ExitTable_insert(ctx *Table_insertContext) {}
+// ExitFunctionCall is called when production functionCall is exited.
+func (s *Baselua_grammar_antlr4Listener) ExitFunctionCall(ctx *FunctionCallContext) {}
 
-// EnterFunction_declaration is called when production function_declaration is entered.
-func (s *Baselua_grammar_antlr4Listener) EnterFunction_declaration(ctx *Function_declarationContext) {
-}
+// EnterTableConstructor is called when production tableConstructor is entered.
+func (s *Baselua_grammar_antlr4Listener) EnterTableConstructor(ctx *TableConstructorContext) {}
 
-// ExitFunction_declaration is called when production function_declaration is exited.
-func (s *Baselua_grammar_antlr4Listener) ExitFunction_declaration(ctx *Function_declarationContext) {}
+// ExitTableConstructor is called when production tableConstructor is exited.
+func (s *Baselua_grammar_antlr4Listener) ExitTableConstructor(ctx *TableConstructorContext) {}
 
-// EnterParameter is called when production parameter is entered.
-func (s *Baselua_grammar_antlr4Listener) EnterParameter(ctx *ParameterContext) {}
+// EnterMetatable is called when production metatable is entered.
+func (s *Baselua_grammar_antlr4Listener) EnterMetatable(ctx *MetatableContext) {}
 
-// ExitParameter is called when production parameter is exited.
-func (s *Baselua_grammar_antlr4Listener) ExitParameter(ctx *ParameterContext) {}
+// ExitMetatable is called when production metatable is exited.
+func (s *Baselua_grammar_antlr4Listener) ExitMetatable(ctx *MetatableContext) {}
 
-// EnterBlock is called when production block is entered.
-func (s *Baselua_grammar_antlr4Listener) EnterBlock(ctx *BlockContext) {}
+// EnterMetamethods is called when production metamethods is entered.
+func (s *Baselua_grammar_antlr4Listener) EnterMetamethods(ctx *MetamethodsContext) {}
 
-// ExitBlock is called when production block is exited.
-func (s *Baselua_grammar_antlr4Listener) ExitBlock(ctx *BlockContext) {}
+// ExitMetamethods is called when production metamethods is exited.
+func (s *Baselua_grammar_antlr4Listener) ExitMetamethods(ctx *MetamethodsContext) {}
 
-// EnterIf_statement is called when production if_statement is entered.
-func (s *Baselua_grammar_antlr4Listener) EnterIf_statement(ctx *If_statementContext) {}
+// EnterLabelStatement is called when production labelStatement is entered.
+func (s *Baselua_grammar_antlr4Listener) EnterLabelStatement(ctx *LabelStatementContext) {}
 
-// ExitIf_statement is called when production if_statement is exited.
-func (s *Baselua_grammar_antlr4Listener) ExitIf_statement(ctx *If_statementContext) {}
-
-// EnterFor_statement is called when production for_statement is entered.
-func (s *Baselua_grammar_antlr4Listener) EnterFor_statement(ctx *For_statementContext) {}
-
-// ExitFor_statement is called when production for_statement is exited.
-func (s *Baselua_grammar_antlr4Listener) ExitFor_statement(ctx *For_statementContext) {}
-
-// EnterWhile_statement is called when production while_statement is entered.
-func (s *Baselua_grammar_antlr4Listener) EnterWhile_statement(ctx *While_statementContext) {}
-
-// ExitWhile_statement is called when production while_statement is exited.
-func (s *Baselua_grammar_antlr4Listener) ExitWhile_statement(ctx *While_statementContext) {}
-
-// EnterDo_statement is called when production do_statement is entered.
-func (s *Baselua_grammar_antlr4Listener) EnterDo_statement(ctx *Do_statementContext) {}
-
-// ExitDo_statement is called when production do_statement is exited.
-func (s *Baselua_grammar_antlr4Listener) ExitDo_statement(ctx *Do_statementContext) {}
-
-// EnterTable is called when production table is entered.
-func (s *Baselua_grammar_antlr4Listener) EnterTable(ctx *TableContext) {}
-
-// ExitTable is called when production table is exited.
-func (s *Baselua_grammar_antlr4Listener) ExitTable(ctx *TableContext) {}
-
-// EnterField_separator is called when production field_separator is entered.
-func (s *Baselua_grammar_antlr4Listener) EnterField_separator(ctx *Field_separatorContext) {}
-
-// ExitField_separator is called when production field_separator is exited.
-func (s *Baselua_grammar_antlr4Listener) ExitField_separator(ctx *Field_separatorContext) {}
-
-// EnterField is called when production field is entered.
-func (s *Baselua_grammar_antlr4Listener) EnterField(ctx *FieldContext) {}
-
-// ExitField is called when production field is exited.
-func (s *Baselua_grammar_antlr4Listener) ExitField(ctx *FieldContext) {}
-
-// EnterTable_access is called when production table_access is entered.
-func (s *Baselua_grammar_antlr4Listener) EnterTable_access(ctx *Table_accessContext) {}
-
-// ExitTable_access is called when production table_access is exited.
-func (s *Baselua_grammar_antlr4Listener) ExitTable_access(ctx *Table_accessContext) {}
-
-// EnterSingle_line_comment is called when production single_line_comment is entered.
-func (s *Baselua_grammar_antlr4Listener) EnterSingle_line_comment(ctx *Single_line_commentContext) {}
-
-// ExitSingle_line_comment is called when production single_line_comment is exited.
-func (s *Baselua_grammar_antlr4Listener) ExitSingle_line_comment(ctx *Single_line_commentContext) {}
-
-// EnterPrint_statement is called when production print_statement is entered.
-func (s *Baselua_grammar_antlr4Listener) EnterPrint_statement(ctx *Print_statementContext) {}
-
-// ExitPrint_statement is called when production print_statement is exited.
-func (s *Baselua_grammar_antlr4Listener) ExitPrint_statement(ctx *Print_statementContext) {}
-
-// EnterIdentifier is called when production identifier is entered.
-func (s *Baselua_grammar_antlr4Listener) EnterIdentifier(ctx *IdentifierContext) {}
-
-// ExitIdentifier is called when production identifier is exited.
-func (s *Baselua_grammar_antlr4Listener) ExitIdentifier(ctx *IdentifierContext) {}
-
-// EnterRepeat_statement is called when production repeat_statement is entered.
-func (s *Baselua_grammar_antlr4Listener) EnterRepeat_statement(ctx *Repeat_statementContext) {}
-
-// ExitRepeat_statement is called when production repeat_statement is exited.
-func (s *Baselua_grammar_antlr4Listener) ExitRepeat_statement(ctx *Repeat_statementContext) {}
-
-// EnterIdentifier_list is called when production identifier_list is entered.
-func (s *Baselua_grammar_antlr4Listener) EnterIdentifier_list(ctx *Identifier_listContext) {}
-
-// ExitIdentifier_list is called when production identifier_list is exited.
-func (s *Baselua_grammar_antlr4Listener) ExitIdentifier_list(ctx *Identifier_listContext) {}
-
-// EnterExpression_list is called when production expression_list is entered.
-func (s *Baselua_grammar_antlr4Listener) EnterExpression_list(ctx *Expression_listContext) {}
-
-// ExitExpression_list is called when production expression_list is exited.
-func (s *Baselua_grammar_antlr4Listener) ExitExpression_list(ctx *Expression_listContext) {}
-
-// EnterReturn_statement is called when production return_statement is entered.
-func (s *Baselua_grammar_antlr4Listener) EnterReturn_statement(ctx *Return_statementContext) {}
-
-// ExitReturn_statement is called when production return_statement is exited.
-func (s *Baselua_grammar_antlr4Listener) ExitReturn_statement(ctx *Return_statementContext) {}
-
-// EnterBreak_statement is called when production break_statement is entered.
-func (s *Baselua_grammar_antlr4Listener) EnterBreak_statement(ctx *Break_statementContext) {}
-
-// ExitBreak_statement is called when production break_statement is exited.
-func (s *Baselua_grammar_antlr4Listener) ExitBreak_statement(ctx *Break_statementContext) {}
-
-// EnterGoto_statement is called when production goto_statement is entered.
-func (s *Baselua_grammar_antlr4Listener) EnterGoto_statement(ctx *Goto_statementContext) {}
-
-// ExitGoto_statement is called when production goto_statement is exited.
-func (s *Baselua_grammar_antlr4Listener) ExitGoto_statement(ctx *Goto_statementContext) {}
-
-// EnterLabel_statement is called when production label_statement is entered.
-func (s *Baselua_grammar_antlr4Listener) EnterLabel_statement(ctx *Label_statementContext) {}
-
-// ExitLabel_statement is called when production label_statement is exited.
-func (s *Baselua_grammar_antlr4Listener) ExitLabel_statement(ctx *Label_statementContext) {}
-
-// EnterFunction_expression is called when production function_expression is entered.
-func (s *Baselua_grammar_antlr4Listener) EnterFunction_expression(ctx *Function_expressionContext) {}
-
-// ExitFunction_expression is called when production function_expression is exited.
-func (s *Baselua_grammar_antlr4Listener) ExitFunction_expression(ctx *Function_expressionContext) {}
-
-// EnterMethod_call is called when production method_call is entered.
-func (s *Baselua_grammar_antlr4Listener) EnterMethod_call(ctx *Method_callContext) {}
-
-// ExitMethod_call is called when production method_call is exited.
-func (s *Baselua_grammar_antlr4Listener) ExitMethod_call(ctx *Method_callContext) {}
-
-// EnterMetatable_field is called when production metatable_field is entered.
-func (s *Baselua_grammar_antlr4Listener) EnterMetatable_field(ctx *Metatable_fieldContext) {}
-
-// ExitMetatable_field is called when production metatable_field is exited.
-func (s *Baselua_grammar_antlr4Listener) ExitMetatable_field(ctx *Metatable_fieldContext) {}
+// ExitLabelStatement is called when production labelStatement is exited.
+func (s *Baselua_grammar_antlr4Listener) ExitLabelStatement(ctx *LabelStatementContext) {}
 
 // EnterMetamethod is called when production metamethod is entered.
 func (s *Baselua_grammar_antlr4Listener) EnterMetamethod(ctx *MetamethodContext) {}
@@ -275,8 +99,171 @@ func (s *Baselua_grammar_antlr4Listener) EnterMetamethod(ctx *MetamethodContext)
 // ExitMetamethod is called when production metamethod is exited.
 func (s *Baselua_grammar_antlr4Listener) ExitMetamethod(ctx *MetamethodContext) {}
 
-// EnterCoroutine_statement is called when production coroutine_statement is entered.
-func (s *Baselua_grammar_antlr4Listener) EnterCoroutine_statement(ctx *Coroutine_statementContext) {}
+// EnterField is called when production field is entered.
+func (s *Baselua_grammar_antlr4Listener) EnterField(ctx *FieldContext) {}
 
-// ExitCoroutine_statement is called when production coroutine_statement is exited.
-func (s *Baselua_grammar_antlr4Listener) ExitCoroutine_statement(ctx *Coroutine_statementContext) {}
+// ExitField is called when production field is exited.
+func (s *Baselua_grammar_antlr4Listener) ExitField(ctx *FieldContext) {}
+
+// EnterBinaryOperation is called when production binaryOperation is entered.
+func (s *Baselua_grammar_antlr4Listener) EnterBinaryOperation(ctx *BinaryOperationContext) {}
+
+// ExitBinaryOperation is called when production binaryOperation is exited.
+func (s *Baselua_grammar_antlr4Listener) ExitBinaryOperation(ctx *BinaryOperationContext) {}
+
+// EnterUnaryOperation is called when production unaryOperation is entered.
+func (s *Baselua_grammar_antlr4Listener) EnterUnaryOperation(ctx *UnaryOperationContext) {}
+
+// ExitUnaryOperation is called when production unaryOperation is exited.
+func (s *Baselua_grammar_antlr4Listener) ExitUnaryOperation(ctx *UnaryOperationContext) {}
+
+// EnterControlFlowStatement is called when production controlFlowStatement is entered.
+func (s *Baselua_grammar_antlr4Listener) EnterControlFlowStatement(ctx *ControlFlowStatementContext) {
+}
+
+// ExitControlFlowStatement is called when production controlFlowStatement is exited.
+func (s *Baselua_grammar_antlr4Listener) ExitControlFlowStatement(ctx *ControlFlowStatementContext) {}
+
+// EnterIfStatement is called when production ifStatement is entered.
+func (s *Baselua_grammar_antlr4Listener) EnterIfStatement(ctx *IfStatementContext) {}
+
+// ExitIfStatement is called when production ifStatement is exited.
+func (s *Baselua_grammar_antlr4Listener) ExitIfStatement(ctx *IfStatementContext) {}
+
+// EnterWhileStatement is called when production whileStatement is entered.
+func (s *Baselua_grammar_antlr4Listener) EnterWhileStatement(ctx *WhileStatementContext) {}
+
+// ExitWhileStatement is called when production whileStatement is exited.
+func (s *Baselua_grammar_antlr4Listener) ExitWhileStatement(ctx *WhileStatementContext) {}
+
+// EnterRepeatStatement is called when production repeatStatement is entered.
+func (s *Baselua_grammar_antlr4Listener) EnterRepeatStatement(ctx *RepeatStatementContext) {}
+
+// ExitRepeatStatement is called when production repeatStatement is exited.
+func (s *Baselua_grammar_antlr4Listener) ExitRepeatStatement(ctx *RepeatStatementContext) {}
+
+// EnterForStatement is called when production forStatement is entered.
+func (s *Baselua_grammar_antlr4Listener) EnterForStatement(ctx *ForStatementContext) {}
+
+// ExitForStatement is called when production forStatement is exited.
+func (s *Baselua_grammar_antlr4Listener) ExitForStatement(ctx *ForStatementContext) {}
+
+// EnterBreakStatement is called when production breakStatement is entered.
+func (s *Baselua_grammar_antlr4Listener) EnterBreakStatement(ctx *BreakStatementContext) {}
+
+// ExitBreakStatement is called when production breakStatement is exited.
+func (s *Baselua_grammar_antlr4Listener) ExitBreakStatement(ctx *BreakStatementContext) {}
+
+// EnterGotoStatement is called when production gotoStatement is entered.
+func (s *Baselua_grammar_antlr4Listener) EnterGotoStatement(ctx *GotoStatementContext) {}
+
+// ExitGotoStatement is called when production gotoStatement is exited.
+func (s *Baselua_grammar_antlr4Listener) ExitGotoStatement(ctx *GotoStatementContext) {}
+
+// EnterCoroutineStatement is called when production coroutineStatement is entered.
+func (s *Baselua_grammar_antlr4Listener) EnterCoroutineStatement(ctx *CoroutineStatementContext) {}
+
+// ExitCoroutineStatement is called when production coroutineStatement is exited.
+func (s *Baselua_grammar_antlr4Listener) ExitCoroutineStatement(ctx *CoroutineStatementContext) {}
+
+// EnterBlock is called when production block is entered.
+func (s *Baselua_grammar_antlr4Listener) EnterBlock(ctx *BlockContext) {}
+
+// ExitBlock is called when production block is exited.
+func (s *Baselua_grammar_antlr4Listener) ExitBlock(ctx *BlockContext) {}
+
+// EnterLocalDeclaration is called when production localDeclaration is entered.
+func (s *Baselua_grammar_antlr4Listener) EnterLocalDeclaration(ctx *LocalDeclarationContext) {}
+
+// ExitLocalDeclaration is called when production localDeclaration is exited.
+func (s *Baselua_grammar_antlr4Listener) ExitLocalDeclaration(ctx *LocalDeclarationContext) {}
+
+// EnterFunctionDeclaration is called when production functionDeclaration is entered.
+func (s *Baselua_grammar_antlr4Listener) EnterFunctionDeclaration(ctx *FunctionDeclarationContext) {}
+
+// ExitFunctionDeclaration is called when production functionDeclaration is exited.
+func (s *Baselua_grammar_antlr4Listener) ExitFunctionDeclaration(ctx *FunctionDeclarationContext) {}
+
+// EnterReturnStatement is called when production returnStatement is entered.
+func (s *Baselua_grammar_antlr4Listener) EnterReturnStatement(ctx *ReturnStatementContext) {}
+
+// ExitReturnStatement is called when production returnStatement is exited.
+func (s *Baselua_grammar_antlr4Listener) ExitReturnStatement(ctx *ReturnStatementContext) {}
+
+// EnterOperatorGroup is called when production operatorGroup is entered.
+func (s *Baselua_grammar_antlr4Listener) EnterOperatorGroup(ctx *OperatorGroupContext) {}
+
+// ExitOperatorGroup is called when production operatorGroup is exited.
+func (s *Baselua_grammar_antlr4Listener) ExitOperatorGroup(ctx *OperatorGroupContext) {}
+
+// EnterLogicalOp is called when production logicalOp is entered.
+func (s *Baselua_grammar_antlr4Listener) EnterLogicalOp(ctx *LogicalOpContext) {}
+
+// ExitLogicalOp is called when production logicalOp is exited.
+func (s *Baselua_grammar_antlr4Listener) ExitLogicalOp(ctx *LogicalOpContext) {}
+
+// EnterComparisonOp is called when production comparisonOp is entered.
+func (s *Baselua_grammar_antlr4Listener) EnterComparisonOp(ctx *ComparisonOpContext) {}
+
+// ExitComparisonOp is called when production comparisonOp is exited.
+func (s *Baselua_grammar_antlr4Listener) ExitComparisonOp(ctx *ComparisonOpContext) {}
+
+// EnterArithOp is called when production arithOp is entered.
+func (s *Baselua_grammar_antlr4Listener) EnterArithOp(ctx *ArithOpContext) {}
+
+// ExitArithOp is called when production arithOp is exited.
+func (s *Baselua_grammar_antlr4Listener) ExitArithOp(ctx *ArithOpContext) {}
+
+// EnterBitwiseOp is called when production bitwiseOp is entered.
+func (s *Baselua_grammar_antlr4Listener) EnterBitwiseOp(ctx *BitwiseOpContext) {}
+
+// ExitBitwiseOp is called when production bitwiseOp is exited.
+func (s *Baselua_grammar_antlr4Listener) ExitBitwiseOp(ctx *BitwiseOpContext) {}
+
+// EnterAssignOp is called when production assignOp is entered.
+func (s *Baselua_grammar_antlr4Listener) EnterAssignOp(ctx *AssignOpContext) {}
+
+// ExitAssignOp is called when production assignOp is exited.
+func (s *Baselua_grammar_antlr4Listener) ExitAssignOp(ctx *AssignOpContext) {}
+
+// EnterUnaryOp is called when production unaryOp is entered.
+func (s *Baselua_grammar_antlr4Listener) EnterUnaryOp(ctx *UnaryOpContext) {}
+
+// ExitUnaryOp is called when production unaryOp is exited.
+func (s *Baselua_grammar_antlr4Listener) ExitUnaryOp(ctx *UnaryOpContext) {}
+
+// EnterConcatOp is called when production concatOp is entered.
+func (s *Baselua_grammar_antlr4Listener) EnterConcatOp(ctx *ConcatOpContext) {}
+
+// ExitConcatOp is called when production concatOp is exited.
+func (s *Baselua_grammar_antlr4Listener) ExitConcatOp(ctx *ConcatOpContext) {}
+
+// EnterVarargOp is called when production varargOp is entered.
+func (s *Baselua_grammar_antlr4Listener) EnterVarargOp(ctx *VarargOpContext) {}
+
+// ExitVarargOp is called when production varargOp is exited.
+func (s *Baselua_grammar_antlr4Listener) ExitVarargOp(ctx *VarargOpContext) {}
+
+// EnterCompoundAssignOp is called when production compoundAssignOp is entered.
+func (s *Baselua_grammar_antlr4Listener) EnterCompoundAssignOp(ctx *CompoundAssignOpContext) {}
+
+// ExitCompoundAssignOp is called when production compoundAssignOp is exited.
+func (s *Baselua_grammar_antlr4Listener) ExitCompoundAssignOp(ctx *CompoundAssignOpContext) {}
+
+// EnterIncrOp is called when production incrOp is entered.
+func (s *Baselua_grammar_antlr4Listener) EnterIncrOp(ctx *IncrOpContext) {}
+
+// ExitIncrOp is called when production incrOp is exited.
+func (s *Baselua_grammar_antlr4Listener) ExitIncrOp(ctx *IncrOpContext) {}
+
+// EnterCoalesceOp is called when production coalesceOp is entered.
+func (s *Baselua_grammar_antlr4Listener) EnterCoalesceOp(ctx *CoalesceOpContext) {}
+
+// ExitCoalesceOp is called when production coalesceOp is exited.
+func (s *Baselua_grammar_antlr4Listener) ExitCoalesceOp(ctx *CoalesceOpContext) {}
+
+// EnterShiftAssignOp is called when production shiftAssignOp is entered.
+func (s *Baselua_grammar_antlr4Listener) EnterShiftAssignOp(ctx *ShiftAssignOpContext) {}
+
+// ExitShiftAssignOp is called when production shiftAssignOp is exited.
+func (s *Baselua_grammar_antlr4Listener) ExitShiftAssignOp(ctx *ShiftAssignOpContext) {}
