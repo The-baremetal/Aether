@@ -32,7 +32,7 @@ assignStatement
 expression
     : primaryExpression
     | expression operatorGroup expression
-    |<assoc=right> expression operatorGroup expression  // For right-associative
+    |<assoc=right> expression operatorGroup expression
     | unaryOp expression
     ;
 
@@ -42,6 +42,7 @@ primaryExpression
     | functionCall
     | unaryOperation
     | tableConstructor
+    | functionExpression
     | '(' expression ')'
     ;
 
@@ -82,7 +83,9 @@ metamethod: '__add' | '__sub' | '__mul' | '__div' | '__mod' | '__pow'
 
 field
     : IDENTIFIER '=' expression
+    | '[' expression ']' '=' expression
     | expression
+    | IDENTIFIER ':' functionExpression
     ;
 
 // ---------------------------
@@ -113,6 +116,7 @@ controlFlowStatement
     | breakStatement
     | gotoStatement
     | coroutineStatement
+    | protectedCallStatement
     ;
 
 ifStatement
@@ -128,7 +132,8 @@ repeatStatement
     ;
 
 forStatement
-    : 'for' IDENTIFIER '=' expression ',' expression (',' expression)? 'do' block 'end'
+    : 'for' IDENTIFIER '=' expression ',' expression (',' expression)? 'do' block 'end'  #numericFor
+    | 'for' identifierList 'in' expressionList 'do' block 'end'                            #genericFor
     ;
 
 breakStatement
@@ -143,6 +148,10 @@ coroutineStatement
     : 'coroutine' '.' ( 'create' | 'resume' | 'yield' | 'status' )
     ;
 
+protectedCallStatement
+    : ('pcall' | 'xpcall') '(' expression (',' expression)? ')'
+    ;
+
 block
     : statement*
     ;
@@ -151,10 +160,11 @@ block
 /* Declarations (Local Variables, Functions) */
 localDeclaration
     : 'local' IDENTIFIER ('=' expression)?
+    | 'local' 'function' IDENTIFIER '(' (IDENTIFIER (',' IDENTIFIER)*)? ')' block 'end'
     ;
 
 functionDeclaration
-    : 'function' IDENTIFIER '(' (IDENTIFIER (',' IDENTIFIER)*)? ')' block 'end'
+    : 'function' IDENTIFIER '(' (IDENTIFIER (',' IDENTIFIER)* (',' varargOp)? | varargOp)? ')' block 'end'
     ;
 
 returnStatement
@@ -222,4 +232,16 @@ WS
 
 COMMENT
     : '--' ~[\r\n]* -> skip
+    ;
+
+identifierList
+    : IDENTIFIER (',' IDENTIFIER)*
+    ;
+
+expressionList
+    : expression (',' expression)*
+    ;
+
+functionExpression
+    : 'function' '(' (IDENTIFIER (',' IDENTIFIER)*)? ')' block 'end'
     ;
