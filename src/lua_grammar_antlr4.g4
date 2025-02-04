@@ -56,10 +56,13 @@ literal
 
 variable
     : IDENTIFIER
+    | variable '[' expression ']'
+    | variable '.' IDENTIFIER
     ;
 
 functionCall
-    : IDENTIFIER '(' (expression (',' expression)*)? ')'
+    : variable '(' (expression (',' expression)*)? ')'
+    | variable ':' IDENTIFIER '(' (expression (',' expression)*)? ')'
     ;
 
 tableConstructor
@@ -68,6 +71,7 @@ tableConstructor
 
 metatable
     : '__metatable' '=' expression
+    | '{' metamethods '}'
     ;
 
 metamethods
@@ -197,7 +201,7 @@ comparisonOp:  '=='|'>='|'<='|'~='|'>'|'<';
 arithOp:       '+'|'-'|'*'|'/'|'//'|'%'|'^';
 bitwiseOp:     '&'|'|'|'~'|'<<'|'>>';
 assignOp:      '='|'+='|'-='|'*='|'/='|'//='|'^='|'&='|'|=';
-unaryOp:       'not'|'#'|'-';
+unaryOp:       'not'|'#'|'-'|'~'|'typeof';
 concatOp:      '..';
 varargOp: '...';
 compoundAssignOp: '+=' | '-=' | '*=' | '/=' | '//=' | '^=' | '..=' | '??=';
@@ -245,6 +249,7 @@ identifierList
 
 expressionList
     : expression (',' expression)*
+    | varargOp
     ;
 
 functionExpression
