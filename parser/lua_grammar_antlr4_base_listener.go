@@ -142,11 +142,17 @@ func (s *Baselua_grammar_antlr4Listener) EnterRepeatStatement(ctx *RepeatStateme
 // ExitRepeatStatement is called when production repeatStatement is exited.
 func (s *Baselua_grammar_antlr4Listener) ExitRepeatStatement(ctx *RepeatStatementContext) {}
 
-// EnterForStatement is called when production forStatement is entered.
-func (s *Baselua_grammar_antlr4Listener) EnterForStatement(ctx *ForStatementContext) {}
+// EnterNumericFor is called when production numericFor is entered.
+func (s *Baselua_grammar_antlr4Listener) EnterNumericFor(ctx *NumericForContext) {}
 
-// ExitForStatement is called when production forStatement is exited.
-func (s *Baselua_grammar_antlr4Listener) ExitForStatement(ctx *ForStatementContext) {}
+// ExitNumericFor is called when production numericFor is exited.
+func (s *Baselua_grammar_antlr4Listener) ExitNumericFor(ctx *NumericForContext) {}
+
+// EnterGenericFor is called when production genericFor is entered.
+func (s *Baselua_grammar_antlr4Listener) EnterGenericFor(ctx *GenericForContext) {}
+
+// ExitGenericFor is called when production genericFor is exited.
+func (s *Baselua_grammar_antlr4Listener) ExitGenericFor(ctx *GenericForContext) {}
 
 // EnterBreakStatement is called when production breakStatement is entered.
 func (s *Baselua_grammar_antlr4Listener) EnterBreakStatement(ctx *BreakStatementContext) {}
@@ -165,6 +171,14 @@ func (s *Baselua_grammar_antlr4Listener) EnterCoroutineStatement(ctx *CoroutineS
 
 // ExitCoroutineStatement is called when production coroutineStatement is exited.
 func (s *Baselua_grammar_antlr4Listener) ExitCoroutineStatement(ctx *CoroutineStatementContext) {}
+
+// EnterProtectedCallStatement is called when production protectedCallStatement is entered.
+func (s *Baselua_grammar_antlr4Listener) EnterProtectedCallStatement(ctx *ProtectedCallStatementContext) {
+}
+
+// ExitProtectedCallStatement is called when production protectedCallStatement is exited.
+func (s *Baselua_grammar_antlr4Listener) ExitProtectedCallStatement(ctx *ProtectedCallStatementContext) {
+}
 
 // EnterBlock is called when production block is entered.
 func (s *Baselua_grammar_antlr4Listener) EnterBlock(ctx *BlockContext) {}
@@ -267,3 +281,27 @@ func (s *Baselua_grammar_antlr4Listener) EnterShiftAssignOp(ctx *ShiftAssignOpCo
 
 // ExitShiftAssignOp is called when production shiftAssignOp is exited.
 func (s *Baselua_grammar_antlr4Listener) ExitShiftAssignOp(ctx *ShiftAssignOpContext) {}
+
+// EnterIdentifierList is called when production identifierList is entered.
+func (s *Baselua_grammar_antlr4Listener) EnterIdentifierList(ctx *IdentifierListContext) {}
+
+// ExitIdentifierList is called when production identifierList is exited.
+func (s *Baselua_grammar_antlr4Listener) ExitIdentifierList(ctx *IdentifierListContext) {}
+
+// EnterExpressionList is called when production expressionList is entered.
+func (s *Baselua_grammar_antlr4Listener) EnterExpressionList(ctx *ExpressionListContext) {}
+
+// ExitExpressionList is called when production expressionList is exited.
+func (s *Baselua_grammar_antlr4Listener) ExitExpressionList(ctx *ExpressionListContext) {}
+
+// EnterFunctionExpression is called when production functionExpression is entered.
+func (s *Baselua_grammar_antlr4Listener) EnterFunctionExpression(ctx *FunctionExpressionContext) {}
+
+// ExitFunctionExpression is called when production functionExpression is exited.
+func (s *Baselua_grammar_antlr4Listener) ExitFunctionExpression(ctx *FunctionExpressionContext) {}
+
+// EnterSelectStatement is called when production selectStatement is entered.
+func (s *Baselua_grammar_antlr4Listener) EnterSelectStatement(ctx *SelectStatementContext) {}
+
+// ExitSelectStatement is called when production selectStatement is exited.
+func (s *Baselua_grammar_antlr4Listener) ExitSelectStatement(ctx *SelectStatementContext) {}

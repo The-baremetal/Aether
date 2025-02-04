@@ -68,8 +68,11 @@ type lua_grammar_antlr4Listener interface {
 	// EnterRepeatStatement is called when entering the repeatStatement production.
 	EnterRepeatStatement(c *RepeatStatementContext)
 
-	// EnterForStatement is called when entering the forStatement production.
-	EnterForStatement(c *ForStatementContext)
+	// EnterNumericFor is called when entering the numericFor production.
+	EnterNumericFor(c *NumericForContext)
+
+	// EnterGenericFor is called when entering the genericFor production.
+	EnterGenericFor(c *GenericForContext)
 
 	// EnterBreakStatement is called when entering the breakStatement production.
 	EnterBreakStatement(c *BreakStatementContext)
@@ -79,6 +82,9 @@ type lua_grammar_antlr4Listener interface {
 
 	// EnterCoroutineStatement is called when entering the coroutineStatement production.
 	EnterCoroutineStatement(c *CoroutineStatementContext)
+
+	// EnterProtectedCallStatement is called when entering the protectedCallStatement production.
+	EnterProtectedCallStatement(c *ProtectedCallStatementContext)
 
 	// EnterBlock is called when entering the block production.
 	EnterBlock(c *BlockContext)
@@ -130,6 +136,18 @@ type lua_grammar_antlr4Listener interface {
 
 	// EnterShiftAssignOp is called when entering the shiftAssignOp production.
 	EnterShiftAssignOp(c *ShiftAssignOpContext)
+
+	// EnterIdentifierList is called when entering the identifierList production.
+	EnterIdentifierList(c *IdentifierListContext)
+
+	// EnterExpressionList is called when entering the expressionList production.
+	EnterExpressionList(c *ExpressionListContext)
+
+	// EnterFunctionExpression is called when entering the functionExpression production.
+	EnterFunctionExpression(c *FunctionExpressionContext)
+
+	// EnterSelectStatement is called when entering the selectStatement production.
+	EnterSelectStatement(c *SelectStatementContext)
 
 	// ExitProgram is called when exiting the program production.
 	ExitProgram(c *ProgramContext)
@@ -191,8 +209,11 @@ type lua_grammar_antlr4Listener interface {
 	// ExitRepeatStatement is called when exiting the repeatStatement production.
 	ExitRepeatStatement(c *RepeatStatementContext)
 
-	// ExitForStatement is called when exiting the forStatement production.
-	ExitForStatement(c *ForStatementContext)
+	// ExitNumericFor is called when exiting the numericFor production.
+	ExitNumericFor(c *NumericForContext)
+
+	// ExitGenericFor is called when exiting the genericFor production.
+	ExitGenericFor(c *GenericForContext)
 
 	// ExitBreakStatement is called when exiting the breakStatement production.
 	ExitBreakStatement(c *BreakStatementContext)
@@ -202,6 +223,9 @@ type lua_grammar_antlr4Listener interface {
 
 	// ExitCoroutineStatement is called when exiting the coroutineStatement production.
 	ExitCoroutineStatement(c *CoroutineStatementContext)
+
+	// ExitProtectedCallStatement is called when exiting the protectedCallStatement production.
+	ExitProtectedCallStatement(c *ProtectedCallStatementContext)
 
 	// ExitBlock is called when exiting the block production.
 	ExitBlock(c *BlockContext)
@@ -253,4 +277,16 @@ type lua_grammar_antlr4Listener interface {
 
 	// ExitShiftAssignOp is called when exiting the shiftAssignOp production.
 	ExitShiftAssignOp(c *ShiftAssignOpContext)
+
+	// ExitIdentifierList is called when exiting the identifierList production.
+	ExitIdentifierList(c *IdentifierListContext)
+
+	// ExitExpressionList is called when exiting the expressionList production.
+	ExitExpressionList(c *ExpressionListContext)
+
+	// ExitFunctionExpression is called when exiting the functionExpression production.
+	ExitFunctionExpression(c *FunctionExpressionContext)
+
+	// ExitSelectStatement is called when exiting the selectStatement production.
+	ExitSelectStatement(c *SelectStatementContext)
 }

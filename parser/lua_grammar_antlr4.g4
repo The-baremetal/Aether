@@ -14,6 +14,7 @@ statement
     | returnStatement
     | localDeclaration
     | labelStatement
+    | selectStatement
     ;
 
 // **Adding a new statement**: 
@@ -32,7 +33,7 @@ assignStatement
 expression
     : primaryExpression
     | expression operatorGroup expression
-    |<assoc=right> expression operatorGroup expression  // For right-associative
+    |<assoc=right> expression operatorGroup expression
     | unaryOp expression
     ;
 
@@ -42,6 +43,7 @@ primaryExpression
     | functionCall
     | unaryOperation
     | tableConstructor
+    | functionExpression
     | '(' expression ')'
     ;
 
@@ -54,10 +56,13 @@ literal
 
 variable
     : IDENTIFIER
+    | variable '[' expression ']'
+    | variable '.' IDENTIFIER
     ;
 
 functionCall
-    : IDENTIFIER '(' (expression (',' expression)*)? ')'
+    : variable '(' (expression (',' expression)*)? ')'
+    | variable ':' IDENTIFIER '(' (expression (',' expression)*)? ')'
     ;
 
 tableConstructor
@@ -66,6 +71,7 @@ tableConstructor
 
 metatable
     : '__metatable' '=' expression
+    | '{' metamethods '}'
     ;
 
 metamethods
@@ -82,7 +88,9 @@ metamethod: '__add' | '__sub' | '__mul' | '__div' | '__mod' | '__pow'
 
 field
     : IDENTIFIER '=' expression
+    | '[' expression ']' '=' expression
     | expression
+    | IDENTIFIER ':' functionExpression
     ;
 
 // ---------------------------
@@ -113,6 +121,7 @@ controlFlowStatement
     | breakStatement
     | gotoStatement
     | coroutineStatement
+    | protectedCallStatement
     ;
 
 ifStatement
@@ -128,7 +137,8 @@ repeatStatement
     ;
 
 forStatement
-    : 'for' IDENTIFIER '=' expression ',' expression (',' expression)? 'do' block 'end'
+    : 'for' IDENTIFIER '=' expression ',' expression (',' expression)? 'do' block 'end'  #numericFor
+    | 'for' identifierList 'in' expressionList 'do' block 'end'                            #genericFor
     ;
 
 breakStatement
@@ -140,7 +150,12 @@ gotoStatement
     ;
 
 coroutineStatement
-    : 'coroutine' '.' ( 'create' | 'resume' | 'yield' | 'status' )
+    : 'coroutine' '.' ( 'create' | 'resume' | 'yield' | 'status' | 'running' | 'wrap' | 'isyieldable' )
+    ;
+
+protectedCallStatement
+    : (('pcall' | 'xpcall') ('.' | ':')? IDENTIFIER?)
+      '(' expression (',' expression)? ')'
     ;
 
 block
@@ -151,14 +166,17 @@ block
 /* Declarations (Local Variables, Functions) */
 localDeclaration
     : 'local' IDENTIFIER ('=' expression)?
+    | 'local' IDENTIFIER (',' IDENTIFIER)* '=' expressionList
+    | 'local' 'function' IDENTIFIER '(' (IDENTIFIER (',' IDENTIFIER)*)? ')' block 'end'
     ;
 
 functionDeclaration
-    : 'function' IDENTIFIER '(' (IDENTIFIER (',' IDENTIFIER)*)? ')' block 'end'
+    : 'function' (IDENTIFIER '.' | IDENTIFIER ':')? IDENTIFIER
+      '(' (IDENTIFIER (',' IDENTIFIER)* (',' varargOp)? | varargOp)? ')' block 'end'
     ;
 
 returnStatement
-    : 'return' (expression (',' expression)*)?
+    : 'return' (expression (',' expression)* | functionCall)?
     ;
 
 // ---------------------------
@@ -175,6 +193,7 @@ operatorGroup
     | incrOp
     | coalesceOp
     | shiftAssignOp
+    | '=>'
     ;
 
 logicalOp:     'and'|'or';
@@ -182,7 +201,7 @@ comparisonOp:  '=='|'>='|'<='|'~='|'>'|'<';
 arithOp:       '+'|'-'|'*'|'/'|'//'|'%'|'^';
 bitwiseOp:     '&'|'|'|'~'|'<<'|'>>';
 assignOp:      '='|'+='|'-='|'*='|'/='|'//='|'^='|'&='|'|=';
-unaryOp:       'not'|'#'|'-';
+unaryOp:       'not'|'#'|'-'|'~'|'typeof';
 concatOp:      '..';
 varargOp: '...';
 compoundAssignOp: '+=' | '-=' | '*=' | '/=' | '//=' | '^=' | '..=' | '??=';
@@ -222,4 +241,21 @@ WS
 
 COMMENT
     : '--' ~[\r\n]* -> skip
+    ;
+
+identifierList
+    : IDENTIFIER (',' IDENTIFIER)*
+    ;
+
+expressionList
+    : expression (',' expression)*
+    | varargOp
+    ;
+
+functionExpression
+    : 'function' (IDENTIFIER ':')? '(' (IDENTIFIER (',' IDENTIFIER)*)? ')' block 'end'
+    ;
+
+selectStatement
+    : 'select' '(' ('#' | expression) ',' expression ')' 
     ;

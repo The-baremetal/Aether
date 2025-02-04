@@ -15,6 +15,7 @@ statement
     | localDeclaration
     | labelStatement
     | selectStatement
+    | 'spawn' expression
     ;
 
 // **Adding a new statement**: 
@@ -25,26 +26,37 @@ statement
 //     : 'newKeyword' expression ';'
 //     ;
 assignStatement
-    : variable ('=' | '+=' | '-=' | '*=' | '/=') expression
+    : variable (assignOp | incrOp | shiftAssignOp | coalesceOp) expression
     ;
 
 // ---------------------------
 /* Expressions (Literals, Variables, Operations) */
 expression
-    : primaryExpression
+    : primaryExpression (operatorGroup expression)*
     | expression operatorGroup expression
     |<assoc=right> expression operatorGroup expression
     | unaryOp expression
+    | 'match' expression 'with' matchArm+ 'end'
+    | 'async' block 'end'
+    | 'await' expression
     ;
 
 primaryExpression
-    : literal
+    : (literal
     | variable
     | functionCall
     | unaryOperation
     | tableConstructor
     | functionExpression
     | '(' expression ')'
+    | lambdaExpression)
+    ( callChain )*
+    ;
+
+callChain
+    : ':' IDENTIFIER '(' expressionList? ')'  #methodChain
+    | '.' IDENTIFIER                           #propertyChain
+    | '[' expression ']'                       #indexChain
     ;
 
 literal
@@ -56,8 +68,14 @@ literal
 
 variable
     : IDENTIFIER
+    | variable safeAccess
     | variable '[' expression ']'
     | variable '.' IDENTIFIER
+    ;
+
+safeAccess
+    : '?.' IDENTIFIER
+    | '?[' expression ']'
     ;
 
 functionCall
@@ -82,6 +100,24 @@ labelStatement
     : '::' IDENTIFIER '::'
     ;
 
+matchArm
+    : pattern ('when' expression)? '=>' expression
+    ;
+
+pattern
+    : literal
+    | tableConstructor
+    | IDENTIFIER
+    | pattern '|' pattern
+    | '{' fieldPattern (',' fieldPattern)* '}'
+    ;
+
+fieldPattern
+    : IDENTIFIER '=' pattern
+    | '[' expression ']' '=' pattern
+    | pattern
+    ;
+    
 metamethod: '__add' | '__sub' | '__mul' | '__div' | '__mod' | '__pow' 
           | '__unm' | '__concat' | '__len' | '__eq' | '__lt' | '__le'
           | '__tostring' | '__pairs' | '__ipairs' | '__call';
@@ -155,7 +191,11 @@ coroutineStatement
 
 protectedCallStatement
     : (('pcall' | 'xpcall') ('.' | ':')? IDENTIFIER?)
-      '(' expression (',' expression)? ')'
+      '(' (expressionList | namedArgs) ')'
+    ;
+
+namedArgs
+    : IDENTIFIER '=' expression (',' IDENTIFIER '=' expression)*
     ;
 
 block
@@ -165,7 +205,7 @@ block
 // ---------------------------
 /* Declarations (Local Variables, Functions) */
 localDeclaration
-    : 'local' IDENTIFIER ('=' expression)?
+    : 'local' typeAnnotation? IDENTIFIER ('=' expression)?
     | 'local' IDENTIFIER (',' IDENTIFIER)* '=' expressionList
     | 'local' 'function' IDENTIFIER '(' (IDENTIFIER (',' IDENTIFIER)*)? ')' block 'end'
     ;
@@ -194,6 +234,7 @@ operatorGroup
     | coalesceOp
     | shiftAssignOp
     | '=>'
+    | safeAccess
     ;
 
 logicalOp:     'and'|'or';
@@ -204,7 +245,10 @@ assignOp:      '='|'+='|'-='|'*='|'/='|'//='|'^='|'&='|'|=';
 unaryOp:       'not'|'#'|'-'|'~'|'typeof';
 concatOp:      '..';
 varargOp: '...';
-compoundAssignOp: '+=' | '-=' | '*=' | '/=' | '//=' | '^=' | '..=' | '??=';
+compoundAssignOp: 
+    '+=' | '-=' | '*=' | '/=' | '//=' | '^=' | '..=' | '??=' |
+    '+_=' | '-_='
+    ;
 incrOp: '+_' | '-_';
 coalesceOp: '??';
 shiftAssignOp: '<<=' | '>>=';
@@ -253,9 +297,56 @@ expressionList
     ;
 
 functionExpression
-    : 'function' (IDENTIFIER ':')? '(' (IDENTIFIER (',' IDENTIFIER)*)? ')' block 'end'
+    : 'function' (IDENTIFIER ':')? '(' (IDENTIFIER (',' IDENTIFIER)*)? ')' 
+      (block 'end' | '=>' expression)
     ;
 
 selectStatement
     : 'select' '(' ('#' | expression) ',' expression ')' 
+    ;
+
+lambdaExpression
+    : '(' (IDENTIFIER (',' IDENTIFIER)*)? ')' '=>' expression
+    ;
+
+typeAnnotation
+    : ':' typeSpec
+    ;
+
+typeSpec
+    : 'number' | 'string' | 'boolean' | 'table' | 'function'
+    | 'any' | typeSpec '[]' | 'table<' typeSpec ',' typeSpec '>'
+    ;
+
+// ---------------------------
+/* 
+$$\      $$\  $$$$$$\  $$$$$$\ $$$$$$$$\ $$\       $$$$$$$\  $$$$$$$$\ $$$$$$$$\  $$$$$$\  $$$$$$$\  $$$$$$$$\       $$\      $$\  $$$$$$\  $$\   $$\ $$$$$$\ $$\   $$\  $$$$$$\         $$$$$$\  $$\   $$\  $$$$$$\  $$\   $$\  $$$$$$\  $$$$$$$$\  $$$$$$\            $$$$$$$\  $$\       $$$$$$$$\  $$$$$$\   $$$$$$\  $$$$$$$$\       $$$$$$$$\ $$$$$$\ $$$$$$$\   $$$$$$\ $$$$$$$$\       $$\   $$\  $$$$$$\  $$$$$$$$\       $$$$$$$$\ $$\   $$\ $$$$$$$$\       $$$$$$$$\ $$\   $$\ $$$$$$$\  $$$$$$$$\ $$$$$$$\  $$$$$$\ $$\      $$\ $$$$$$$$\ $$\   $$\ $$$$$$$$\  $$$$$$\         $$$$$$\  $$$$$$$$\  $$$$$$\ $$$$$$$$\ $$$$$$\  $$$$$$\  $$\   $$\       $$$$$$$$\  $$$$$$\         $$$$$$\  $$\    $$\  $$$$$$\  $$$$$$\ $$$$$$$\        $$$$$$$\  $$$$$$$\  $$$$$$$$\  $$$$$$\  $$\   $$\ $$$$$$\ $$\   $$\  $$$$$$\        $$\   $$\  $$$$$$\  $$$$$$$$\ $$$$$$$\         $$$$$$\   $$$$$$\  $$$$$$$\  $$$$$$$$\ $$\ 
+$$ | $\  $$ |$$  __$$\ \_$$  _|\__$$  __|$$ |      $$  __$$\ $$  _____|$$  _____|$$  __$$\ $$  __$$\ $$  _____|      $$$\    $$$ |$$  __$$\ $$ | $$  |\_$$  _|$$$\  $$ |$$  __$$\       $$  __$$\ $$ |  $$ |$$  __$$\ $$$\  $$ |$$  __$$\ $$  _____|$$  __$$\           $$  __$$\ $$ |      $$  _____|$$  __$$\ $$  __$$\ $$  _____|      $$  _____|\_$$  _|$$  __$$\ $$  __$$\\__$$  __|      $$ |  $$ |$$  __$$\ $$  _____|      \__$$  __|$$ |  $$ |$$  _____|      $$  _____|$$ |  $$ |$$  __$$\ $$  _____|$$  __$$\ \_$$  _|$$$\    $$$ |$$  _____|$$$\  $$ |\__$$  __|$$  __$$\       $$  __$$\ $$  _____|$$  __$$\\__$$  __|\_$$  _|$$  __$$\ $$$\  $$ |      \__$$  __|$$  __$$\       $$  __$$\ $$ |   $$ |$$  __$$\ \_$$  _|$$  __$$\       $$  __$$\ $$  __$$\ $$  _____|$$  __$$\ $$ | $$  |\_$$  _|$$$\  $$ |$$  __$$\       $$ |  $$ |$$  __$$\ $$  _____|$$  __$$\       $$  __$$\ $$  __$$\ $$  __$$\ $$  _____|$$ |
+$$ |$$$\ $$ |$$ /  $$ |  $$ |     $$ |   $$ |      $$ |  $$ |$$ |      $$ |      $$ /  $$ |$$ |  $$ |$$ |            $$$$\  $$$$ |$$ /  $$ |$$ |$$  /   $$ |  $$$$\ $$ |$$ /  \__|      $$ /  \__|$$ |  $$ |$$ /  $$ |$$$$\ $$ |$$ /  \__|$$ |      $$ /  \__|          $$ |  $$ |$$ |      $$ |      $$ /  $$ |$$ /  \__|$$ |            $$ |        $$ |  $$ |  $$ |$$ /  \__|  $$ |         $$ |  $$ |$$ /  \__|$$ |               $$ |   $$ |  $$ |$$ |            $$ |      \$$\ $$  |$$ |  $$ |$$ |      $$ |  $$ |  $$ |  $$$$\  $$$$ |$$ |      $$$$\ $$ |   $$ |   $$ /  \__|      $$ /  \__|$$ |      $$ /  \__|  $$ |     $$ |  $$ /  $$ |$$$$\ $$ |         $$ |   $$ /  $$ |      $$ /  $$ |$$ |   $$ |$$ /  $$ |  $$ |  $$ |  $$ |      $$ |  $$ |$$ |  $$ |$$ |      $$ /  $$ |$$ |$$  /   $$ |  $$$$\ $$ |$$ /  \__|      $$ |  $$ |$$ /  \__|$$ |      $$ |  $$ |      $$ /  \__|$$ /  $$ |$$ |  $$ |$$ |      $$ |
+$$ $$ $$\$$ |$$$$$$$$ |  $$ |     $$ |   $$ |      $$$$$$$\ |$$$$$\    $$$$$\    $$ |  $$ |$$$$$$$  |$$$$$\          $$\$$\$$ $$ |$$$$$$$$ |$$$$$  /    $$ |  $$ $$\$$ |$$ |$$$$\       $$ |      $$$$$$$$ |$$$$$$$$ |$$ $$\$$ |$$ |$$$$\ $$$$$\    \$$$$$$\            $$$$$$$  |$$ |      $$$$$\    $$$$$$$$ |\$$$$$$\  $$$$$\          $$$$$\      $$ |  $$$$$$$  |\$$$$$$\    $$ |         $$ |  $$ |\$$$$$$\  $$$$$\             $$ |   $$$$$$$$ |$$$$$\          $$$$$\     \$$$$  / $$$$$$$  |$$$$$\    $$$$$$$  |  $$ |  $$\$$\$$ $$ |$$$$$\    $$ $$\$$ |   $$ |   \$$$$$$\        \$$$$$$\  $$$$$\    $$ |        $$ |     $$ |  $$ |  $$ |$$ $$\$$ |         $$ |   $$ |  $$ |      $$$$$$$$ |\$$\  $$  |$$ |  $$ |  $$ |  $$ |  $$ |      $$$$$$$\ |$$$$$$$  |$$$$$\    $$$$$$$$ |$$$$$  /    $$ |  $$ $$\$$ |$$ |$$$$\       $$ |  $$ |\$$$$$$\  $$$$$\    $$$$$$$  |      $$ |      $$ |  $$ |$$ |  $$ |$$$$$\    $$ |
+$$$$  _$$$$ |$$  __$$ |  $$ |     $$ |   \__|      $$  __$$\ $$  __|   $$  __|   $$ |  $$ |$$  __$$< $$  __|         $$ \$$$  $$ |$$  __$$ |$$  $$<     $$ |  $$ \$$$$ |$$ |\_$$ |      $$ |      $$  __$$ |$$  __$$ |$$ \$$$$ |$$ |\_$$ |$$  __|    \____$$\           $$  ____/ $$ |      $$  __|   $$  __$$ | \____$$\ $$  __|         $$  __|     $$ |  $$  __$$<  \____$$\   $$ |         $$ |  $$ | \____$$\ $$  __|            $$ |   $$  __$$ |$$  __|         $$  __|    $$  $$<  $$  ____/ $$  __|   $$  __$$<   $$ |  $$ \$$$  $$ |$$  __|   $$ \$$$$ |   $$ |    \____$$\        \____$$\ $$  __|   $$ |        $$ |     $$ |  $$ |  $$ |$$ \$$$$ |         $$ |   $$ |  $$ |      $$  __$$ | \$$\$$  / $$ |  $$ |  $$ |  $$ |  $$ |      $$  __$$\ $$  __$$< $$  __|   $$  __$$ |$$  $$<     $$ |  $$ \$$$$ |$$ |\_$$ |      $$ |  $$ | \____$$\ $$  __|   $$  __$$<       $$ |      $$ |  $$ |$$ |  $$ |$$  __|   \__|
+$$$  / \$$$ |$$ |  $$ |  $$ |     $$ |             $$ |  $$ |$$ |      $$ |      $$ |  $$ |$$ |  $$ |$$ |            $$ |\$  /$$ |$$ |  $$ |$$ |\$$\    $$ |  $$ |\$$$ |$$ |  $$ |      $$ |  $$\ $$ |  $$ |$$ |  $$ |$$ |\$$$ |$$ |  $$ |$$ |      $$\   $$ |          $$ |      $$ |      $$ |      $$ |  $$ |$$\   $$ |$$ |            $$ |        $$ |  $$ |  $$ |$$\   $$ |  $$ |         $$ |  $$ |$$\   $$ |$$ |               $$ |   $$ |  $$ |$$ |            $$ |      $$  /\$$\ $$ |      $$ |      $$ |  $$ |  $$ |  $$ |\$  /$$ |$$ |      $$ |\$$$ |   $$ |   $$\   $$ |      $$\   $$ |$$ |      $$ |  $$\   $$ |     $$ |  $$ |  $$ |$$ |\$$$ |         $$ |   $$ |  $$ |      $$ |  $$ |  \$$$  /  $$ |  $$ |  $$ |  $$ |  $$ |      $$ |  $$ |$$ |  $$ |$$ |      $$ |  $$ |$$ |\$$\    $$ |  $$ |\$$$ |$$ |  $$ |      $$ |  $$ |$$\   $$ |$$ |      $$ |  $$ |      $$ |  $$\ $$ |  $$ |$$ |  $$ |$$ |          
+$$  /   \$$ |$$ |  $$ |$$$$$$\    $$ |   $$\       $$$$$$$  |$$$$$$$$\ $$ |       $$$$$$  |$$ |  $$ |$$$$$$$$\       $$ | \_/ $$ |$$ |  $$ |$$ | \$$\ $$$$$$\ $$ | \$$ |\$$$$$$  |      \$$$$$$  |$$ |  $$ |$$ |  $$ |$$ | \$$ |\$$$$$$  |$$$$$$$$\ \$$$$$$  |$$\       $$ |      $$$$$$$$\ $$$$$$$$\ $$ |  $$ |\$$$$$$  |$$$$$$$$\       $$ |      $$$$$$\ $$ |  $$ |\$$$$$$  |  $$ |         \$$$$$$  |\$$$$$$  |$$$$$$$$\          $$ |   $$ |  $$ |$$$$$$$$\       $$$$$$$$\ $$ /  $$ |$$ |      $$$$$$$$\ $$ |  $$ |$$$$$$\ $$ | \_/ $$ |$$$$$$$$\ $$ | \$$ |   $$ |   \$$$$$$  |      \$$$$$$  |$$$$$$$$\ \$$$$$$  |  $$ |   $$$$$$\  $$$$$$  |$$ | \$$ |         $$ |    $$$$$$  |      $$ |  $$ |   \$  /    $$$$$$  |$$$$$$\ $$$$$$$  |      $$$$$$$  |$$ |  $$ |$$$$$$$$\ $$ |  $$ |$$ | \$$\ $$$$$$\ $$ | \$$ |\$$$$$$  |      \$$$$$$  |\$$$$$$  |$$$$$$$$\ $$ |  $$ |      \$$$$$$  | $$$$$$  |$$$$$$$  |$$$$$$$$\ $$\ 
+\__/     \__|\__|  \__|\______|   \__|   \__|      \_______/ \________|\__|       \______/ \__|  \__|\________|      \__|     \__|\__|  \__|\__|  \__|\______|\__|  \__| \______/        \______/ \__|  \__|\__|  \__|\__|  \__| \______/ \________| \______/ $  |      \__|      \________|\________|\__|  \__| \______/ \________|      \__|      \______|\__|  \__| \______/   \__|          \______/  \______/ \________|         \__|   \__|  \__|\________|      \________|\__|  \__|\__|      \________|\__|  \__|\______|\__|     \__|\________|\__|  \__|   \__|    \______/        \______/ \________| \______/   \__|   \______| \______/ \__|  \__|         \__|    \______/       \__|  \__|    \_/     \______/ \______|\_______/       \_______/ \__|  \__|\________|\__|  \__|\__|  \__|\______|\__|  \__| \______/        \______/  \______/ \________|\__|  \__|       \______/  \______/ \_______/ \________|\__|
+
+(very cool right? the script to handle this is is in the location /INTERNALSCRIPTS/EXPERIMENTS/init.lua) NOTE THIS SCRIPT ISNT IN STANDARD LUA, IT IS IN THE LANGUAGE THIS PROJECT IS ITSELF. This project is coming together and I'm very excited to have the build ready in the next 8 months.
+*/
+
+experimentalExpression
+    : {experiments.isEnabled("safe_nav")}? safeNavigation
+    | {experiments.isEnabled("pipe")}? pipeOperator
+    | {experiments.isEnabled("decorators")}? decoratorSyntax
+    ;
+
+safeNavigation
+    : expression '?.' IDENTIFIER
+    | expression '?[' expression ']'
+    ;
+
+pipeOperator
+    : expression '|>' expression
+    ;
+
+decoratorSyntax
+    : '@' IDENTIFIER ( '(' expressionList? ')' )?
     ;

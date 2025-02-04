@@ -88,7 +88,11 @@ func (v *Baselua_grammar_antlr4Visitor) VisitRepeatStatement(ctx *RepeatStatemen
 	return v.VisitChildren(ctx)
 }
 
-func (v *Baselua_grammar_antlr4Visitor) VisitForStatement(ctx *ForStatementContext) interface{} {
+func (v *Baselua_grammar_antlr4Visitor) VisitNumericFor(ctx *NumericForContext) interface{} {
+	return v.VisitChildren(ctx)
+}
+
+func (v *Baselua_grammar_antlr4Visitor) VisitGenericFor(ctx *GenericForContext) interface{} {
 	return v.VisitChildren(ctx)
 }
 
@@ -101,6 +105,10 @@ func (v *Baselua_grammar_antlr4Visitor) VisitGotoStatement(ctx *GotoStatementCon
 }
 
 func (v *Baselua_grammar_antlr4Visitor) VisitCoroutineStatement(ctx *CoroutineStatementContext) interface{} {
+	return v.VisitChildren(ctx)
+}
+
+func (v *Baselua_grammar_antlr4Visitor) VisitProtectedCallStatement(ctx *ProtectedCallStatementContext) interface{} {
 	return v.VisitChildren(ctx)
 }
 
@@ -169,5 +177,21 @@ func (v *Baselua_grammar_antlr4Visitor) VisitCoalesceOp(ctx *CoalesceOpContext) 
 }
 
 func (v *Baselua_grammar_antlr4Visitor) VisitShiftAssignOp(ctx *ShiftAssignOpContext) interface{} {
+	return v.VisitChildren(ctx)
+}
+
+func (v *Baselua_grammar_antlr4Visitor) VisitIdentifierList(ctx *IdentifierListContext) interface{} {
+	return v.VisitChildren(ctx)
+}
+
+func (v *Baselua_grammar_antlr4Visitor) VisitExpressionList(ctx *ExpressionListContext) interface{} {
+	return v.VisitChildren(ctx)
+}
+
+func (v *Baselua_grammar_antlr4Visitor) VisitFunctionExpression(ctx *FunctionExpressionContext) interface{} {
+	return v.VisitChildren(ctx)
+}
+
+func (v *Baselua_grammar_antlr4Visitor) VisitSelectStatement(ctx *SelectStatementContext) interface{} {
 	return v.VisitChildren(ctx)
 }

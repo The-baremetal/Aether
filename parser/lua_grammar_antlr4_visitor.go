@@ -68,8 +68,11 @@ type lua_grammar_antlr4Visitor interface {
 	// Visit a parse tree produced by lua_grammar_antlr4Parser#repeatStatement.
 	VisitRepeatStatement(ctx *RepeatStatementContext) interface{}
 
-	// Visit a parse tree produced by lua_grammar_antlr4Parser#forStatement.
-	VisitForStatement(ctx *ForStatementContext) interface{}
+	// Visit a parse tree produced by lua_grammar_antlr4Parser#numericFor.
+	VisitNumericFor(ctx *NumericForContext) interface{}
+
+	// Visit a parse tree produced by lua_grammar_antlr4Parser#genericFor.
+	VisitGenericFor(ctx *GenericForContext) interface{}
 
 	// Visit a parse tree produced by lua_grammar_antlr4Parser#breakStatement.
 	VisitBreakStatement(ctx *BreakStatementContext) interface{}
@@ -79,6 +82,9 @@ type lua_grammar_antlr4Visitor interface {
 
 	// Visit a parse tree produced by lua_grammar_antlr4Parser#coroutineStatement.
 	VisitCoroutineStatement(ctx *CoroutineStatementContext) interface{}
+
+	// Visit a parse tree produced by lua_grammar_antlr4Parser#protectedCallStatement.
+	VisitProtectedCallStatement(ctx *ProtectedCallStatementContext) interface{}
 
 	// Visit a parse tree produced by lua_grammar_antlr4Parser#block.
 	VisitBlock(ctx *BlockContext) interface{}
@@ -130,4 +136,16 @@ type lua_grammar_antlr4Visitor interface {
 
 	// Visit a parse tree produced by lua_grammar_antlr4Parser#shiftAssignOp.
 	VisitShiftAssignOp(ctx *ShiftAssignOpContext) interface{}
+
+	// Visit a parse tree produced by lua_grammar_antlr4Parser#identifierList.
+	VisitIdentifierList(ctx *IdentifierListContext) interface{}
+
+	// Visit a parse tree produced by lua_grammar_antlr4Parser#expressionList.
+	VisitExpressionList(ctx *ExpressionListContext) interface{}
+
+	// Visit a parse tree produced by lua_grammar_antlr4Parser#functionExpression.
+	VisitFunctionExpression(ctx *FunctionExpressionContext) interface{}
+
+	// Visit a parse tree produced by lua_grammar_antlr4Parser#selectStatement.
+	VisitSelectStatement(ctx *SelectStatementContext) interface{}
 }
