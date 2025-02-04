@@ -14,6 +14,7 @@ statement
     | returnStatement
     | localDeclaration
     | labelStatement
+    | selectStatement
     ;
 
 // **Adding a new statement**: 
@@ -145,11 +146,12 @@ gotoStatement
     ;
 
 coroutineStatement
-    : 'coroutine' '.' ( 'create' | 'resume' | 'yield' | 'status' )
+    : 'coroutine' '.' ( 'create' | 'resume' | 'yield' | 'status' | 'running' | 'wrap' | 'isyieldable' )
     ;
 
 protectedCallStatement
-    : ('pcall' | 'xpcall') '(' expression (',' expression)? ')'
+    : (('pcall' | 'xpcall') ('.' | ':')? IDENTIFIER?)
+      '(' expression (',' expression)? ')'
     ;
 
 block
@@ -160,15 +162,17 @@ block
 /* Declarations (Local Variables, Functions) */
 localDeclaration
     : 'local' IDENTIFIER ('=' expression)?
+    | 'local' IDENTIFIER (',' IDENTIFIER)* '=' expressionList
     | 'local' 'function' IDENTIFIER '(' (IDENTIFIER (',' IDENTIFIER)*)? ')' block 'end'
     ;
 
 functionDeclaration
-    : 'function' IDENTIFIER '(' (IDENTIFIER (',' IDENTIFIER)* (',' varargOp)? | varargOp)? ')' block 'end'
+    : 'function' (IDENTIFIER '.' | IDENTIFIER ':')? IDENTIFIER
+      '(' (IDENTIFIER (',' IDENTIFIER)* (',' varargOp)? | varargOp)? ')' block 'end'
     ;
 
 returnStatement
-    : 'return' (expression (',' expression)*)?
+    : 'return' (expression (',' expression)* | functionCall)?
     ;
 
 // ---------------------------
@@ -185,6 +189,7 @@ operatorGroup
     | incrOp
     | coalesceOp
     | shiftAssignOp
+    | '=>'
     ;
 
 logicalOp:     'and'|'or';
@@ -243,5 +248,9 @@ expressionList
     ;
 
 functionExpression
-    : 'function' '(' (IDENTIFIER (',' IDENTIFIER)*)? ')' block 'end'
+    : 'function' (IDENTIFIER ':')? '(' (IDENTIFIER (',' IDENTIFIER)*)? ')' block 'end'
+    ;
+
+selectStatement
+    : 'select' '(' ('#' | expression) ',' expression ')' 
     ;
