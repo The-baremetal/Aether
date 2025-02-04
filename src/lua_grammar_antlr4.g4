@@ -39,6 +39,7 @@ expression
     | 'match' expression 'with' matchArm+ 'end'
     | 'async' block 'end'
     | 'await' expression
+    | expression '!!'       
     ;
 
 primaryExpression
@@ -235,6 +236,7 @@ operatorGroup
     | shiftAssignOp
     | '=>'
     | safeAccess
+    | nonNullAssertOp
     ;
 
 logicalOp:     'and'|'or';
@@ -252,7 +254,7 @@ compoundAssignOp:
 incrOp: '+_' | '-_';
 coalesceOp: '??';
 shiftAssignOp: '<<=' | '>>=';
-
+nonNullAssertOp: '!!';
 
 // ---------------------------
 /* Keywords and Identifiers */
@@ -330,6 +332,7 @@ $$  /   \$$ |$$ |  $$ |$$$$$$\    $$ |   $$\       $$$$$$$  |$$$$$$$$\ $$ |     
 \__/     \__|\__|  \__|\______|   \__|   \__|      \_______/ \________|\__|       \______/ \__|  \__|\________|      \__|     \__|\__|  \__|\__|  \__|\______|\__|  \__| \______/        \______/ \__|  \__|\__|  \__|\__|  \__| \______/ \________| \______/ $  |      \__|      \________|\________|\__|  \__| \______/ \________|      \__|      \______|\__|  \__| \______/   \__|          \______/  \______/ \________|         \__|   \__|  \__|\________|      \________|\__|  \__|\__|      \________|\__|  \__|\______|\__|     \__|\________|\__|  \__|   \__|    \______/        \______/ \________| \______/   \__|   \______| \______/ \__|  \__|         \__|    \______/       \__|  \__|    \_/     \______/ \______|\_______/       \_______/ \__|  \__|\________|\__|  \__|\__|  \__|\______|\__|  \__| \______/        \______/  \______/ \________|\__|  \__|       \______/  \______/ \_______/ \________|\__|
 
 (very cool right? the script to handle this is is in the location /INTERNALSCRIPTS/EXPERIMENTS/init.lua) NOTE THIS SCRIPT ISNT IN STANDARD LUA, IT IS IN THE LANGUAGE THIS PROJECT IS ITSELF. This project is coming together and I'm very excited to have the build ready in the next 8 months.
+okay fine, I'm sorry for making you read that. For now, the internal scripts wont work because the parser is not finished and the compiler doesn't exist. after that, you can stop moving parts of your code from experimentalExpression to the Expression rule. Thanks for reading this pointless comment. These experiment rules are for multi merge collaboration so when you work on it, please move the code back...when you commit unfinshed code, please move this back to the experiment rule.
 */
 
 experimentalExpression
