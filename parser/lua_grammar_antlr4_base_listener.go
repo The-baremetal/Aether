@@ -354,6 +354,12 @@ func (s *BaseLua_grammar_antlr4Listener) EnterFunctionExpression(ctx *FunctionEx
 // ExitFunctionExpression is called when production functionExpression is exited.
 func (s *BaseLua_grammar_antlr4Listener) ExitFunctionExpression(ctx *FunctionExpressionContext) {}
 
+// EnterParameterList is called when production parameterList is entered.
+func (s *BaseLua_grammar_antlr4Listener) EnterParameterList(ctx *ParameterListContext) {}
+
+// ExitParameterList is called when production parameterList is exited.
+func (s *BaseLua_grammar_antlr4Listener) ExitParameterList(ctx *ParameterListContext) {}
+
 // EnterSelectStatement is called when production selectStatement is entered.
 func (s *BaseLua_grammar_antlr4Listener) EnterSelectStatement(ctx *SelectStatementContext) {}
 
@@ -403,3 +409,9 @@ func (s *BaseLua_grammar_antlr4Listener) EnterDecoratorSyntax(ctx *DecoratorSynt
 
 // ExitDecoratorSyntax is called when production decoratorSyntax is exited.
 func (s *BaseLua_grammar_antlr4Listener) ExitDecoratorSyntax(ctx *DecoratorSyntaxContext) {}
+
+// EnterRequireExpression is called when production requireExpression is entered.
+func (s *BaseLua_grammar_antlr4Listener) EnterRequireExpression(ctx *RequireExpressionContext) {}
+
+// ExitRequireExpression is called when production requireExpression is exited.
+func (s *BaseLua_grammar_antlr4Listener) ExitRequireExpression(ctx *RequireExpressionContext) {}

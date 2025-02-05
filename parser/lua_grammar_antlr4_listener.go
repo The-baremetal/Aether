@@ -173,6 +173,9 @@ type Lua_grammar_antlr4Listener interface {
 	// EnterFunctionExpression is called when entering the functionExpression production.
 	EnterFunctionExpression(c *FunctionExpressionContext)
 
+	// EnterParameterList is called when entering the parameterList production.
+	EnterParameterList(c *ParameterListContext)
+
 	// EnterSelectStatement is called when entering the selectStatement production.
 	EnterSelectStatement(c *SelectStatementContext)
 
@@ -196,6 +199,9 @@ type Lua_grammar_antlr4Listener interface {
 
 	// EnterDecoratorSyntax is called when entering the decoratorSyntax production.
 	EnterDecoratorSyntax(c *DecoratorSyntaxContext)
+
+	// EnterRequireExpression is called when entering the requireExpression production.
+	EnterRequireExpression(c *RequireExpressionContext)
 
 	// ExitProgram is called when exiting the program production.
 	ExitProgram(c *ProgramContext)
@@ -362,6 +368,9 @@ type Lua_grammar_antlr4Listener interface {
 	// ExitFunctionExpression is called when exiting the functionExpression production.
 	ExitFunctionExpression(c *FunctionExpressionContext)
 
+	// ExitParameterList is called when exiting the parameterList production.
+	ExitParameterList(c *ParameterListContext)
+
 	// ExitSelectStatement is called when exiting the selectStatement production.
 	ExitSelectStatement(c *SelectStatementContext)
 
@@ -385,4 +394,7 @@ type Lua_grammar_antlr4Listener interface {
 
 	// ExitDecoratorSyntax is called when exiting the decoratorSyntax production.
 	ExitDecoratorSyntax(c *DecoratorSyntaxContext)
+
+	// ExitRequireExpression is called when exiting the requireExpression production.
+	ExitRequireExpression(c *RequireExpressionContext)
 }

@@ -173,6 +173,9 @@ type Lua_grammar_antlr4Visitor interface {
 	// Visit a parse tree produced by Lua_grammar_antlr4Parser#functionExpression.
 	VisitFunctionExpression(ctx *FunctionExpressionContext) interface{}
 
+	// Visit a parse tree produced by Lua_grammar_antlr4Parser#parameterList.
+	VisitParameterList(ctx *ParameterListContext) interface{}
+
 	// Visit a parse tree produced by Lua_grammar_antlr4Parser#selectStatement.
 	VisitSelectStatement(ctx *SelectStatementContext) interface{}
 
@@ -196,4 +199,7 @@ type Lua_grammar_antlr4Visitor interface {
 
 	// Visit a parse tree produced by Lua_grammar_antlr4Parser#decoratorSyntax.
 	VisitDecoratorSyntax(ctx *DecoratorSyntaxContext) interface{}
+
+	// Visit a parse tree produced by Lua_grammar_antlr4Parser#requireExpression.
+	VisitRequireExpression(ctx *RequireExpressionContext) interface{}
 }

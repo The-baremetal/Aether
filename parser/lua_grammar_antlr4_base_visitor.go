@@ -228,6 +228,10 @@ func (v *BaseLua_grammar_antlr4Visitor) VisitFunctionExpression(ctx *FunctionExp
 	return v.VisitChildren(ctx)
 }
 
+func (v *BaseLua_grammar_antlr4Visitor) VisitParameterList(ctx *ParameterListContext) interface{} {
+	return v.VisitChildren(ctx)
+}
+
 func (v *BaseLua_grammar_antlr4Visitor) VisitSelectStatement(ctx *SelectStatementContext) interface{} {
 	return v.VisitChildren(ctx)
 }
@@ -257,5 +261,9 @@ func (v *BaseLua_grammar_antlr4Visitor) VisitPipeOperator(ctx *PipeOperatorConte
 }
 
 func (v *BaseLua_grammar_antlr4Visitor) VisitDecoratorSyntax(ctx *DecoratorSyntaxContext) interface{} {
+	return v.VisitChildren(ctx)
+}
+
+func (v *BaseLua_grammar_antlr4Visitor) VisitRequireExpression(ctx *RequireExpressionContext) interface{} {
 	return v.VisitChildren(ctx)
 }
