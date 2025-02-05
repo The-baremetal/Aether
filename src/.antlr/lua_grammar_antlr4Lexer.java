@@ -1,4 +1,4 @@
-// Generated from d:/Programs/Programmed/fluxlang/antlr4/FLUXASSEMBLY/src/lua_grammar_antlr4.g4 by ANTLR 4.13.1
+// Generated from d:/Programs/Programmed/fluxlang/antlr4/FLUXASSEMBLY/src/lua_grammar_antlr.g4 by ANTLR 4.13.1
 import org.antlr.v4.runtime.Lexer;
 import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.Token;
@@ -141,7 +141,7 @@ public class lua_grammar_antlr4Lexer extends Lexer {
 	}
 
 	@Override
-	public String getGrammarFileName() { return "lua_grammar_antlr4.g4"; }
+	public String getGrammarFileName() { return "lua_grammar_antlr.g4"; }
 
 	@Override
 	public String[] getRuleNames() { return ruleNames; }

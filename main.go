@@ -4,7 +4,8 @@ import (
 	"github.com/antlr4-go/antlr/v4"
 	"os"
 	"io/ioutil"
-	"FLUX/parser"
+	"FLUX/parser" // PLEASE STOP ASKING ME IF THIS IS CORRECT OR NOT, FLUX IS THE PROJECT NAME SO IN GO, THIS IS CORRECT
+	"strings"
 )
 func main() {
 	if len(os.Args) < 2 {
@@ -19,10 +20,76 @@ func main() {
 	}
 	input := string(content)
 	is := antlr.NewInputStream(input)
-	lexer := parser.Newlua_grammar_antlr4Lexer(is)
+	lexer := parser.NewLua_grammar_antlr4Lexer(is)
 	stream := antlr.NewCommonTokenStream(lexer, 0)
-	parser := parser.Newlua_grammar_antlr4Parser(stream)
+	parser := parser.NewLua_grammar_antlr4Parser(stream)
+	visitor := NewCustomVisitor(parser)
 	tree := parser.Program()
-	fmt.Println("Parse Tree:")
-	fmt.Println(tree.ToStringTree(nil, parser))
+	result := visitor.Visit(tree)
+	fmt.Println("AST Structure:")
+	fmt.Println(formatAST(result, 0))
+}
+
+type CustomVisitor struct {
+	*parser.BaseLua_grammar_antlr4Visitor
+	Parser *parser.Lua_grammar_antlr4Parser
+}
+
+func NewCustomVisitor(p *parser.Lua_grammar_antlr4Parser) *CustomVisitor {
+	return &CustomVisitor{
+		BaseLua_grammar_antlr4Visitor: &parser.BaseLua_grammar_antlr4Visitor{},
+		Parser: p,
+	}
+}
+
+func (v *CustomVisitor) Visit(tree antlr.ParseTree) interface{} {
+	return v.visitNode(tree)
+}
+
+func (v *CustomVisitor) visitNode(node antlr.Tree) interface{} {
+	switch ctx := node.(type) {
+	case *antlr.TerminalNodeImpl:
+		return ctx.GetText()
+	case antlr.RuleContext:
+		children := make([]interface{}, 0)
+		ruleIndex := ctx.GetRuleIndex()
+		ruleName := v.Parser.GetRuleNames()[ruleIndex]
+		
+		for i := 0; i < ctx.GetChildCount(); i++ {
+			child := ctx.GetChild(i)
+			if child != nil {
+				children = append(children, v.visitNode(child))
+			}
+		}
+		
+		return map[string]interface{}{
+			"rule":  ruleName,
+			"nodes": children,
+		}
+	default:
+		return nil
+	}
+}
+
+func formatAST(result interface{}, indent int) string {
+	var sb strings.Builder
+	indentStr := strings.Repeat("  ", indent)
+	
+	switch val := result.(type) {
+	case map[string]interface{}:
+		sb.WriteString(fmt.Sprintf("%s%s {\n", indentStr, val["rule"]))
+		if nodes, ok := val["nodes"].([]interface{}); ok {
+			for _, node := range nodes {
+				sb.WriteString(formatAST(node, indent+1))
+			}
+		}
+		sb.WriteString(fmt.Sprintf("%s}\n", indentStr))
+	case string:
+		sb.WriteString(fmt.Sprintf("%s'%s'\n", indentStr, val))
+	case []interface{}:
+		for _, item := range val {
+			sb.WriteString(formatAST(item, indent))
+		}
+	}
+	return sb.String()
 }

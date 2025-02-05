@@ -1,151 +1,199 @@
-// Code generated from lua_grammar_antlr4.g4 by ANTLR 4.13.2. DO NOT EDIT.
+// Code generated from Lua_grammar_antlr4.g4 by ANTLR 4.13.2. DO NOT EDIT.
 
-package parser // lua_grammar_antlr4
+package parser // Lua_grammar_antlr4
 
 import "github.com/antlr4-go/antlr/v4"
 
-// A complete Visitor for a parse tree produced by lua_grammar_antlr4Parser.
-type lua_grammar_antlr4Visitor interface {
+// A complete Visitor for a parse tree produced by Lua_grammar_antlr4Parser.
+type Lua_grammar_antlr4Visitor interface {
 	antlr.ParseTreeVisitor
 
-	// Visit a parse tree produced by lua_grammar_antlr4Parser#program.
+	// Visit a parse tree produced by Lua_grammar_antlr4Parser#program.
 	VisitProgram(ctx *ProgramContext) interface{}
 
-	// Visit a parse tree produced by lua_grammar_antlr4Parser#statement.
+	// Visit a parse tree produced by Lua_grammar_antlr4Parser#statement.
 	VisitStatement(ctx *StatementContext) interface{}
 
-	// Visit a parse tree produced by lua_grammar_antlr4Parser#assignStatement.
+	// Visit a parse tree produced by Lua_grammar_antlr4Parser#assignStatement.
 	VisitAssignStatement(ctx *AssignStatementContext) interface{}
 
-	// Visit a parse tree produced by lua_grammar_antlr4Parser#expression.
+	// Visit a parse tree produced by Lua_grammar_antlr4Parser#expression.
 	VisitExpression(ctx *ExpressionContext) interface{}
 
-	// Visit a parse tree produced by lua_grammar_antlr4Parser#primaryExpression.
+	// Visit a parse tree produced by Lua_grammar_antlr4Parser#primaryExpression.
 	VisitPrimaryExpression(ctx *PrimaryExpressionContext) interface{}
 
-	// Visit a parse tree produced by lua_grammar_antlr4Parser#literal.
+	// Visit a parse tree produced by Lua_grammar_antlr4Parser#methodChain.
+	VisitMethodChain(ctx *MethodChainContext) interface{}
+
+	// Visit a parse tree produced by Lua_grammar_antlr4Parser#propertyChain.
+	VisitPropertyChain(ctx *PropertyChainContext) interface{}
+
+	// Visit a parse tree produced by Lua_grammar_antlr4Parser#indexChain.
+	VisitIndexChain(ctx *IndexChainContext) interface{}
+
+	// Visit a parse tree produced by Lua_grammar_antlr4Parser#literal.
 	VisitLiteral(ctx *LiteralContext) interface{}
 
-	// Visit a parse tree produced by lua_grammar_antlr4Parser#variable.
+	// Visit a parse tree produced by Lua_grammar_antlr4Parser#variable.
 	VisitVariable(ctx *VariableContext) interface{}
 
-	// Visit a parse tree produced by lua_grammar_antlr4Parser#functionCall.
+	// Visit a parse tree produced by Lua_grammar_antlr4Parser#safeAccess.
+	VisitSafeAccess(ctx *SafeAccessContext) interface{}
+
+	// Visit a parse tree produced by Lua_grammar_antlr4Parser#functionCall.
 	VisitFunctionCall(ctx *FunctionCallContext) interface{}
 
-	// Visit a parse tree produced by lua_grammar_antlr4Parser#tableConstructor.
+	// Visit a parse tree produced by Lua_grammar_antlr4Parser#tableConstructor.
 	VisitTableConstructor(ctx *TableConstructorContext) interface{}
 
-	// Visit a parse tree produced by lua_grammar_antlr4Parser#metatable.
+	// Visit a parse tree produced by Lua_grammar_antlr4Parser#metatable.
 	VisitMetatable(ctx *MetatableContext) interface{}
 
-	// Visit a parse tree produced by lua_grammar_antlr4Parser#metamethods.
+	// Visit a parse tree produced by Lua_grammar_antlr4Parser#metamethods.
 	VisitMetamethods(ctx *MetamethodsContext) interface{}
 
-	// Visit a parse tree produced by lua_grammar_antlr4Parser#labelStatement.
+	// Visit a parse tree produced by Lua_grammar_antlr4Parser#labelStatement.
 	VisitLabelStatement(ctx *LabelStatementContext) interface{}
 
-	// Visit a parse tree produced by lua_grammar_antlr4Parser#metamethod.
+	// Visit a parse tree produced by Lua_grammar_antlr4Parser#matchArm.
+	VisitMatchArm(ctx *MatchArmContext) interface{}
+
+	// Visit a parse tree produced by Lua_grammar_antlr4Parser#pattern.
+	VisitPattern(ctx *PatternContext) interface{}
+
+	// Visit a parse tree produced by Lua_grammar_antlr4Parser#fieldPattern.
+	VisitFieldPattern(ctx *FieldPatternContext) interface{}
+
+	// Visit a parse tree produced by Lua_grammar_antlr4Parser#metamethod.
 	VisitMetamethod(ctx *MetamethodContext) interface{}
 
-	// Visit a parse tree produced by lua_grammar_antlr4Parser#field.
+	// Visit a parse tree produced by Lua_grammar_antlr4Parser#field.
 	VisitField(ctx *FieldContext) interface{}
 
-	// Visit a parse tree produced by lua_grammar_antlr4Parser#binaryOperation.
+	// Visit a parse tree produced by Lua_grammar_antlr4Parser#binaryOperation.
 	VisitBinaryOperation(ctx *BinaryOperationContext) interface{}
 
-	// Visit a parse tree produced by lua_grammar_antlr4Parser#unaryOperation.
+	// Visit a parse tree produced by Lua_grammar_antlr4Parser#unaryOperation.
 	VisitUnaryOperation(ctx *UnaryOperationContext) interface{}
 
-	// Visit a parse tree produced by lua_grammar_antlr4Parser#controlFlowStatement.
+	// Visit a parse tree produced by Lua_grammar_antlr4Parser#controlFlowStatement.
 	VisitControlFlowStatement(ctx *ControlFlowStatementContext) interface{}
 
-	// Visit a parse tree produced by lua_grammar_antlr4Parser#ifStatement.
+	// Visit a parse tree produced by Lua_grammar_antlr4Parser#ifStatement.
 	VisitIfStatement(ctx *IfStatementContext) interface{}
 
-	// Visit a parse tree produced by lua_grammar_antlr4Parser#whileStatement.
+	// Visit a parse tree produced by Lua_grammar_antlr4Parser#whileStatement.
 	VisitWhileStatement(ctx *WhileStatementContext) interface{}
 
-	// Visit a parse tree produced by lua_grammar_antlr4Parser#repeatStatement.
+	// Visit a parse tree produced by Lua_grammar_antlr4Parser#repeatStatement.
 	VisitRepeatStatement(ctx *RepeatStatementContext) interface{}
 
-	// Visit a parse tree produced by lua_grammar_antlr4Parser#numericFor.
+	// Visit a parse tree produced by Lua_grammar_antlr4Parser#numericFor.
 	VisitNumericFor(ctx *NumericForContext) interface{}
 
-	// Visit a parse tree produced by lua_grammar_antlr4Parser#genericFor.
+	// Visit a parse tree produced by Lua_grammar_antlr4Parser#genericFor.
 	VisitGenericFor(ctx *GenericForContext) interface{}
 
-	// Visit a parse tree produced by lua_grammar_antlr4Parser#breakStatement.
+	// Visit a parse tree produced by Lua_grammar_antlr4Parser#breakStatement.
 	VisitBreakStatement(ctx *BreakStatementContext) interface{}
 
-	// Visit a parse tree produced by lua_grammar_antlr4Parser#gotoStatement.
+	// Visit a parse tree produced by Lua_grammar_antlr4Parser#gotoStatement.
 	VisitGotoStatement(ctx *GotoStatementContext) interface{}
 
-	// Visit a parse tree produced by lua_grammar_antlr4Parser#coroutineStatement.
+	// Visit a parse tree produced by Lua_grammar_antlr4Parser#coroutineStatement.
 	VisitCoroutineStatement(ctx *CoroutineStatementContext) interface{}
 
-	// Visit a parse tree produced by lua_grammar_antlr4Parser#protectedCallStatement.
+	// Visit a parse tree produced by Lua_grammar_antlr4Parser#protectedCallStatement.
 	VisitProtectedCallStatement(ctx *ProtectedCallStatementContext) interface{}
 
-	// Visit a parse tree produced by lua_grammar_antlr4Parser#block.
+	// Visit a parse tree produced by Lua_grammar_antlr4Parser#namedArgs.
+	VisitNamedArgs(ctx *NamedArgsContext) interface{}
+
+	// Visit a parse tree produced by Lua_grammar_antlr4Parser#block.
 	VisitBlock(ctx *BlockContext) interface{}
 
-	// Visit a parse tree produced by lua_grammar_antlr4Parser#localDeclaration.
+	// Visit a parse tree produced by Lua_grammar_antlr4Parser#localDeclaration.
 	VisitLocalDeclaration(ctx *LocalDeclarationContext) interface{}
 
-	// Visit a parse tree produced by lua_grammar_antlr4Parser#functionDeclaration.
+	// Visit a parse tree produced by Lua_grammar_antlr4Parser#functionDeclaration.
 	VisitFunctionDeclaration(ctx *FunctionDeclarationContext) interface{}
 
-	// Visit a parse tree produced by lua_grammar_antlr4Parser#returnStatement.
+	// Visit a parse tree produced by Lua_grammar_antlr4Parser#returnStatement.
 	VisitReturnStatement(ctx *ReturnStatementContext) interface{}
 
-	// Visit a parse tree produced by lua_grammar_antlr4Parser#operatorGroup.
+	// Visit a parse tree produced by Lua_grammar_antlr4Parser#operatorGroup.
 	VisitOperatorGroup(ctx *OperatorGroupContext) interface{}
 
-	// Visit a parse tree produced by lua_grammar_antlr4Parser#logicalOp.
+	// Visit a parse tree produced by Lua_grammar_antlr4Parser#logicalOp.
 	VisitLogicalOp(ctx *LogicalOpContext) interface{}
 
-	// Visit a parse tree produced by lua_grammar_antlr4Parser#comparisonOp.
+	// Visit a parse tree produced by Lua_grammar_antlr4Parser#comparisonOp.
 	VisitComparisonOp(ctx *ComparisonOpContext) interface{}
 
-	// Visit a parse tree produced by lua_grammar_antlr4Parser#arithOp.
+	// Visit a parse tree produced by Lua_grammar_antlr4Parser#arithOp.
 	VisitArithOp(ctx *ArithOpContext) interface{}
 
-	// Visit a parse tree produced by lua_grammar_antlr4Parser#bitwiseOp.
+	// Visit a parse tree produced by Lua_grammar_antlr4Parser#bitwiseOp.
 	VisitBitwiseOp(ctx *BitwiseOpContext) interface{}
 
-	// Visit a parse tree produced by lua_grammar_antlr4Parser#assignOp.
+	// Visit a parse tree produced by Lua_grammar_antlr4Parser#assignOp.
 	VisitAssignOp(ctx *AssignOpContext) interface{}
 
-	// Visit a parse tree produced by lua_grammar_antlr4Parser#unaryOp.
+	// Visit a parse tree produced by Lua_grammar_antlr4Parser#unaryOp.
 	VisitUnaryOp(ctx *UnaryOpContext) interface{}
 
-	// Visit a parse tree produced by lua_grammar_antlr4Parser#concatOp.
+	// Visit a parse tree produced by Lua_grammar_antlr4Parser#concatOp.
 	VisitConcatOp(ctx *ConcatOpContext) interface{}
 
-	// Visit a parse tree produced by lua_grammar_antlr4Parser#varargOp.
+	// Visit a parse tree produced by Lua_grammar_antlr4Parser#varargOp.
 	VisitVarargOp(ctx *VarargOpContext) interface{}
 
-	// Visit a parse tree produced by lua_grammar_antlr4Parser#compoundAssignOp.
+	// Visit a parse tree produced by Lua_grammar_antlr4Parser#compoundAssignOp.
 	VisitCompoundAssignOp(ctx *CompoundAssignOpContext) interface{}
 
-	// Visit a parse tree produced by lua_grammar_antlr4Parser#incrOp.
+	// Visit a parse tree produced by Lua_grammar_antlr4Parser#incrOp.
 	VisitIncrOp(ctx *IncrOpContext) interface{}
 
-	// Visit a parse tree produced by lua_grammar_antlr4Parser#coalesceOp.
+	// Visit a parse tree produced by Lua_grammar_antlr4Parser#coalesceOp.
 	VisitCoalesceOp(ctx *CoalesceOpContext) interface{}
 
-	// Visit a parse tree produced by lua_grammar_antlr4Parser#shiftAssignOp.
+	// Visit a parse tree produced by Lua_grammar_antlr4Parser#shiftAssignOp.
 	VisitShiftAssignOp(ctx *ShiftAssignOpContext) interface{}
 
-	// Visit a parse tree produced by lua_grammar_antlr4Parser#identifierList.
+	// Visit a parse tree produced by Lua_grammar_antlr4Parser#nonNullAssertOp.
+	VisitNonNullAssertOp(ctx *NonNullAssertOpContext) interface{}
+
+	// Visit a parse tree produced by Lua_grammar_antlr4Parser#identifierList.
 	VisitIdentifierList(ctx *IdentifierListContext) interface{}
 
-	// Visit a parse tree produced by lua_grammar_antlr4Parser#expressionList.
+	// Visit a parse tree produced by Lua_grammar_antlr4Parser#expressionList.
 	VisitExpressionList(ctx *ExpressionListContext) interface{}
 
-	// Visit a parse tree produced by lua_grammar_antlr4Parser#functionExpression.
+	// Visit a parse tree produced by Lua_grammar_antlr4Parser#functionExpression.
 	VisitFunctionExpression(ctx *FunctionExpressionContext) interface{}
 
-	// Visit a parse tree produced by lua_grammar_antlr4Parser#selectStatement.
+	// Visit a parse tree produced by Lua_grammar_antlr4Parser#selectStatement.
 	VisitSelectStatement(ctx *SelectStatementContext) interface{}
+
+	// Visit a parse tree produced by Lua_grammar_antlr4Parser#lambdaExpression.
+	VisitLambdaExpression(ctx *LambdaExpressionContext) interface{}
+
+	// Visit a parse tree produced by Lua_grammar_antlr4Parser#typeAnnotation.
+	VisitTypeAnnotation(ctx *TypeAnnotationContext) interface{}
+
+	// Visit a parse tree produced by Lua_grammar_antlr4Parser#typeSpec.
+	VisitTypeSpec(ctx *TypeSpecContext) interface{}
+
+	// Visit a parse tree produced by Lua_grammar_antlr4Parser#experimentalExpression.
+	VisitExperimentalExpression(ctx *ExperimentalExpressionContext) interface{}
+
+	// Visit a parse tree produced by Lua_grammar_antlr4Parser#safeNavigation.
+	VisitSafeNavigation(ctx *SafeNavigationContext) interface{}
+
+	// Visit a parse tree produced by Lua_grammar_antlr4Parser#pipeOperator.
+	VisitPipeOperator(ctx *PipeOperatorContext) interface{}
+
+	// Visit a parse tree produced by Lua_grammar_antlr4Parser#decoratorSyntax.
+	VisitDecoratorSyntax(ctx *DecoratorSyntaxContext) interface{}
 }

@@ -1,4 +1,8 @@
-grammar lua_grammar_antlr4;
+grammar Lua_grammar_antlr4;
+
+options {
+    language = Go;
+}
 
 // **Main entry point**
 program
@@ -336,9 +340,9 @@ okay fine, I'm sorry for making you read that. For now, the internal scripts won
 */
 
 experimentalExpression
-    : {experiments.isEnabled("safe_nav")}? safeNavigation
-    | {experiments.isEnabled("pipe")}? pipeOperator
-    | {experiments.isEnabled("decorators")}? decoratorSyntax
+    : safeNavigation // {experiments.isEnabled("safe_nav")}? (removed for: IMPLEMENTATION.NOTDONE)
+    | pipeOperator // {experiments.isEnabled("pipe")}? (removed for: IMPLEMENTATION.NOTDONE)
+    | decoratorSyntax // {experiments.isEnabled("decorators")}? (removed for: IMPLEMENTATION.NOTDONE)
     ;
 
 safeNavigation

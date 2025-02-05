@@ -3,8 +3,8 @@
 # I think the code is already pretty self explainatory with all these step comments. Don't beg me for an explanation, user, the responsibility's YOURS
 
 # Directories
-grammar="src/lua_grammar_antlr4.g4"
-grammarpure="lua_grammar_antlr4.g4"
+grammar="src/Lua_grammar_antlr4.g4"
+grammarpure="Lua_grammar_antlr4.g4"
 output="parser"
 src="src"
 pwd=$(pwd)
