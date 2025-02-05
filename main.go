@@ -6,6 +6,9 @@ import (
 	"io/ioutil"
 	"FLUX/parser" // PLEASE STOP ASKING ME IF THIS IS CORRECT OR NOT, FLUX IS THE PROJECT NAME SO IN GO, THIS IS CORRECT
 	"strings"
+	"github.com/llir/llvm/ir"
+	"github.com/llir/llvm/ir/constant"
+	"github.com/llir/llvm/ir/types"
 )
 func main() {
 	if len(os.Args) < 2 {
@@ -28,6 +31,11 @@ func main() {
 	result := visitor.Visit(tree)
 	fmt.Println("AST Structure:")
 	fmt.Println(formatAST(result, 0))
+
+	// Generate and print LLVM IR
+	module := generateIR(result)
+	fmt.Println("\nGenerated LLVM IR:")
+	fmt.Println(module)
 }
 
 type CustomVisitor struct {
@@ -92,4 +100,17 @@ func formatAST(result interface{}, indent int) string {
 		}
 	}
 	return sb.String()
+}
+
+// INIT AND DO NOTHING AFTER LOLOLOLOLOLOLOLOLOLOLOLLOOL ALR ILL IMPLEMENT IT LATER, cya
+func generateIR(ast interface{}) *ir.Module {
+	module := ir.NewModule()
+	
+	mainFunc := module.NewFunc("main", types.I32)
+	
+	entry := mainFunc.NewBlock("entry")
+	
+	entry.NewRet(constant.NewInt(types.I32, 0))
+	
+	return module
 }
