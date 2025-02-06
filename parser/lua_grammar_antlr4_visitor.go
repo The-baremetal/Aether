@@ -101,9 +101,6 @@ type Lua_grammar_antlr4Visitor interface {
 	// Visit a parse tree produced by Lua_grammar_antlr4Parser#gotoStatement.
 	VisitGotoStatement(ctx *GotoStatementContext) interface{}
 
-	// Visit a parse tree produced by Lua_grammar_antlr4Parser#coroutineStatement.
-	VisitCoroutineStatement(ctx *CoroutineStatementContext) interface{}
-
 	// Visit a parse tree produced by Lua_grammar_antlr4Parser#protectedCallStatement.
 	VisitProtectedCallStatement(ctx *ProtectedCallStatementContext) interface{}
 
@@ -199,7 +196,4 @@ type Lua_grammar_antlr4Visitor interface {
 
 	// Visit a parse tree produced by Lua_grammar_antlr4Parser#decoratorSyntax.
 	VisitDecoratorSyntax(ctx *DecoratorSyntaxContext) interface{}
-
-	// Visit a parse tree produced by Lua_grammar_antlr4Parser#requireExpression.
-	VisitRequireExpression(ctx *RequireExpressionContext) interface{}
 }

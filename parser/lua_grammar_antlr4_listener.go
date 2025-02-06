@@ -101,9 +101,6 @@ type Lua_grammar_antlr4Listener interface {
 	// EnterGotoStatement is called when entering the gotoStatement production.
 	EnterGotoStatement(c *GotoStatementContext)
 
-	// EnterCoroutineStatement is called when entering the coroutineStatement production.
-	EnterCoroutineStatement(c *CoroutineStatementContext)
-
 	// EnterProtectedCallStatement is called when entering the protectedCallStatement production.
 	EnterProtectedCallStatement(c *ProtectedCallStatementContext)
 
@@ -200,9 +197,6 @@ type Lua_grammar_antlr4Listener interface {
 	// EnterDecoratorSyntax is called when entering the decoratorSyntax production.
 	EnterDecoratorSyntax(c *DecoratorSyntaxContext)
 
-	// EnterRequireExpression is called when entering the requireExpression production.
-	EnterRequireExpression(c *RequireExpressionContext)
-
 	// ExitProgram is called when exiting the program production.
 	ExitProgram(c *ProgramContext)
 
@@ -295,9 +289,6 @@ type Lua_grammar_antlr4Listener interface {
 
 	// ExitGotoStatement is called when exiting the gotoStatement production.
 	ExitGotoStatement(c *GotoStatementContext)
-
-	// ExitCoroutineStatement is called when exiting the coroutineStatement production.
-	ExitCoroutineStatement(c *CoroutineStatementContext)
 
 	// ExitProtectedCallStatement is called when exiting the protectedCallStatement production.
 	ExitProtectedCallStatement(c *ProtectedCallStatementContext)
@@ -394,7 +385,4 @@ type Lua_grammar_antlr4Listener interface {
 
 	// ExitDecoratorSyntax is called when exiting the decoratorSyntax production.
 	ExitDecoratorSyntax(c *DecoratorSyntaxContext)
-
-	// ExitRequireExpression is called when exiting the requireExpression production.
-	ExitRequireExpression(c *RequireExpressionContext)
 }

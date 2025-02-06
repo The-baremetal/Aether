@@ -208,12 +208,6 @@ func (s *BaseLua_grammar_antlr4Listener) EnterGotoStatement(ctx *GotoStatementCo
 // ExitGotoStatement is called when production gotoStatement is exited.
 func (s *BaseLua_grammar_antlr4Listener) ExitGotoStatement(ctx *GotoStatementContext) {}
 
-// EnterCoroutineStatement is called when production coroutineStatement is entered.
-func (s *BaseLua_grammar_antlr4Listener) EnterCoroutineStatement(ctx *CoroutineStatementContext) {}
-
-// ExitCoroutineStatement is called when production coroutineStatement is exited.
-func (s *BaseLua_grammar_antlr4Listener) ExitCoroutineStatement(ctx *CoroutineStatementContext) {}
-
 // EnterProtectedCallStatement is called when production protectedCallStatement is entered.
 func (s *BaseLua_grammar_antlr4Listener) EnterProtectedCallStatement(ctx *ProtectedCallStatementContext) {
 }
@@ -409,9 +403,3 @@ func (s *BaseLua_grammar_antlr4Listener) EnterDecoratorSyntax(ctx *DecoratorSynt
 
 // ExitDecoratorSyntax is called when production decoratorSyntax is exited.
 func (s *BaseLua_grammar_antlr4Listener) ExitDecoratorSyntax(ctx *DecoratorSyntaxContext) {}
-
-// EnterRequireExpression is called when production requireExpression is entered.
-func (s *BaseLua_grammar_antlr4Listener) EnterRequireExpression(ctx *RequireExpressionContext) {}
-
-// ExitRequireExpression is called when production requireExpression is exited.
-func (s *BaseLua_grammar_antlr4Listener) ExitRequireExpression(ctx *RequireExpressionContext) {}

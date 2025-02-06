@@ -1,3 +1,5 @@
+// should be used for operators and new syntax instead of statements now.
+
 grammar Lua_grammar_antlr4;
 
 options {
@@ -49,15 +51,14 @@ expression
 
 primaryExpression
     : (literal
-    | variable
     | functionCall
+    | variable
     | unaryOperation
     | tableConstructor
     | functionExpression
     | '(' expression ')'
     | lambdaExpression
-    | requireExpression)
-    ( callChain )*
+    ( callChain )*)
     ;
 
 callChain
@@ -163,7 +164,7 @@ controlFlowStatement
     | forStatement
     | breakStatement
     | gotoStatement
-    | coroutineStatement
+    // | coroutineStatement internal function call too
     | protectedCallStatement
     ;
 
@@ -192,9 +193,9 @@ gotoStatement
     : 'goto' IDENTIFIER
     ;
 
-coroutineStatement
-    : 'coroutine' '.' ( 'create' | 'resume' | 'yield' | 'status' | 'running' | 'wrap' | 'isyieldable' )
-    ;
+//coroutineStatement
+//    : 'coroutine' '.' ( 'create' | 'resume' | 'yield' | 'status' | 'running' | 'wrap' | 'isyieldable' )
+//    ;
 
 protectedCallStatement
     : (('pcall' | 'xpcall') ('.' | ':')? IDENTIFIER?)
@@ -365,6 +366,6 @@ decoratorSyntax
     ;
 
 // Add require as a special expression form
-requireExpression
-    : 'require' '(' expression ')'
-    ;
+//requireExpression
+//    : 'require' '(' expression ')'
+//    ;

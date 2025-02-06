@@ -51,14 +51,13 @@ expression
 
 primaryExpression
     : (literal
-    | variable
     | functionCall
+    | variable
     | unaryOperation
     | tableConstructor
     | functionExpression
     | '(' expression ')'
     | lambdaExpression
-    //| requireExpression) now removed as it is not an expression but an internal function call.
     ( callChain )*)
     ;
 

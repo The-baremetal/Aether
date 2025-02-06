@@ -2,8 +2,10 @@ package resolver
 
 import (
 	"github.com/llir/llvm/ir"
+	"github.com/llir/llvm/ir/constant"
 	"github.com/llir/llvm/ir/types"
 	"github.com/llir/llvm/ir/value"
+	"fmt"
 )
 
 type Resolver struct {
@@ -58,24 +60,29 @@ func (r *Resolver) handleFunctionCall(nodes []interface{}) value.Value {
 
 func (r *Resolver) require(args []interface{}) value.Value {
 	// (llvm require call (just return the path (eg. local (require as) = require("<path>") just tell llvm to request a link to this during compilation eg. declare i32 @printf(i8*, ...) )))
+	fmt.Println("Require is in dev, what did you expect!?")
 	return nil
 }
 
 func (r *Resolver) coroutine(args []interface{}) value.Value {
 	// (llvm coroutine call (just return the path (eg. local (coroutine as) = coroutine("<path>") just tell llvm to request a link to this during compilation eg. i forgot... just import another package in go that handles coroutines because of its complexity )))
+	fmt.Println("Coroutine is in dev, what did you expect!?")
 	return nil
 }
 
+
 func (r *Resolver) getOrDeclarePuts() *ir.Func {
-	if puts := r.module.Funcs["puts"]; puts != nil {
-		return puts
+	for _, f := range r.module.Funcs {
+		if f.Name() == "puts" {
+			return f
+		}
 	}
-	
-	return r.module.NewFunc(
+	putsFunc := r.module.NewFunc(
 		"puts",
 		types.I32,
 		ir.NewParam("s", types.I8Ptr),
 	)
+	return putsFunc
 }
 
 func (r *Resolver) createGlobalString(str string) value.Value {
