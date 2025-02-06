@@ -1,4 +1,4 @@
-require("math")
+require("/gaaa")
 a = 5
 b = a + 3
 
@@ -7,4 +7,4 @@ function cool(a, b)
 end
 
 cool(a, b)
-
+gaae(a, b)
