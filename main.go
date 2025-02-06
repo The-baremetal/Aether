@@ -9,6 +9,7 @@ import (
 	"github.com/llir/llvm/ir"
 	"github.com/llir/llvm/ir/constant"
 	"github.com/llir/llvm/ir/types"
+	"FLUX/resolver"
 )
 func main() {
 	if len(os.Args) < 2 {
@@ -106,10 +107,15 @@ func formatAST(result interface{}, indent int) string {
 func generateIR(ast interface{}) *ir.Module {
 	module := ir.NewModule()
 	
+	// Declare puts function for I/O
 	mainFunc := module.NewFunc("main", types.I32)
-	
 	entry := mainFunc.NewBlock("entry")
 	
+	// Create and use resolver
+	resolver := resolver.NewResolver(module, mainFunc, entry)
+	resolver.Visit(ast)
+	
+	// Add default return
 	entry.NewRet(constant.NewInt(types.I32, 0))
 	
 	return module
