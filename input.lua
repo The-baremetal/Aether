@@ -1,10 +1,5 @@
-require("/gaaa")
-a = 5
-b = a + 3
+local a = 5
+local b = 10
+local c = a + b
 
-function cool(a, b)
-    return a + b
-end
-
-cool(a, b)
-gaae(a, b)
+print(c)
