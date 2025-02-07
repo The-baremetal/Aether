@@ -137,11 +137,12 @@ func generateIRRecursive(ast interface{}, module *ir.Module, visited map[string]
 	entry := mainFunc.Blocks[0]
 	symbolTable := make(map[string]*ir.InstAlloca)
 	createAlloca := func(name string) *ir.InstAlloca {
-		if _, exists := symbolTable[name]; !exists {
-			alloc := entry.NewAlloca(types.I32)
-			symbolTable[name] = alloc
+		if alloc, exists := symbolTable[name]; exists {
+			return alloc
 		}
-		return symbolTable[name]
+		alloc := entry.NewAlloca(types.I32)
+		symbolTable[name] = alloc
+		return alloc
 	}
 	var genExpr func(interface{}) value.Value
 	genExpr = func(node interface{}) value.Value {
@@ -166,24 +167,10 @@ func generateIRRecursive(ast interface{}, module *ir.Module, visited map[string]
 								alloc := createAlloca(varName)
 								if value := genExpr(asNodes[2]); value != nil {
 									entry.NewStore(value, alloc)
-									return value
+									return entry.NewLoad(types.I32, alloc)
 								}
 							}
 						}
-					}
-				}
-				return nil
-
-			case "functionDeclaration":
-				if fnNameNode, ok := n["nodes"].([]interface{})[2].(map[string]interface{}); ok {
-					if fnName, ok := fnNameNode["nodes"].([]interface{})[0].(string); ok {
-						fn := module.NewFunc(fnName, types.I32,
-							ir.NewParam("a", types.I32),
-							ir.NewParam("b", types.I32),
-						)
-						block := fn.NewBlock("entry")
-						sum := block.NewAdd(fn.Params[0], fn.Params[1])
-						block.NewRet(sum)
 					}
 				}
 				return nil
@@ -229,31 +216,6 @@ func generateIRRecursive(ast interface{}, module *ir.Module, visited map[string]
 				}
 				return nil
 
-			case "operatorGroup":
-				if op, ok := n["nodes"].([]interface{})[0].(string); ok {
-					return &operatorWrapper{op: op}
-				}
-			case "expression":
-				if len(n["nodes"].([]interface{})) > 1 {
-					lhs := genExpr(n["nodes"].([]interface{})[0])
-					opVal := genExpr(n["nodes"].([]interface{})[1])
-					rhs := genExpr(n["nodes"].([]interface{})[2])
-					if opWrapper, ok := opVal.(*operatorWrapper); ok {
-						switch opWrapper.op {
-						case "+":
-							return entry.NewAdd(lhs.(value.Value), rhs.(value.Value))
-						case "=":
-							if lhsAlloca, isAlloca := lhs.(*ir.InstAlloca); isAlloca {
-								entry.NewStore(rhs.(value.Value), lhsAlloca)
-								return rhs.(value.Value)
-							}
-							if loadInst, isLoad := lhs.(*ir.InstLoad); isLoad {
-								entry.NewStore(rhs.(value.Value), loadInst.Src)
-								return rhs.(value.Value)
-							}
-						}
-					}
-				}
 			case "variable":
 				if nodes, ok := n["nodes"].([]interface{}); ok && len(nodes) > 0 {
 					if varName, ok := nodes[0].(string); ok {
@@ -308,7 +270,7 @@ func generateIRRecursive(ast interface{}, module *ir.Module, visited map[string]
 			for _, child := range n {
 				processNode(child)
 			}
-			
+
 		case string:
 			genExpr(n)
 		}
@@ -317,7 +279,7 @@ func generateIRRecursive(ast interface{}, module *ir.Module, visited map[string]
 	if len(entry.Insts) == 0 || entry.Insts[len(entry.Insts)-1].LLString() != "ret i32 0" {
 		entry.NewRet(constant.NewInt(types.I32, 0))
 	}
-	
+
 	return module
 }
 
