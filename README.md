@@ -9,3 +9,23 @@
 > The grammar and syntax of Flux Assembly are heavily inspired by Lua, a language renowned for its simplicity and ease of learning. Lua, developed by the Lua authors (https://www.lua.org/), has been a popular choice for developers looking for an accessible programming language.
 > Flux Assembly is a derivative work of Lua's syntax, not intended to replace Lua but to offer an assembly-level option that retains the same beginner-friendly appeal. While this language shares the essence of Lua, it is not an official Lua implementation but a creative evolution designed to bridge the gap between high-level scripting and low-level assembly programming.
 > By building on Lua's foundation, Flux Assembly ensures that developers can experience the power and flexibility of assembly without sacrificing the simplicity of their original coding language.
+## Build instructions
+
+### Prerequisites
+Go 1.20+ for compilation of the project
+All packages mentioned in go.sum
+A machine that has Bash installed with SH support
+
+> Step 1
+### Clone the repository
+```git clone https://github.com/The-baremetal/FLUXASSEMBLY.git```
+```cd FLUXASSEMBLY```
+> Step 2
+### Gettings the dependencies
+Go: Install go at: https://golang.org/doc/install or run ```sudo apt install golang```
+LLVM: You can get llvm by running the command ```sudo apt install llvm```
+> Step 3
+### Actually building Flux Assembly
+``` build.sh build```
+Now that your Flux Assembly is installed, you can run ```./main```
+Example files: ### input.lua
