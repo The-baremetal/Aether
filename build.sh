@@ -56,7 +56,7 @@ cd "$pwd"
 #   $output/lua_grammar_antlr4Parser.cpp: The parser source file
 #   -lantlr4-runtime: Link against the antlr4-runtime library
 compile() {
-    go build main.go
+    go build AetherGo/main.go
 }
 
 build() {
