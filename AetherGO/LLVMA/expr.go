@@ -6,8 +6,9 @@ import (
 	"github.com/llir/llvm/ir/constant"
 	"github.com/llir/llvm/ir/value"
 	"FLUX/parser"
+	"strconv"
+	"fmt"
 )
-
 
 type Expr interface {
 	Generate(builder *ir.Block) value.Value
@@ -50,6 +51,14 @@ type ExprGenerator struct {
 	Builder *ir.Block
 }
 
+type ValueWrapper struct {
+	Value value.Value
+}
+
+func (v *ValueWrapper) Generate(builder *ir.Block) value.Value {
+	return v.Value
+}
+
 func (e *BinaryExpr) Generate(builder *ir.Block) value.Value {
 	left := e.Left.Generate(builder)
 	right := e.Right.Generate(builder)
@@ -88,6 +97,7 @@ func (e *BinaryExpr) Generate(builder *ir.Block) value.Value {
 
 func (e *UnaryExpr) Generate(builder *ir.Block) value.Value {
 	operand := e.Operand.Generate(builder)
+	fmt.Println("you suck")
 	switch e.Operator {
 	case "-":
 		return builder.NewSub(constant.NewInt(types.I32, 0), operand)
@@ -116,9 +126,11 @@ func (e *StringLiteral) Generate(builder *ir.Block) value.Value {
 }
 
 func (e *VariableExpr) Generate(builder *ir.Block) value.Value {
-	for _, inst := range builder.Parent.Blocks[0].Insts {
-		if alloca, ok := inst.(*ir.InstAlloca); ok && alloca.Name() == e.Name {
-			return builder.NewLoad(types.I32, alloca)
+	for _, bb := range builder.Parent.Blocks {
+		for _, inst := range bb.Insts {
+			if alloca, ok := inst.(*ir.InstAlloca); ok && alloca.Name() == e.Name {
+				return builder.NewLoad(types.I32, alloca)
+			}
 		}
 	}
 	panic("undeclared variable: " + e.Name)
@@ -165,34 +177,89 @@ func NewExprGenerator(mod *ir.Module, entry *ir.Block) *ExprGenerator {
 }
 
 func (g *ExprGenerator) GenerateExpression(ctx *parser.ExpressionContext) value.Value {
-	if primary := ctx.PrimaryExpression(); primary != nil {
-		return g.GeneratePrimary(primary.(*parser.PrimaryExpressionContext))
-	}
-	
 	if len(ctx.AllExpression()) == 2 {
-		left := &IntegerLiteral{Value: 0}
-		right := &IntegerLiteral{Value: 0}
+		left := g.GenerateExpression(ctx.Expression(0).(*parser.ExpressionContext))
+		right := g.GenerateExpression(ctx.Expression(1).(*parser.ExpressionContext))
 		op := ""
 		
 		if opGroup := ctx.OperatorGroup(0); opGroup != nil {
 			op = opGroup.GetText()
 			return (&BinaryExpr{
-				Left:     left,
-				Right:    right,
+				Left:     &ValueWrapper{Value: left},
+				Right:    &ValueWrapper{Value: right},
 				Operator: op,
 			}).Generate(g.Builder)
 		}
+	}
+	if primary := ctx.PrimaryExpression(); primary != nil {
+		return g.GeneratePrimary(primary.(*parser.PrimaryExpressionContext))
 	}
 	
 	panic("unsupported expression type")
 }
 
 func (g *ExprGenerator) GeneratePrimary(ctx *parser.PrimaryExpressionContext) value.Value {
-	if lit := ctx.Literal(); lit != nil {
-		return (&IntegerLiteral{Value: 0}).Generate(g.Builder)
-	}
-	if varExpr := ctx.Variable(); varExpr != nil {
-		return (&VariableExpr{Name: "temp"}).Generate(g.Builder)
-	}
-	panic("unsupported primary expression")
+    if lit := ctx.Literal(); lit != nil {
+        if num := lit.NUMBER(); num != nil {
+            val, _ := strconv.Atoi(num.GetText())
+            return (&IntegerLiteral{Value: val}).Generate(g.Builder)
+        }
+    }
+    if varExpr := ctx.Variable(); varExpr != nil {
+        return (&VariableExpr{Name: varExpr.GetText()}).Generate(g.Builder)
+    }
+    if fc := ctx.FunctionCall(); fc != nil {
+        return g.GenerateFunctionCall(fc.(*parser.FunctionCallContext))
+    }
+    panic("unsupported primary expression")
+}
+
+func (g *ExprGenerator) HandlePrint(value value.Value) {
+    var fmtStr *ir.Global
+    for _, global := range g.Module.Globals {
+        if global.Name() == "fmt.str" {
+            fmtStr = global
+            break
+        }
+    }
+    
+    if fmtStr == nil {
+        fmtStr = g.Module.NewGlobalDef("fmt.str", 
+            constant.NewCharArrayFromString("%d\n\x00"))
+    }
+    formatPtr := g.Builder.NewBitCast(fmtStr, types.I8Ptr)
+    g.Builder.NewCall(g.Module.Funcs[0], formatPtr, value)
+}
+
+func (g *ExprGenerator) GenerateFunctionCall(ctx *parser.FunctionCallContext) value.Value {
+    var fnName string
+    if varCtx := ctx.Variable(); varCtx != nil {
+        fnName = varCtx.GetText()
+    }
+
+    var args []value.Value
+    for _, exprCtx := range ctx.AllExpression() {
+        args = append(args, g.GenerateExpression(exprCtx.(*parser.ExpressionContext)))
+    }
+
+    switch fnName {
+    case "print":
+        if len(args) == 0 {
+            panic("print requires at least one argument")
+        }
+        g.HandlePrint(args[0])
+        return nil
+    default:
+        var fn *ir.Func
+        for _, f := range g.Module.Funcs {
+            if f.Name() == fnName {
+                fn = f
+                break
+            }
+        }
+        if fn != nil {
+            return g.Builder.NewCall(fn, args...)
+        }
+        panic("undefined function: " + fnName)
+    }
 }
