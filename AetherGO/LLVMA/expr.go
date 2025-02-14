@@ -8,6 +8,7 @@ import (
 	"FLUX/parser"
 	"strconv"
 	"fmt"
+	"FLUX/AetherGO/utils"
 )
 
 type Expr interface {
@@ -91,7 +92,8 @@ func (e *BinaryExpr) Generate(builder *ir.Block) value.Value {
 	case "~":
 		return builder.NewXor(left, right)
 	default:
-		panic("unsupported binary operator: " + e.Operator)
+		utils.LogError("unsupported binary operator: %s", e.Operator)
+		panic("operator error")
 	}
 }
 
@@ -176,26 +178,66 @@ func NewExprGenerator(mod *ir.Module, entry *ir.Block) *ExprGenerator {
 	}
 }
 
-func (g *ExprGenerator) GenerateExpression(ctx *parser.ExpressionContext) value.Value {
-	if len(ctx.AllExpression()) == 2 {
-		left := g.GenerateExpression(ctx.Expression(0).(*parser.ExpressionContext))
-		right := g.GenerateExpression(ctx.Expression(1).(*parser.ExpressionContext))
-		op := ""
+func (g *ExprGenerator) GenerateExpression(ctx parser.IExpressionContext) value.Value {
+	utils.LogInfo("\n=== EXPRESSION GENERATION START ===")
+	defer utils.LogInfo("=== EXPRESSION GENERATION END ===\n")
+	
+	if ctx == nil {
+		panic("nil expression context")
+	}
+
+	utils.LogInfo("Expression context type: %T", ctx)
+	utils.LogInfo("Operator groups: %d", len(ctx.AllOperatorGroup()))
+	
+	if prim := ctx.PrimaryExpression(); prim != nil {
+		utils.LogInfo("Contains primary expression: true")
+	} else {
+		utils.LogInfo("Contains primary expression: false")
+	}
+	
+	utils.LogInfo("Child count: %d", ctx.GetChildCount())
+
+	if len(ctx.AllOperatorGroup()) > 0 {
+		utils.LogInfo("Processing binary operation")
+		var val value.Value
+		if prim := ctx.PrimaryExpression(); prim != nil {
+			utils.LogInfo("Initial primary expression: %s", prim.GetText())
+			val = g.GeneratePrimary(prim.(*parser.PrimaryExpressionContext))
+		} else {
+			panic("binary expression missing left operand")
+		}
 		
-		if opGroup := ctx.OperatorGroup(0); opGroup != nil {
-			op = opGroup.GetText()
-			return (&BinaryExpr{
-				Left:     &ValueWrapper{Value: left},
+		for i := 0; i < len(ctx.AllOperatorGroup()); i++ {
+			op := ctx.OperatorGroup(i).GetText()
+			utils.LogInfo("Processing operator %d: %s", i+1, op)
+			utils.LogInfo("Looking for right operand at index %d", i)
+			
+			right := g.GenerateExpression(ctx.Expression(i))
+			utils.LogInfo("Generated right operand: %v", right)
+			
+			val = (&BinaryExpr{
+				Left:     &ValueWrapper{Value: val},
 				Right:    &ValueWrapper{Value: right},
 				Operator: op,
 			}).Generate(g.Builder)
+			
+			utils.LogInfo("New combined value: %v", val)
 		}
-	}
-	if primary := ctx.PrimaryExpression(); primary != nil {
-		return g.GeneratePrimary(primary.(*parser.PrimaryExpressionContext))
+		return val
 	}
 	
-	panic("unsupported expression type")
+	if prim := ctx.PrimaryExpression(); prim != nil {
+		return g.GeneratePrimary(prim.(*parser.PrimaryExpressionContext))
+	}
+	
+	if unary := ctx.UnaryOp(); unary != nil {
+		if len(ctx.AllExpression()) == 0 {
+			panic("invalid unary expression - missing operand")
+		}
+		return g.GenerateUnary(ctx.Expression(0).(*parser.ExpressionContext))
+	}
+	
+	panic(fmt.Sprintf("unsupported expression type: %T", ctx))
 }
 
 func (g *ExprGenerator) GeneratePrimary(ctx *parser.PrimaryExpressionContext) value.Value {
@@ -239,7 +281,7 @@ func (g *ExprGenerator) GenerateFunctionCall(ctx *parser.FunctionCallContext) va
 
     var args []value.Value
     for _, exprCtx := range ctx.AllExpression() {
-        args = append(args, g.GenerateExpression(exprCtx.(*parser.ExpressionContext)))
+        args = append(args, g.GenerateExpression(exprCtx.(parser.IExpressionContext)))
     }
 
     switch fnName {
@@ -262,4 +304,23 @@ func (g *ExprGenerator) GenerateFunctionCall(ctx *parser.FunctionCallContext) va
         }
         panic("undefined function: " + fnName)
     }
+}
+
+func (g *ExprGenerator) GenerateUnary(ctx *parser.ExpressionContext) value.Value {
+    unaryOp := ctx.UnaryOp().GetText()
+    operandExpr := ctx.Expression(0).(*parser.ExpressionContext)
+    operand := g.GenerateExpression(operandExpr)
+    
+    return (&UnaryExpr{
+        Operand:  &ValueWrapper{Value: operand},
+        Operator: unaryOp,
+    }).Generate(g.Builder)
+}
+
+func (g *ExprGenerator) GenerateBinaryOp(left, right value.Value, op string) value.Value {
+    return (&BinaryExpr{
+        Left:     &ValueWrapper{Value: left},
+        Right:    &ValueWrapper{Value: right},
+        Operator: op,
+    }).Generate(g.Builder)
 }

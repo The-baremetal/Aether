@@ -9,6 +9,7 @@ import (
     "github.com/llir/llvm/ir/constant"
     "github.com/llir/llvm/ir/types"
     "github.com/llir/llvm/ir/value"
+    "FLUX/AetherGO/utils"
 )
 
 type Variable struct {
@@ -41,24 +42,23 @@ func NewCompiler() *Compiler {
 }
 
 func (c *Compiler) SetupParser(input string) error {
-    fmt.Println("\n=== Setting up parser ===")
+    utils.LogInfo("\n=== Setting up parser ===\n")
     is := antlr.NewInputStream(input)
     lexer := parser.NewLua_grammar_antlr4Lexer(is)
     stream := antlr.NewCommonTokenStream(lexer, 0)
     c.parser = parser.NewLua_grammar_antlr4Parser(stream)
     tree := c.parser.Program()
     c.ast = tree
-    fmt.Println("Raw AST structure:")
-    fmt.Println(antlr.TreesStringTree(c.ast, c.parser.GetRuleNames(), c.parser))
+    utils.LogDebug("Raw AST structure:\n%s", antlr.TreesStringTree(c.ast, c.parser.GetRuleNames(), c.parser))
     
     c.visitor = NewCustomVisitor(c.parser)
-    fmt.Println("AST structure printed above")
+    utils.LogInfo("AST structure printed above")
     return nil
 }
 
 func (c *Compiler) GenerateIR() error {
-    fmt.Println("\n=== Generating IR ===")
-    fmt.Println("Initializing module...")
+    utils.LogInfo("\n=== Generating IR ===\n")
+    utils.LogDebug("Initializing module...\n")
     c.variables = make(map[string]*Variable)
     
     var err error
@@ -79,34 +79,31 @@ func (c *Compiler) GenerateIR() error {
     
     c.printf = printf
     
-    fmt.Printf("Created main function: %s\n", c.mainFn.Name())
-    fmt.Printf("Created entry block: %s\n", c.entry.Name())
-    fmt.Println("Initialized expression generator")
+    utils.LogInfo("Created main function: %s\n", c.mainFn.Name())
+    utils.LogInfo("Created entry block: %s\n", c.entry.Name())
+    utils.LogInfo("Initialized expression generator")
     
     return nil
 }
 
 func (c *Compiler) ProcessAST() error {
-    fmt.Println("\n=== Processing AST ===")
-    fmt.Println("Full AST structure:")
-    fmt.Println(antlr.TreesStringTree(c.ast, nil, nil))
+    utils.LogInfo("\n=== Processing AST ===\n")
+    utils.LogDebug("Full AST structure:\n%s\n", antlr.TreesStringTree(c.ast, nil, nil))
     
     ctx := c.ast.(*parser.ProgramContext)
     stmtList := ctx.AllStatement()
-    fmt.Printf("Found %d statements\n", len(stmtList))
+    utils.LogInfo("Found %d statements\n", len(stmtList))
     
     for i, stmt := range stmtList {
-        fmt.Printf("\nProcessing statement %d (%T)\n", i, stmt)
+        utils.LogInfo("\nProcessing statement %d (%T)\n", i, stmt)
         if assign := stmt.AssignStatement(); assign != nil {
             c.handleAssignment(assign)
         } else if expr := stmt.Expression(); expr != nil {
-            c.handleExpression(expr.(antlr.ParserRuleContext))
-            if primaryExpr := expr.PrimaryExpression(); primaryExpr != nil {
-                if fc := primaryExpr.FunctionCall(); fc != nil {
-                    fmt.Println("here is being called")
+            val := c.handleExpression(expr.(antlr.ParserRuleContext))
+            if val != nil && val.Type() != types.Void {
+                if fc := expr.(*parser.ExpressionContext).PrimaryExpression().FunctionCall(); fc != nil {
                     c.handleFunctionCall(fc.(parser.IFunctionCallContext))
                 }
-
             }
         } else if localDecl := stmt.LocalDeclaration(); localDecl != nil {
             c.handleLocalDeclaration(localDecl.(antlr.ParserRuleContext))
@@ -123,7 +120,8 @@ func (c *Compiler) handleLocalDeclaration(ctx antlr.ParserRuleContext) {
     alloc.SetName(ident)
     
     if expr := localCtx.Expression(); expr != nil {
-        val := c.exprGen.GenerateExpression(expr.(*parser.ExpressionContext))
+        exprCtx := expr.(parser.IExpressionContext)
+        val := c.exprGen.GenerateExpression(exprCtx)
         c.entry.NewStore(val, alloc)
     }
     
@@ -135,15 +133,40 @@ func (c *Compiler) handleLocalDeclaration(ctx antlr.ParserRuleContext) {
 }
 
 func (c *Compiler) handleExpression(ctx antlr.ParserRuleContext) value.Value {
-    fmt.Println("Handling expression")
+    utils.LogInfo("\n=== HANDLING EXPRESSION ===")
+    defer utils.LogInfo("=== EXPRESSION HANDLED ===\n")
+    
+    utils.LogInfo("Full context type: %T", ctx)
+    utils.LogInfo("Context text: %s", ctx.GetText())
+    
     exprCtx := ctx.(*parser.ExpressionContext)
+    utils.LogInfo("Operator groups found: %d", len(exprCtx.AllOperatorGroup()))
+    
+    if ops := exprCtx.AllOperatorGroup(); len(ops) > 0 {
+        utils.LogInfo("Processing binary operation chain")
+        left := c.exprGen.GenerateExpression(exprCtx.Expression(0))
+        utils.LogInfo("Initial left operand: %v", left)
+        
+        for i, opGroup := range ops {
+            op := opGroup.GetText()
+            utils.LogInfo("Processing operator %d: %s", i+1, op)
+            utils.LogInfo("Fetching right operand at index %d", i+1)
+            
+            right := c.exprGen.GenerateExpression(exprCtx.Expression(i+1))
+            utils.LogInfo("Right operand value: %v", right)
+            
+            left = c.exprGen.GenerateBinaryOp(left, right, op)
+            utils.LogInfo("New combined value: %v", left)
+        }
+        return left
+    }
     val := c.exprGen.GenerateExpression(exprCtx)
-    fmt.Printf("Generated expression value: %v\n", val)
+    utils.LogInfo("Generated expression value: %v\n", val)
     return val
 }
 
 func (c *Compiler) handleFunctionCall(ctx parser.IFunctionCallContext) {
-    fmt.Println("\nHandling function call")
+    utils.LogInfo("\nHandling function call\n")
     var fnName string
     if varCtx := ctx.Variable(); varCtx != nil {
         fnName = varCtx.GetText()
@@ -154,15 +177,15 @@ func (c *Compiler) handleFunctionCall(ctx parser.IFunctionCallContext) {
         args = append(args, c.exprGen.GenerateExpression(exprCtx.(*parser.ExpressionContext)))
     }
 
-    fmt.Printf("Function name: %s\n", fnName)
-    fmt.Printf("Arguments count: %d\n", len(args))
+    utils.LogInfo("Function name: %s\n", fnName)
+    utils.LogInfo("Arguments count: %d\n", len(args))
     
     switch fnName {
     case "print":
         if len(args) == 0 {
-            panic("print requires at least one argument")
+            utils.LogError("print requires at least one argument\n")
         }
-        fmt.Printf("Generating print call for value: %v\n", args[0])
+        utils.LogInfo("Generating print call for value: %v\n", args[0])
         fmtName := fmt.Sprintf("fmt.str.%d", c.getUniqueID())
         formatStr := c.module.NewGlobalDef(fmtName, 
             constant.NewCharArrayFromString("%d\n\x00"))
@@ -190,8 +213,9 @@ func (c *Compiler) handleAssignment(ctx parser.IAssignStatementContext) {
 }
 
 func (c *Compiler) Finalize() (string, error) {
-    fmt.Println("\n=== Finalizing IR ===")
+    utils.LogInfo("\n=== Finalizing IR ===\n")
     c.entry.NewRet(constant.NewInt(types.I32, 0))
-    fmt.Println("Added final return instruction")
+    utils.LogInfo("Added final return instruction\n")
+    utils.LogSuccess("Compilation successful!\n")
     return c.module.String(), nil
 }
