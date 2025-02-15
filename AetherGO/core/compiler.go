@@ -10,6 +10,7 @@ import (
     "github.com/llir/llvm/ir/types"
     "github.com/llir/llvm/ir/value"
     "FLUX/AetherGO/utils"
+    "strings"
 )
 
 type Variable struct {
@@ -28,6 +29,7 @@ type Compiler struct {
     exprGen   *LLVMA.ExprGenerator
     printf    *ir.Func
     ast       antlr.Tree
+    controlGen *LLVMA.ControlFlow
 }
 
 var counter int
@@ -75,7 +77,8 @@ func (c *Compiler) GenerateIR() error {
     if c.entry, err = LLVMA.InitBlock(c.mainFn); err != nil {
         return fmt.Errorf("entry block init failed: %w", err)
     }
-    c.exprGen = LLVMA.NewExprGenerator(c.module, c.entry)
+    c.exprGen = LLVMA.NewExprGenerator(c.module, c.entry, c)
+    c.controlGen = LLVMA.NewControlFlow(c.module, c.entry)
     
     c.printf = printf
     
@@ -107,6 +110,8 @@ func (c *Compiler) ProcessAST() error {
             }
         } else if localDecl := stmt.LocalDeclaration(); localDecl != nil {
             c.handleLocalDeclaration(localDecl.(antlr.ParserRuleContext))
+        } else if controlStmt := stmt.ControlFlowStatement(); controlStmt != nil {
+            c.handleControlFlow(controlStmt.(*parser.ControlFlowStatementContext))
         }
     }
     
@@ -116,7 +121,17 @@ func (c *Compiler) ProcessAST() error {
 func (c *Compiler) handleLocalDeclaration(ctx antlr.ParserRuleContext) {
     localCtx := ctx.(*parser.LocalDeclarationContext)
     ident := localCtx.IDENTIFIER(0).GetText()
-    alloc := c.entry.NewAlloca(types.I32)
+    
+    var alloc *ir.InstAlloca
+    if expr := localCtx.Expression(); expr != nil {
+        exprCtx := expr.(parser.IExpressionContext)
+        val := c.exprGen.GenerateExpression(exprCtx)
+        allocType := val.Type()
+        alloc = c.entry.NewAlloca(allocType)
+    } else {
+        alloc = c.entry.NewAlloca(types.I32)
+    }
+    
     alloc.SetName(ident)
     
     if expr := localCtx.Expression(); expr != nil {
@@ -126,8 +141,8 @@ func (c *Compiler) handleLocalDeclaration(ctx antlr.ParserRuleContext) {
     }
     
     c.variables[ident] = &Variable{
-        Name: ident,
-        Type: types.I32,
+        Name:  ident,
+        Type:  alloc.Type(),
         Value: alloc,
     }
 }
@@ -186,10 +201,17 @@ func (c *Compiler) handleFunctionCall(ctx parser.IFunctionCallContext) {
             utils.LogError("print requires at least one argument\n")
         }
         utils.LogInfo("Generating print call for value: %v\n", args[0])
+        var formatStr string
+        switch args[0].Type().(type) {
+        case *types.PointerType:
+            formatStr = "%s\n\x00"
+        default:
+            formatStr = "%d\n\x00"
+        }
         fmtName := fmt.Sprintf("fmt.str.%d", c.getUniqueID())
-        formatStr := c.module.NewGlobalDef(fmtName, 
-            constant.NewCharArrayFromString("%d\n\x00"))
-        formatPtr := c.entry.NewBitCast(formatStr, types.I8Ptr)
+        fmtGlobal := c.module.NewGlobalDef(fmtName, 
+            constant.NewCharArrayFromString(formatStr))
+        formatPtr := c.entry.NewBitCast(fmtGlobal, types.I8Ptr)
         c.entry.NewCall(c.printf, formatPtr, args[0])
     default:
         var fn *ir.Func
@@ -207,9 +229,56 @@ func (c *Compiler) handleFunctionCall(ctx parser.IFunctionCallContext) {
 
 func (c *Compiler) handleAssignment(ctx parser.IAssignStatementContext) {
     varIdent := ctx.Variable().GetText()
-    variable := c.variables[varIdent]
     val := c.exprGen.GenerateExpression(ctx.Expression().(*parser.ExpressionContext))
+    
+    variable, exists := c.variables[varIdent]
+    if !exists {
+        alloc := c.entry.NewAlloca(val.Type())
+        alloc.SetName(varIdent)
+        variable = &Variable{
+            Name:  varIdent,
+            Type:  val.Type(),
+            Value: alloc,
+        }
+        c.variables[varIdent] = variable
+    }
+    
+    if !val.Type().Equal(variable.Type) {
+        utils.LogError("Type mismatch: cannot assign %s to %s", val.Type(), variable.Type)
+    }
+    
     c.entry.NewStore(val, variable.Value)
+}
+
+func (c *Compiler) ProcessBlock(ctx antlr.ParseTree) {
+    blockCtx, ok := ctx.(*parser.BlockContext)
+    if !ok {
+        panic("invalid block context")
+    }
+    for _, stmt := range blockCtx.AllStatement() {
+        c.ProcessASTStatement(stmt.(*parser.StatementContext))
+    }
+}
+
+func (c *Compiler) ProcessASTStatement(stmt *parser.StatementContext) {
+    if assign := stmt.AssignStatement(); assign != nil {
+        c.handleAssignment(assign)
+    } else if expr := stmt.Expression(); expr != nil {
+        c.handleExpression(expr.(antlr.ParserRuleContext))
+    } else if control := stmt.ControlFlowStatement(); control != nil {
+        c.handleControlFlow(control.(*parser.ControlFlowStatementContext))
+    }
+}
+
+func (c *Compiler) handleControlFlow(ctx *parser.ControlFlowStatementContext) {
+    child := ctx.GetChild(0).(antlr.ParseTree)
+    key := strings.ToLower(strings.TrimPrefix(fmt.Sprintf("%T", child), "*parser."))
+    key = strings.TrimSuffix(key, "context")
+    if handler, exists := LLVMA.ControlRegistry[strings.TrimSuffix(key, "Context")]; exists {
+        handler(c.controlGen, c, child)
+        return
+    }
+    utils.LogError("Unhandled control flow: %s", key)
 }
 
 func (c *Compiler) Finalize() (string, error) {
@@ -218,4 +287,34 @@ func (c *Compiler) Finalize() (string, error) {
     utils.LogInfo("Added final return instruction\n")
     utils.LogSuccess("Compilation successful!\n")
     return c.module.String(), nil
+}
+
+func (c *Compiler) GetExprGen() *LLVMA.ExprGenerator {
+    return c.exprGen
+}
+
+func (c *Compiler) GetMainFn() *ir.Func {
+    return c.mainFn
+}
+
+func (c *Compiler) GetEntryBlock() *ir.Block { 
+    return c.entry
+}
+
+func (c *Compiler) GetVariable(name string) *Variable {
+    return c.variables[name]
+}
+
+func (c *Compiler) GetVariableType(name string) types.Type {
+    if v, exists := c.variables[name]; exists {
+        return v.Type
+    }
+    return nil
+}
+
+func (c *Compiler) GetVariableValue(name string) value.Value {
+    if v, exists := c.variables[name]; exists {
+        return v.Value
+    }
+    return nil
 }

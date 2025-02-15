@@ -9,6 +9,8 @@ import (
 	"strconv"
 	"fmt"
 	"FLUX/AetherGO/utils"
+	"github.com/llir/llvm/ir/enum"
+	"strings"
 )
 
 type Expr interface {
@@ -35,11 +37,18 @@ type BooleanLiteral struct {
 }
 
 type StringLiteral struct {
-	Value string
+	Value    string
+	generator *ExprGenerator
+}
+
+type VariableStorage interface {
+    GetVariableType(name string) types.Type
+    GetVariableValue(name string) value.Value
 }
 
 type VariableExpr struct {
-	Name string
+	Name    string
+	Storage VariableStorage
 }
 
 type AssignExpr struct {
@@ -48,8 +57,10 @@ type AssignExpr struct {
 }
 
 type ExprGenerator struct {
-	Module  *ir.Module
-	Builder *ir.Block
+	Module    *ir.Module
+	Builder   *ir.Block
+	Storage   VariableStorage
+	counter   int
 }
 
 type ValueWrapper struct {
@@ -76,6 +87,18 @@ func (e *BinaryExpr) Generate(builder *ir.Block) value.Value {
 		return builder.NewMul(left, right)
 	case "/", "//":
 		return builder.NewSDiv(left, right)
+	case ">":
+		return builder.NewICmp(enum.IPredSGT, left, right)
+	case "<":
+		return builder.NewICmp(enum.IPredSLT, left, right)
+	case ">=":
+		return builder.NewICmp(enum.IPredSGE, left, right)
+	case "<=":
+		return builder.NewICmp(enum.IPredSLE, left, right)
+	case "==":
+		return builder.NewICmp(enum.IPredEQ, left, right)
+	case "~=":
+		return builder.NewICmp(enum.IPredNE, left, right)
 	case "%":
 		return builder.NewSRem(left, right)
 	case "^":
@@ -99,7 +122,6 @@ func (e *BinaryExpr) Generate(builder *ir.Block) value.Value {
 
 func (e *UnaryExpr) Generate(builder *ir.Block) value.Value {
 	operand := e.Operand.Generate(builder)
-	fmt.Println("you suck")
 	switch e.Operator {
 	case "-":
 		return builder.NewSub(constant.NewInt(types.I32, 0), operand)
@@ -120,22 +142,24 @@ func (e *BooleanLiteral) Generate(builder *ir.Block) value.Value {
 	return constant.NewInt(types.I1, boolToInt(e.Value))
 }
 
-func (e *StringLiteral) Generate(builder *ir.Block) value.Value {
-	return callRuntimeFunc(builder, "createString", []value.Value{
-		constant.NewCharArray([]byte(e.Value)),
-		constant.NewInt(types.I32, int64(len(e.Value))),
-	})
+func (s *StringLiteral) Generate(builder *ir.Block) value.Value {
+	globalName := fmt.Sprintf("str.%d", s.generator.counter)
+	s.generator.counter++
+	arrType := types.NewArray(uint64(len(s.Value)+1), types.I8)
+	global := s.generator.Module.NewGlobalDef(globalName, 
+		constant.NewCharArrayFromString(s.Value+"\x00"))
+	zero := constant.NewInt(types.I32, 0)
+	gep := builder.NewGetElementPtr(arrType, global, zero, zero)
+	return builder.NewBitCast(gep, types.I8Ptr)
 }
 
-func (e *VariableExpr) Generate(builder *ir.Block) value.Value {
-	for _, bb := range builder.Parent.Blocks {
-		for _, inst := range bb.Insts {
-			if alloca, ok := inst.(*ir.InstAlloca); ok && alloca.Name() == e.Name {
-				return builder.NewLoad(types.I32, alloca)
-			}
-		}
+func (v *VariableExpr) Generate(builder *ir.Block) value.Value {
+	varType := v.Storage.GetVariableType(v.Name)
+	varValue := v.Storage.GetVariableValue(v.Name)
+	if varType == nil || varValue == nil {
+		panic("undefined variable: " + v.Name)
 	}
-	panic("undeclared variable: " + e.Name)
+	return builder.NewLoad(varType, varValue)
 }
 
 func (e *AssignExpr) Generate(builder *ir.Block) value.Value {
@@ -171,156 +195,231 @@ func callRuntimeFunc(b *ir.Block, name string, args []value.Value) value.Value {
 	return b.NewCall(fn, args...)
 }
 
-func NewExprGenerator(mod *ir.Module, entry *ir.Block) *ExprGenerator {
+func NewExprGenerator(mod *ir.Module, entry *ir.Block, storage VariableStorage) *ExprGenerator {
 	return &ExprGenerator{
 		Module:  mod,
 		Builder: entry,
+		Storage: storage,
+	}
+}
+var ExprRegistry map[string]func(*ExprGenerator, parser.IExpressionContext) value.Value
+func (g *ExprGenerator) GenerateExpression(ctx parser.IExpressionContext) value.Value {
+	exprType := getExprType(ctx)
+	if handler, exists := ExprRegistry[exprType]; exists {
+		return handler(g, ctx)
+	}
+	panic("Unsupported expression type: " + exprType)
+}
+func handlePrimary(g *ExprGenerator, ctx parser.IExpressionContext) value.Value {
+	prim := ctx.PrimaryExpression().(*parser.PrimaryExpressionContext)
+	return g.GeneratePrimary(prim)
+}
+func init() {
+	ExprRegistry = map[string]func(*ExprGenerator, parser.IExpressionContext) value.Value{
+		"Binary":  handleBinary,
+		"Unary":   handleUnary,
+		"Call":    handleCall,
+		"Primary": handlePrimary,
 	}
 }
 
-func (g *ExprGenerator) GenerateExpression(ctx parser.IExpressionContext) value.Value {
-	utils.LogInfo("\n=== EXPRESSION GENERATION START ===")
-	defer utils.LogInfo("=== EXPRESSION GENERATION END ===\n")
-	
-	if ctx == nil {
-		panic("nil expression context")
+func handleBinary(g *ExprGenerator, ctx parser.IExpressionContext) value.Value {
+	if len(ctx.AllOperatorGroup()) == 0 {
+		panic("binary expression without operator")
 	}
-
-	utils.LogInfo("Expression context type: %T", ctx)
-	utils.LogInfo("Operator groups: %d", len(ctx.AllOperatorGroup()))
 	
+	var val value.Value
 	if prim := ctx.PrimaryExpression(); prim != nil {
-		utils.LogInfo("Contains primary expression: true")
+		val = g.GeneratePrimary(prim.(*parser.PrimaryExpressionContext))
 	} else {
-		utils.LogInfo("Contains primary expression: false")
+		panic("binary expression missing left operand")
 	}
 	
-	utils.LogInfo("Child count: %d", ctx.GetChildCount())
-
-	if len(ctx.AllOperatorGroup()) > 0 {
-		utils.LogInfo("Processing binary operation")
-		var val value.Value
-		if prim := ctx.PrimaryExpression(); prim != nil {
-			utils.LogInfo("Initial primary expression: %s", prim.GetText())
-			val = g.GeneratePrimary(prim.(*parser.PrimaryExpressionContext))
-		} else {
-			panic("binary expression missing left operand")
-		}
+	for i := 0; i < len(ctx.AllOperatorGroup()); i++ {
+		op := ctx.OperatorGroup(i).GetText()
+		right := g.GenerateExpression(ctx.Expression(i))
 		
-		for i := 0; i < len(ctx.AllOperatorGroup()); i++ {
-			op := ctx.OperatorGroup(i).GetText()
-			utils.LogInfo("Processing operator %d: %s", i+1, op)
-			utils.LogInfo("Looking for right operand at index %d", i)
-			
-			right := g.GenerateExpression(ctx.Expression(i))
-			utils.LogInfo("Generated right operand: %v", right)
-			
-			val = (&BinaryExpr{
-				Left:     &ValueWrapper{Value: val},
-				Right:    &ValueWrapper{Value: right},
-				Operator: op,
-			}).Generate(g.Builder)
-			
-			utils.LogInfo("New combined value: %v", val)
+		switch op {
+		case "+", "..":
+			val = g.Builder.NewAdd(val, right)
+		case "-":
+			val = g.Builder.NewSub(val, right)
+		case "*":
+			val = g.Builder.NewMul(val, right)
+		case "/":
+			val = g.Builder.NewSDiv(val, right)
+		case ">", "<", ">=", "<=", "==", "~=":
+			val = g.Builder.NewICmp(getComparisonPredicate(op), val, right)
+		default:
+			panic("unsupported binary operator: " + op)
 		}
-		return val
+	}
+	return val
+}
+
+func handleUnary(g *ExprGenerator, ctx parser.IExpressionContext) value.Value {
+	if ctx.UnaryOp() == nil {
+		panic("unary expression without operator")
 	}
 	
-	if prim := ctx.PrimaryExpression(); prim != nil {
-		return g.GeneratePrimary(prim.(*parser.PrimaryExpressionContext))
-	}
+	op := ctx.UnaryOp().GetText()
+	operand := g.GenerateExpression(ctx.Expression(0))
 	
-	if unary := ctx.UnaryOp(); unary != nil {
-		if len(ctx.AllExpression()) == 0 {
-			panic("invalid unary expression - missing operand")
-		}
-		return g.GenerateUnary(ctx.Expression(0).(*parser.ExpressionContext))
+	switch op {
+	case "-":
+		return g.Builder.NewSub(constant.NewInt(types.I32, 0), operand)
+	case "not":
+		return g.Builder.NewICmp(enum.IPredEQ, operand, constant.NewInt(types.I32, 0))
+	default:
+		panic("unsupported unary operator: " + op)
 	}
-	
-	panic(fmt.Sprintf("unsupported expression type: %T", ctx))
+}
+
+func handleCall(g *ExprGenerator, ctx parser.IExpressionContext) value.Value {
+	fc := ctx.PrimaryExpression().(*parser.PrimaryExpressionContext).FunctionCall()
+	if fc == nil {
+		panic("function call context missing")
+	}
+	return g.GenerateFunctionCall(fc.(*parser.FunctionCallContext))
+}
+
+func getExprType(ctx parser.IExpressionContext) string {
+	switch {
+	case len(ctx.AllOperatorGroup()) > 0:
+		return "Binary"
+	case ctx.UnaryOp() != nil:
+		return "Unary"
+	case ctx.PrimaryExpression() != nil:
+		return "Primary"
+	default:
+		return "Unknown"
+	}
 }
 
 func (g *ExprGenerator) GeneratePrimary(ctx *parser.PrimaryExpressionContext) value.Value {
-    if lit := ctx.Literal(); lit != nil {
-        if num := lit.NUMBER(); num != nil {
-            val, _ := strconv.Atoi(num.GetText())
-            return (&IntegerLiteral{Value: val}).Generate(g.Builder)
-        }
-    }
-    if varExpr := ctx.Variable(); varExpr != nil {
-        return (&VariableExpr{Name: varExpr.GetText()}).Generate(g.Builder)
-    }
-    if fc := ctx.FunctionCall(); fc != nil {
-        return g.GenerateFunctionCall(fc.(*parser.FunctionCallContext))
-    }
-    panic("unsupported primary expression")
+	if expr := ctx.Expression(); expr != nil {
+		return g.GenerateExpression(expr.(parser.IExpressionContext))
+	}
+	if lit := ctx.Literal(); lit != nil {
+		if num := lit.NUMBER(); num != nil {
+			val, _ := strconv.Atoi(num.GetText())
+			return (&IntegerLiteral{Value: val}).Generate(g.Builder)
+		}
+		if str := lit.STRING(); str != nil {
+			strVal := strings.Trim(str.GetText(), `"`)
+			return (&StringLiteral{
+				Value:    strVal,
+				generator: g,
+			}).Generate(g.Builder)
+		}
+	}
+	if varExpr := ctx.Variable(); varExpr != nil {
+		return (&VariableExpr{Name: varExpr.GetText(), Storage: g.Storage}).Generate(g.Builder)
+	}
+	if fc := ctx.FunctionCall(); fc != nil {
+		return g.GenerateFunctionCall(fc.(*parser.FunctionCallContext))
+	}
+	panic("unsupported primary expression")
 }
 
 func (g *ExprGenerator) HandlePrint(value value.Value) {
-    var fmtStr *ir.Global
-    for _, global := range g.Module.Globals {
-        if global.Name() == "fmt.str" {
-            fmtStr = global
-            break
-        }
-    }
-    
-    if fmtStr == nil {
-        fmtStr = g.Module.NewGlobalDef("fmt.str", 
-            constant.NewCharArrayFromString("%d\n\x00"))
-    }
-    formatPtr := g.Builder.NewBitCast(fmtStr, types.I8Ptr)
-    g.Builder.NewCall(g.Module.Funcs[0], formatPtr, value)
+	var formatStr string
+	switch value.Type().(type) {
+	case *types.PointerType:
+		formatStr = "%s\n\x00"
+	default:
+		formatStr = "%d\n\x00"
+	}
+	
+	fmtName := fmt.Sprintf("fmt.str.%d", g.counter)
+	g.counter++
+	fmtGlobal := g.Module.NewGlobalDef(fmtName, constant.NewCharArrayFromString(formatStr))
+	formatPtr := g.Builder.NewBitCast(fmtGlobal, types.I8Ptr)
+	g.Builder.NewCall(g.Module.Funcs[0], formatPtr, value)
 }
 
 func (g *ExprGenerator) GenerateFunctionCall(ctx *parser.FunctionCallContext) value.Value {
-    var fnName string
-    if varCtx := ctx.Variable(); varCtx != nil {
-        fnName = varCtx.GetText()
-    }
+	var fnName string
+	if varCtx := ctx.Variable(); varCtx != nil {
+		fnName = varCtx.GetText()
+	}
 
-    var args []value.Value
-    for _, exprCtx := range ctx.AllExpression() {
-        args = append(args, g.GenerateExpression(exprCtx.(parser.IExpressionContext)))
-    }
+	var args []value.Value
+	for _, exprCtx := range ctx.AllExpression() {
+		args = append(args, g.GenerateExpression(exprCtx.(parser.IExpressionContext)))
+	}
 
-    switch fnName {
-    case "print":
-        if len(args) == 0 {
-            panic("print requires at least one argument")
-        }
-        g.HandlePrint(args[0])
-        return nil
-    default:
-        var fn *ir.Func
-        for _, f := range g.Module.Funcs {
-            if f.Name() == fnName {
-                fn = f
-                break
-            }
-        }
-        if fn != nil {
-            return g.Builder.NewCall(fn, args...)
-        }
-        panic("undefined function: " + fnName)
-    }
+	switch fnName {
+	case "print":
+		if len(args) == 0 {
+			panic("print requires at least one argument")
+		}
+		g.HandlePrint(args[0])
+		return nil
+	default:
+		var fn *ir.Func
+		for _, f := range g.Module.Funcs {
+			if f.Name() == fnName {
+				fn = f
+				break
+			}
+		}
+		if fn != nil {
+			return g.Builder.NewCall(fn, args...)
+		}
+		panic("undefined function: " + fnName)
+	}
 }
 
 func (g *ExprGenerator) GenerateUnary(ctx *parser.ExpressionContext) value.Value {
-    unaryOp := ctx.UnaryOp().GetText()
-    operandExpr := ctx.Expression(0).(*parser.ExpressionContext)
-    operand := g.GenerateExpression(operandExpr)
-    
-    return (&UnaryExpr{
-        Operand:  &ValueWrapper{Value: operand},
-        Operator: unaryOp,
-    }).Generate(g.Builder)
+	unaryOp := ctx.UnaryOp().GetText()
+	operandExpr := ctx.Expression(0).(*parser.ExpressionContext)
+	operand := g.GenerateExpression(operandExpr)
+	
+	return (&UnaryExpr{
+		Operand:  &ValueWrapper{Value: operand},
+		Operator: unaryOp,
+	}).Generate(g.Builder)
 }
 
 func (g *ExprGenerator) GenerateBinaryOp(left, right value.Value, op string) value.Value {
-    return (&BinaryExpr{
-        Left:     &ValueWrapper{Value: left},
-        Right:    &ValueWrapper{Value: right},
-        Operator: op,
-    }).Generate(g.Builder)
+	return (&BinaryExpr{
+		Left:     &ValueWrapper{Value: left},
+		Right:    &ValueWrapper{Value: right},
+		Operator: op,
+	}).Generate(g.Builder)
+}
+
+func ValidateExprRegistry() error {
+	requiredHandlers := []string{"Binary", "Unary", "Call", "Primary"}
+	for _, key := range requiredHandlers {
+		if _, exists := ExprRegistry[key]; !exists {
+			return fmt.Errorf("missing required expression handler: %s", key)
+		}
+	}
+	return nil
+}
+
+var uniqueIDCounter int
+
+func getUniqueID() int {
+	uniqueIDCounter++
+	return uniqueIDCounter
+}
+
+func (g *ExprGenerator) GetUniqueID() int {
+	g.counter++
+	return g.counter
+}
+
+func getComparisonPredicate(op string) enum.IPred {
+	switch op {
+	case ">": return enum.IPredSGT
+	case "<": return enum.IPredSLT 
+	case ">=": return enum.IPredSGE
+	case "<=": return enum.IPredSLE
+	case "==": return enum.IPredEQ
+	case "~=": return enum.IPredNE
+	default: panic("unsupported comparison operator: " + op)
+	}
 }

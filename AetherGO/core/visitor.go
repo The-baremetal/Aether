@@ -28,6 +28,10 @@ func (v *CustomVisitor) visitNode(node antlr.Tree) interface{} {
 }
 
 func (v *CustomVisitor) VisitExpression(ctx *parser.ExpressionContext) interface{} {
+    if ctx == nil {
+        utils.LogError("nil expression context in visitor")
+        return nil
+    }
     utils.LogInfo("=== NEW EXPRESSION PARSING ===")
     utils.LogInfo("Expression text: %s\n", ctx.GetText())
     utils.LogInfo("Child count: %d\n", ctx.GetChildCount())
@@ -115,6 +119,9 @@ func (v *CustomVisitor) VisitPrimaryExpression(ctx *parser.PrimaryExpressionCont
     if lit := ctx.Literal(); lit != nil {
         if num := lit.NUMBER(); num != nil {
             node.Children = append(node.Children, num.GetText())
+        }
+        if str := lit.STRING(); str != nil {
+            node.Children = append(node.Children, str.GetText())
         }
     }
     return node
