@@ -1,5 +1,7 @@
 # FLUX ASSEMBLY
 
+[![GitHub release](https://img.shields.io/github/release/platane/snk.svg?style=flat-square)](https://github.com/The-baremetal/FLUXASSEMBLY/releases/latest)
+
 ## Relativity
 > Flux assembly not to be confused with flux lang is a language that converts directly to x86 assembly.
 ## Why Flux Assembly?
