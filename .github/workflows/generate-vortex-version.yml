@@ -11,6 +11,7 @@ jobs:
     steps:
     - name: Check out the repository
       uses: actions/checkout@v2
+
     - name: Wait for tag addition and generate Vortex version
       id: version
       run: |
@@ -19,9 +20,16 @@ jobs:
         RETRY_COUNT=0
         RETRY_INTERVAL=10
         TAG=""
+        COMMIT_ID=""
+
         while [ $RETRY_COUNT -lt $MAX_RETRIES ]; do
+          # Get the current commit hash
+          COMMIT_ID=$(git rev-parse HEAD)
+          echo "Current commit ID: $COMMIT_ID"
+          
           # Check if there's a tag
           TAG=$(git describe --tags --abbrev=0 || true)
+          
           if [ -n "$TAG" ]; then
             echo "Found tag: $TAG"
             break
@@ -31,10 +39,13 @@ jobs:
             sleep $RETRY_INTERVAL
           fi
         done
+
         if [ -z "$TAG" ]; then
           echo "No tags found after $MAX_RETRIES retries. Exiting."
+          echo "Current commit ID: $COMMIT_ID"
           exit 1
         fi
+
         TIMESTAMP=$(date +%s%N)
         CORE=$(echo $TAG | cut -d '.' -f 1 | sed 's/v//')
         FLOW=$(echo $TAG | cut -d '.' -f 2)
@@ -47,30 +58,11 @@ jobs:
           CUSTOM_TAGS="${CUSTOM_TAGS}_hotfix"
         fi
         VERSION="Vortex-${CORE}.${FLOW}.${PATCH}_${TIMESTAMP}${CUSTOM_TAGS}"
+        
         echo "---------------------"
         echo "[Release: Vortex]"
         echo "[Core: $CORE, Flow: $FLOW, Patch: $PATCH]"
         echo "[Version: $VERSION]"
         echo "---------------------"
-        echo "::set-output name=version::$VERSION"
-    - name: Catch up with newer commits and create new versions
-      run: |
-        LATEST_TAG=$(git describe --tags --abbrev=0)
-        echo "Latest tag: $LATEST_TAG"
-        TAG_HASH=$(git rev-list -n 1 $LATEST_TAG)
-        echo "Latest tag hash: $TAG_HASH"
-        COMMITS=$(git log $TAG_HASH..HEAD --oneline)
         
-        if [ -z "$COMMITS" ]; then
-          echo "No new commits found since the last tag."
-        else
-          echo "New commits since the last tag:"
-          echo "$COMMITS"
-        fi
-        NEW_VERSION="Vortex-${CORE}.${FLOW}.$((PATCH+1))_${TIMESTAMP}_release"
-        echo "Creating new release version: $NEW_VERSION"
-        git tag -a "$NEW_VERSION" -m "Release $NEW_VERSION"
-        echo "Pushing the new version tag to GitHub..."
-        git push origin "$NEW_VERSION"
-        echo "::set-output name=new_version::$NEW_VERSION"
-        echo "New version tag pushed: $NEW_VERSION"
+        echo "::set-output name=version::$VERSION"
