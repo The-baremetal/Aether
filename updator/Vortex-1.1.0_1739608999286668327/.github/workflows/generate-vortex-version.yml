@@ -1,0 +1,65 @@
+name: Generate Vortex Version
+on:
+  push:
+    branches:
+      - main
+    tags:
+      - 'v*'
+jobs:
+  versioning:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Check out the repository
+      uses: actions/checkout@v2
+
+    - name: Wait for tag addition and generate Vortex version
+      id: version
+      run: |
+        echo "Waiting for a tag to be added..."
+        MAX_RETRIES=10
+        RETRY_COUNT=0
+        RETRY_INTERVAL=10
+        TAG=""
+        COMMIT_ID=""
+
+        while [ $RETRY_COUNT -lt $MAX_RETRIES ]; do
+          COMMIT_ID=$(git rev-parse HEAD)
+          echo "Current commit ID: $COMMIT_ID"
+          TAG=$(git describe --tags --abbrev=0 || true)
+          
+          if [ -n "$TAG" ]; then
+            echo "Found tag: $TAG"
+            break
+          else
+            RETRY_COUNT=$((RETRY_COUNT + 1))
+            echo "No tags found, retrying... ($RETRY_COUNT/$MAX_RETRIES)"
+            sleep $RETRY_INTERVAL
+          fi
+        done
+
+        if [ -z "$TAG" ]; then
+          echo "No tags found after $MAX_RETRIES retries. Exiting."
+          echo "Current commit ID: $COMMIT_ID"
+          exit 1
+        fi
+
+        TIMESTAMP=$(date +%s%N)
+        CORE=$(echo $TAG | cut -d '.' -f 1 | sed 's/v//')
+        FLOW=$(echo $TAG | cut -d '.' -f 2)
+        PATCH=$(echo $TAG | cut -d '.' -f 3)
+        CUSTOM_TAGS=""
+        if [[ $(git tag -l "beta*") ]]; then
+          CUSTOM_TAGS="${CUSTOM_TAGS}_beta"
+        fi
+        if [[ $(git tag -l "hotfix*") ]]; then
+          CUSTOM_TAGS="${CUSTOM_TAGS}_hotfix"
+        fi
+        VERSION="Vortex-${CORE}.${FLOW}.${PATCH}_${TIMESTAMP}${CUSTOM_TAGS}"
+        
+        echo "---------------------"
+        echo "[Release: Vortex]"
+        echo "[Core: $CORE, Flow: $FLOW, Patch: $PATCH]"
+        echo "[Version: $VERSION]"
+        echo "---------------------"
+        
+        echo "::set-output name=version::$VERSION"
