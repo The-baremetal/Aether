@@ -23,11 +23,8 @@ jobs:
         COMMIT_ID=""
 
         while [ $RETRY_COUNT -lt $MAX_RETRIES ]; do
-          # Get the current commit hash
           COMMIT_ID=$(git rev-parse HEAD)
           echo "Current commit ID: $COMMIT_ID"
-          
-          # Check if there's a tag
           TAG=$(git describe --tags --abbrev=0 || true)
           
           if [ -n "$TAG" ]; then
