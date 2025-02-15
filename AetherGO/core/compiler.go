@@ -267,6 +267,8 @@ func (c *Compiler) ProcessASTStatement(stmt *parser.StatementContext) {
         c.handleExpression(expr.(antlr.ParserRuleContext))
     } else if control := stmt.ControlFlowStatement(); control != nil {
         c.handleControlFlow(control.(*parser.ControlFlowStatementContext))
+    } else if ret := stmt.ReturnStatement(); ret != nil {
+        c.handleReturn(ret.(*parser.ReturnStatementContext))
     }
 }
 
@@ -274,11 +276,25 @@ func (c *Compiler) handleControlFlow(ctx *parser.ControlFlowStatementContext) {
     child := ctx.GetChild(0).(antlr.ParseTree)
     key := strings.ToLower(strings.TrimPrefix(fmt.Sprintf("%T", child), "*parser."))
     key = strings.TrimSuffix(key, "context")
+    
     if handler, exists := LLVMA.ControlRegistry[strings.TrimSuffix(key, "Context")]; exists {
         handler(c.controlGen, c, child)
+        if mergeBlock := c.GetCurrentBlock(); len(mergeBlock.Insts) == 0 {
+            mergeBlock.NewUnreachable()
+        }
         return
     }
     utils.LogError("Unhandled control flow: %s", key)
+}
+
+func (c *Compiler) handleReturn(ctx *parser.ReturnStatementContext) {
+    if exprCtx := ctx.Expression(0); exprCtx != nil {
+        retVal := c.exprGen.GenerateExpression(exprCtx.(parser.IExpressionContext))
+        c.entry.NewRet(retVal)
+    } else {
+        c.entry.NewRet(constant.NewInt(types.I32, 0))
+    }
+    c.entry = c.mainFn.NewBlock("unreachable_after_return")
 }
 
 func (c *Compiler) Finalize() (string, error) {
@@ -317,4 +333,8 @@ func (c *Compiler) GetVariableValue(name string) value.Value {
         return v.Value
     }
     return nil
+}
+
+func (c *Compiler) GetCurrentBlock() *ir.Block {
+    return c.entry
 }

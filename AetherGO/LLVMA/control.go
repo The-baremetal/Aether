@@ -141,19 +141,46 @@ func handleIf(cf *ControlFlow, comp CompilerInterface, ctx antlr.ParseTree) erro
     cond := comp.GetExprGen().GenerateExpression(ifCtx.Expression(0))
     
     thenBlock := comp.GetMainFn().NewBlock("if.then")
-    elseBlock := comp.GetMainFn().NewBlock("if.else") 
+    elseBlock := comp.GetMainFn().NewBlock("if.else")
     mergeBlock := comp.GetMainFn().NewBlock("if.merge")
     
-    cf.CreateIf(cond, thenBlock, elseBlock, mergeBlock)
-    
-    comp.GetEntryBlock().NewCondBr(cond, thenBlock, elseBlock)
+    origBuilder := cf.Builder
+    cf.Builder = thenBlock
     comp.ProcessBlock(ifCtx.Block(0))
+    thenTerminated := thenBlock.Term != nil
     
+    var elseTerminated bool
     if ifCtx.Block(1) != nil {
+        cf.Builder = elseBlock
         comp.ProcessBlock(ifCtx.Block(1))
+        elseTerminated = elseBlock.Term != nil
+    } else {
+        elseTerminated = false
+    }
+
+    cf.Builder = origBuilder
+    origBuilder.NewCondBr(cond, thenBlock, elseBlock)
+    if !thenTerminated {
+        thenBlock.NewBr(mergeBlock)
+    }
+    if !elseTerminated {
+        elseBlock.NewBr(mergeBlock)
+    }
+    if thenTerminated && elseTerminated {
+        filtered := make([]*ir.Block, 0, len(comp.GetMainFn().Blocks)-1)
+        for _, blk := range comp.GetMainFn().Blocks {
+            if blk != mergeBlock {
+                filtered = append(filtered, blk)
+            }
+        }
+        comp.GetMainFn().Blocks = filtered
+    } else {
+        cf.Builder = mergeBlock
+        if mergeBlock.Term == nil {
+            mergeBlock.NewUnreachable()
+        }
     }
     
-    cf.FinalizeIf(elseBlock, mergeBlock)
     return nil
 }
 

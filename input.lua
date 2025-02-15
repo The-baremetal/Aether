@@ -11,6 +11,9 @@ end
 
 if x == x then
     print("Welp if that didn't work atleast you have this!!")
+    return 0
 end
 
 print(x)
+
+return 69
