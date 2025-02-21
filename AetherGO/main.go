@@ -3,18 +3,27 @@ package main
 import (
 	"FLUX/AetherGO/core"
 	"FLUX/AetherGO/utils"
-	"fmt"
 	"os"
+	"fmt"
 	"runtime"
 )
 
 func main() {
-	setTerminalTitle("Nulsis")
+	setTerminalTitle("Nulsis (Aether compiler codename)")
 	defer resetTerminalColors()
-	if err := run(); err != nil {
-		utils.LogError("Error: %v", err)
-		os.Exit(1)
+	
+	if len(os.Args) < 2 {
+		panic("Please provide source file")
 	}
+
+	sourceCode, _ := os.ReadFile(os.Args[1])
+	ast := core.ParseSource(string(sourceCode))
+	compiler := core.NewCompiler()
+	if err := compiler.Compile(ast); err != nil {
+		panic(err)
+	}
+	println(compiler.Module.String())
+	println("smth", ast)
 }
 
 const (
@@ -45,7 +54,6 @@ func colorPrintf(colorCode string, format string, args ...interface{}) {
 	}
 }
 
-// Standard color coding functions
 func logSuccess(format string, args ...interface{}) {
 	colorPrintf(colorGreen+"✓ ", format, args...)
 }
@@ -72,38 +80,11 @@ func resetTerminalColors() {
 	}
 }
 
-func run() error {
-	if len(os.Args) < 2 {
-		return fmt.Errorf("usage: %s <file>", os.Args[0])
-	}
-	
-	content, err := os.ReadFile(os.Args[1])
+func readSource(filename string) string {
+	content, err := os.ReadFile(filename)
 	if err != nil {
-		return fmt.Errorf("file read error: %w", err)
+		utils.LogError("File read error: %v", err)
+		os.Exit(1)
 	}
-
-	compiler := core.NewCompiler()
-	if err := compiler.SetupParser(string(content)); err != nil {
-		return err
-	}
-
-	if err := compiler.GenerateIR(); err != nil {
-		return err
-	}
-
-	if err := compiler.ProcessAST(); err != nil {
-		return fmt.Errorf("AST processing failed: %w", err)
-	}
-
-	irOutput, err := compiler.Finalize()
-	if err != nil {
-		return fmt.Errorf("finalization failed: %w", err)
-	}
-
-	if err := os.WriteFile("output.ll", []byte(irOutput), 0644); err != nil {
-		return fmt.Errorf("failed to write IR file: %w", err)
-	}
-
-	logSuccess("Compilation successful!")
-	return nil
+	return string(content)
 }

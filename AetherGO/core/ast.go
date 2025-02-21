@@ -1,17 +1,14 @@
 package core
 
 import (
-    "fmt"
+    "fm"
+    "FLUX/AetherGO/types"
 )
 
-type ASTNode struct {
-    Rule     string
-    Children []interface{}
-}
-
 func FormatAST(node interface{}, indent int) string {
-    if n, ok := node.(*ASTNode); ok {
-        str := fmt.Sprintf("%*s%s\n", indent, "", n.Rule)
+    if n, ok := node.(*types.ASTNode); ok {
+        typeStr := types.NodeTypeToString(n.Type)
+        str := fmt.Sprintf("%*s%s\n", indent, "", typeStr)
         for _, child := range n.Children {
             str += FormatAST(child, indent+2)
         }

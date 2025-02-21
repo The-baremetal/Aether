@@ -1,340 +1,142 @@
 package core
 
 import (
-    "fmt"
-    "github.com/antlr4-go/antlr/v4"
-    "FLUX/parser"
+    "FLUX/AetherGO/llvm"
+    "FLUX/AetherGO/types"
     "github.com/llir/llvm/ir"
-    LLVMA "FLUX/AetherGO/LLVMA"
-    "github.com/llir/llvm/ir/constant"
-    "github.com/llir/llvm/ir/types"
     "github.com/llir/llvm/ir/value"
-    "FLUX/AetherGO/utils"
-    "strings"
+    irtypes "github.com/llir/llvm/ir/types"
+    "github.com/llir/llvm/ir/constant"
+    "fmt"
+    "encoding/json"
 )
 
-type Variable struct {
-    Name string
-    Type types.Type
-    Value value.Value
-}
-
 type Compiler struct {
-    parser    *parser.Lua_grammar_antlr4Parser
-    visitor   *CustomVisitor
-    module    *ir.Module
-    mainFn    *ir.Func
-    entry     *ir.Block
-    variables map[string]*Variable
-    exprGen   *LLVMA.ExprGenerator
-    printf    *ir.Func
-    ast       antlr.Tree
-    controlGen *LLVMA.ControlFlow
+    Module      *ir.Module
+    Builder     *llvm.LLVMBuilder
+    curFunc     *ir.Func
+    blocks      []*ir.Block
+    Scope       *types.SymbolScope
+    variables   map[string]*types.Variable
+    TypeSystem  *types.TypeSystem
+    IRGenConfig struct {
+        BinaryOps map[string]IRGenRule
+    }
+    DebugInfo   *DebugInfo
 }
-
-var counter int
-
-func (c *Compiler) getUniqueID() int {
-    counter++
-    return counter
-}
+type (
+    IRGenRule struct {
+        Op    string
+        GenFn func(*Compiler, value.Value, value.Value) (value.Value, error)
+    }
+    
+    SymbolScope struct {
+        Parent  *SymbolScope
+        Symbols map[string]*types.Variable
+    }
+    
+    DebugInfo struct {
+        SourceLines []string
+        FilePath    string
+    }
+)
 
 func NewCompiler() *Compiler {
-    return &Compiler{}
-}
-
-func (c *Compiler) SetupParser(input string) error {
-    utils.LogInfo("\n=== Setting up parser ===\n")
-    is := antlr.NewInputStream(input)
-    lexer := parser.NewLua_grammar_antlr4Lexer(is)
-    stream := antlr.NewCommonTokenStream(lexer, 0)
-    c.parser = parser.NewLua_grammar_antlr4Parser(stream)
-    tree := c.parser.Program()
-    c.ast = tree
-    utils.LogDebug("Raw AST structure:\n%s", antlr.TreesStringTree(c.ast, c.parser.GetRuleNames(), c.parser))
-    
-    c.visitor = NewCustomVisitor(c.parser)
-    utils.LogInfo("AST structure printed above")
-    return nil
-}
-
-func (c *Compiler) GenerateIR() error {
-    utils.LogInfo("\n=== Generating IR ===\n")
-    utils.LogDebug("Initializing module...\n")
-    c.variables = make(map[string]*Variable)
-    
-    var err error
-    if c.module, err = LLVMA.InitModule(); err != nil {
-        return fmt.Errorf("module init failed: %w", err)
+    module := ir.NewModule()
+    return &Compiler{
+        Builder:     llvm.NewBuilder(module),
+        TypeSystem:  types.NewTypeSystem(),
+        Scope:       types.NewSymbolScope(nil),
+        Module:      module,
+        IRGenConfig: struct {
+            BinaryOps map[string]IRGenRule
+        }{
+            BinaryOps: make(map[string]IRGenRule),
+        },
     }
+}
 
-    printf := c.module.NewFunc("printf", types.I32, ir.NewParam("format", types.I8Ptr))
+func (c *Compiler) Compile(ast *types.ASTNode) error {
+    fmt.Println("=== AST DUMP ===")
+    fmt.Println(c.DumpAST(ast))
+    fmt.Println("================")
+    
+    c.Module.NewGlobalDef("print_int_fmt", constant.NewCharArrayFromString("%d\n\x00"))
+    c.Module.NewGlobalDef("print_str_fmt", constant.NewCharArrayFromString("%s\n\x00"))
+    
+    printf := c.Module.NewFunc("printf", irtypes.I32, ir.NewParam("format", irtypes.I8Ptr))
     printf.Sig.Variadic = true
     
-    if c.mainFn, err = LLVMA.InitMain(c.module); err != nil {
-        return fmt.Errorf("main function init failed: %w", err)
-    }
-    if c.entry, err = LLVMA.InitBlock(c.mainFn); err != nil {
-        return fmt.Errorf("entry block init failed: %w", err)
-    }
-    c.exprGen = LLVMA.NewExprGenerator(c.module, c.entry, c)
-    c.controlGen = LLVMA.NewControlFlow(c.module, c.entry)
+    c.Builder.CreateEntryBlock()
     
-    c.printf = printf
-    
-    utils.LogInfo("Created main function: %s\n", c.mainFn.Name())
-    utils.LogInfo("Created entry block: %s\n", c.entry.Name())
-    utils.LogInfo("Initialized expression generator")
-    
-    return nil
-}
-
-func (c *Compiler) ProcessAST() error {
-    utils.LogInfo("\n=== Processing AST ===\n")
-    utils.LogDebug("Full AST structure:\n%s\n", antlr.TreesStringTree(c.ast, nil, nil))
-    
-    ctx := c.ast.(*parser.ProgramContext)
-    stmtList := ctx.AllStatement()
-    utils.LogInfo("Found %d statements\n", len(stmtList))
-    
-    for i, stmt := range stmtList {
-        utils.LogInfo("\nProcessing statement %d (%T)\n", i, stmt)
-        if assign := stmt.AssignStatement(); assign != nil {
-            c.handleAssignment(assign)
-        } else if expr := stmt.Expression(); expr != nil {
-            val := c.handleExpression(expr.(antlr.ParserRuleContext))
-            if val != nil && val.Type() != types.Void {
-                if fc := expr.(*parser.ExpressionContext).PrimaryExpression().FunctionCall(); fc != nil {
-                    c.handleFunctionCall(fc.(parser.IFunctionCallContext))
-                }
-            }
-        } else if localDecl := stmt.LocalDeclaration(); localDecl != nil {
-            c.handleLocalDeclaration(localDecl.(antlr.ParserRuleContext))
-        } else if controlStmt := stmt.ControlFlowStatement(); controlStmt != nil {
-            c.handleControlFlow(controlStmt.(*parser.ControlFlowStatementContext))
-        }
-    }
-    
-    return nil
-}
-
-func (c *Compiler) handleLocalDeclaration(ctx antlr.ParserRuleContext) {
-    localCtx := ctx.(*parser.LocalDeclarationContext)
-    ident := localCtx.IDENTIFIER(0).GetText()
-    
-    var alloc *ir.InstAlloca
-    if expr := localCtx.Expression(); expr != nil {
-        exprCtx := expr.(parser.IExpressionContext)
-        val := c.exprGen.GenerateExpression(exprCtx)
-        allocType := val.Type()
-        alloc = c.entry.NewAlloca(allocType)
-    } else {
-        alloc = c.entry.NewAlloca(types.I32)
-    }
-    
-    alloc.SetName(ident)
-    
-    if expr := localCtx.Expression(); expr != nil {
-        exprCtx := expr.(parser.IExpressionContext)
-        val := c.exprGen.GenerateExpression(exprCtx)
-        c.entry.NewStore(val, alloc)
-    }
-    
-    c.variables[ident] = &Variable{
-        Name:  ident,
-        Type:  alloc.Type(),
-        Value: alloc,
-    }
-}
-
-func (c *Compiler) handleExpression(ctx antlr.ParserRuleContext) value.Value {
-    utils.LogInfo("\n=== HANDLING EXPRESSION ===")
-    defer utils.LogInfo("=== EXPRESSION HANDLED ===\n")
-    
-    utils.LogInfo("Full context type: %T", ctx)
-    utils.LogInfo("Context text: %s", ctx.GetText())
-    
-    exprCtx := ctx.(*parser.ExpressionContext)
-    utils.LogInfo("Operator groups found: %d", len(exprCtx.AllOperatorGroup()))
-    
-    if ops := exprCtx.AllOperatorGroup(); len(ops) > 0 {
-        utils.LogInfo("Processing binary operation chain")
-        left := c.exprGen.GenerateExpression(exprCtx.Expression(0))
-        utils.LogInfo("Initial left operand: %v", left)
-        
-        for i, opGroup := range ops {
-            op := opGroup.GetText()
-            utils.LogInfo("Processing operator %d: %s", i+1, op)
-            utils.LogInfo("Fetching right operand at index %d", i+1)
-            
-            right := c.exprGen.GenerateExpression(exprCtx.Expression(i+1))
-            utils.LogInfo("Right operand value: %v", right)
-            
-            left = c.exprGen.GenerateBinaryOp(left, right, op)
-            utils.LogInfo("New combined value: %v", left)
-        }
-        return left
-    }
-    val := c.exprGen.GenerateExpression(exprCtx)
-    utils.LogInfo("Generated expression value: %v\n", val)
-    return val
-}
-
-func (c *Compiler) handleFunctionCall(ctx parser.IFunctionCallContext) {
-    utils.LogInfo("\nHandling function call\n")
-    var fnName string
-    if varCtx := ctx.Variable(); varCtx != nil {
-        fnName = varCtx.GetText()
-    }
-
-    var args []value.Value
-    for _, exprCtx := range ctx.AllExpression() {
-        args = append(args, c.exprGen.GenerateExpression(exprCtx.(*parser.ExpressionContext)))
-    }
-
-    utils.LogInfo("Function name: %s\n", fnName)
-    utils.LogInfo("Arguments count: %d\n", len(args))
-    
-    switch fnName {
-    case "print":
-        if len(args) == 0 {
-            utils.LogError("print requires at least one argument\n")
-        }
-        utils.LogInfo("Generating print call for value: %v\n", args[0])
-        var formatStr string
-        switch args[0].Type().(type) {
-        case *types.PointerType:
-            formatStr = "%s\n\x00"
-        default:
-            formatStr = "%d\n\x00"
-        }
-        fmtName := fmt.Sprintf("fmt.str.%d", c.getUniqueID())
-        fmtGlobal := c.module.NewGlobalDef(fmtName, 
-            constant.NewCharArrayFromString(formatStr))
-        formatPtr := c.entry.NewBitCast(fmtGlobal, types.I8Ptr)
-        c.entry.NewCall(c.printf, formatPtr, args[0])
-    default:
-        var fn *ir.Func
-        for _, f := range c.module.Funcs {
-            if f.Name() == fnName {
-                fn = f
-                break
+    for _, child := range ast.Children {
+        if stmt, ok := child.Value.(Statement); ok {
+            if err := stmt.GenIR(c); err != nil {
+                return err
             }
         }
-        if fn != nil {
-            c.entry.NewCall(fn, args...)
-        }
     }
-}
-
-func (c *Compiler) handleAssignment(ctx parser.IAssignStatementContext) {
-    varIdent := ctx.Variable().GetText()
-    val := c.exprGen.GenerateExpression(ctx.Expression().(*parser.ExpressionContext))
-    
-    variable, exists := c.variables[varIdent]
-    if !exists {
-        alloc := c.entry.NewAlloca(val.Type())
-        alloc.SetName(varIdent)
-        variable = &Variable{
-            Name:  varIdent,
-            Type:  val.Type(),
-            Value: alloc,
-        }
-        c.variables[varIdent] = variable
-    }
-    
-    if !val.Type().Equal(variable.Type) {
-        utils.LogError("Type mismatch: cannot assign %s to %s", val.Type(), variable.Type)
-    }
-    
-    c.entry.NewStore(val, variable.Value)
-}
-
-func (c *Compiler) ProcessBlock(ctx antlr.ParseTree) {
-    blockCtx, ok := ctx.(*parser.BlockContext)
-    if !ok {
-        panic("invalid block context")
-    }
-    for _, stmt := range blockCtx.AllStatement() {
-        c.ProcessASTStatement(stmt.(*parser.StatementContext))
-    }
-}
-
-func (c *Compiler) ProcessASTStatement(stmt *parser.StatementContext) {
-    if assign := stmt.AssignStatement(); assign != nil {
-        c.handleAssignment(assign)
-    } else if expr := stmt.Expression(); expr != nil {
-        c.handleExpression(expr.(antlr.ParserRuleContext))
-    } else if control := stmt.ControlFlowStatement(); control != nil {
-        c.handleControlFlow(control.(*parser.ControlFlowStatementContext))
-    } else if ret := stmt.ReturnStatement(); ret != nil {
-        c.handleReturn(ret.(*parser.ReturnStatementContext))
-    }
-}
-
-func (c *Compiler) handleControlFlow(ctx *parser.ControlFlowStatementContext) {
-    child := ctx.GetChild(0).(antlr.ParseTree)
-    key := strings.ToLower(strings.TrimPrefix(fmt.Sprintf("%T", child), "*parser."))
-    key = strings.TrimSuffix(key, "context")
-    
-    if handler, exists := LLVMA.ControlRegistry[strings.TrimSuffix(key, "Context")]; exists {
-        handler(c.controlGen, c, child)
-        if mergeBlock := c.GetCurrentBlock(); len(mergeBlock.Insts) == 0 {
-            mergeBlock.NewUnreachable()
-        }
-        return
-    }
-    utils.LogError("Unhandled control flow: %s", key)
-}
-
-func (c *Compiler) handleReturn(ctx *parser.ReturnStatementContext) {
-    if exprCtx := ctx.Expression(0); exprCtx != nil {
-        retVal := c.exprGen.GenerateExpression(exprCtx.(parser.IExpressionContext))
-        c.entry.NewRet(retVal)
-    } else {
-        c.entry.NewRet(constant.NewInt(types.I32, 0))
-    }
-    c.entry = c.mainFn.NewBlock("unreachable_after_return")
-}
-
-func (c *Compiler) Finalize() (string, error) {
-    utils.LogInfo("\n=== Finalizing IR ===\n")
-    c.entry.NewRet(constant.NewInt(types.I32, 0))
-    utils.LogInfo("Added final return instruction\n")
-    utils.LogSuccess("Compilation successful!\n")
-    return c.module.String(), nil
-}
-
-func (c *Compiler) GetExprGen() *LLVMA.ExprGenerator {
-    return c.exprGen
-}
-
-func (c *Compiler) GetMainFn() *ir.Func {
-    return c.mainFn
-}
-
-func (c *Compiler) GetEntryBlock() *ir.Block { 
-    return c.entry
-}
-
-func (c *Compiler) GetVariable(name string) *Variable {
-    return c.variables[name]
-}
-
-func (c *Compiler) GetVariableType(name string) types.Type {
-    if v, exists := c.variables[name]; exists {
-        return v.Type
+    if c.Builder.CurrentBlock().Term == nil {
+        c.Builder.CurrentBlock().NewRet(constant.NewInt(irtypes.I32, 0))
     }
     return nil
 }
 
-func (c *Compiler) GetVariableValue(name string) value.Value {
-    if v, exists := c.variables[name]; exists {
-        return v.Value
-    }
-    return nil
+func (c *Compiler) EnterScope() {
+    c.Scope = types.NewSymbolScope(c.Scope)
 }
 
-func (c *Compiler) GetCurrentBlock() *ir.Block {
-    return c.entry
+func (c *Compiler) ExitScope() {
+    if c.Scope.Parent != nil {
+        c.Scope = c.Scope.Parent
+    }
+}
+
+func (c *Compiler) AddIRRule(op string, genFn func(*Compiler, value.Value, value.Value) (value.Value, error)) {
+    c.IRGenConfig.BinaryOps[op] = IRGenRule{Op: op, GenFn: genFn}
+}
+
+func (c *Compiler) Finalize() string {
+    return c.Module.String()
+}
+
+func (c *Compiler) DumpAST(ast *types.ASTNode) string {
+    fmt.Println("AST")
+    return FormatAST(ast, 0)
+}
+
+func (c *Compiler) compileFromJSON(raw json.RawMessage) error {
+    var jsonAST struct {
+        NodeType string
+        Value    interface{}
+        Children []json.RawMessage
+        IsJSON   bool
+    }
+    
+    if err := json.Unmarshal(raw, &jsonAST); err != nil {
+        return fmt.Errorf("JSON AST parsing failed: %w", err)
+    }
+    
+    ast := &types.ASTNode{
+        Type:   types.NodeTypeFromString(jsonAST.NodeType),
+        Value:  jsonAST.Value,
+        IsJSON: true,
+    }
+    
+    for _, child := range jsonAST.Children {
+        var childNode types.ASTNode
+        if err := json.Unmarshal(child, &childNode); err != nil {
+            return err
+        }
+        ast.Children = append(ast.Children, &childNode)
+    }
+    for _, child := range ast.Children {
+        if stmt, ok := child.Value.(Statement); ok {
+            if err := stmt.GenIR(c); err != nil {
+                return err
+            }
+        }
+    }
+    
+    return nil
 }
