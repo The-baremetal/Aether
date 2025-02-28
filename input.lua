@@ -1,19 +1,55 @@
-x = 5 * (3 + 2)
+-- Basic syntax
+local x = 5 * (3 + 2)
+const MAX = 100
+local y = "hello" .. "world"
+local z = true
 
-y = "if works"
-
-z = 3
-
-if x > z then
-    print(y)
-    print("if this doesn't work, this confirms if is being called but its just a string issue")
+-- Control flow
+if x > MAX then
+    print("Overflow")
+elseif x < 0 then
+    print("Underflow")
+else
+    print("Within limits")
 end
 
-if x == x then
-    print("Welp if that didn't work atleast you have this!!")
-    return 0
+while x < 50 do
+    x += 1
+    print(x)
 end
 
-print(x)
+repeat
+    x -= 1
+until x <= 50
 
-return 69
+-- Functions
+function factorial(n: number): number
+    if n <= 1 then
+        return 1
+    end
+    return n * factorial(n - 1)
+end
+
+local fib = function(n)
+    if n <= 2 then
+        return 1
+    end
+    return fib(n-1) + fib(n-2)
+end
+
+-- Tables and metatables
+local player = {
+    name = "Arthur",
+    health = 100,
+    inventory = { "sword", "shield" },
+    __metatable = { __index = function(t,k) return "N/A" end }
+}
+
+-- Error handling
+try
+    local risky = dangerousOperation()
+catch err
+    print("Error occurred:", err)
+finally
+    cleanupResources()
+end

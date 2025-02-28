@@ -17,7 +17,7 @@ func ParseSource(code string) *types.ASTNode {
 	fmt.Println(tree.ToStringTree([]string{}, p))
 	
 	visitor := NewCustomVisitor(p)
-	result := p.Program().Accept(visitor)
+	result := visitor.Visit(tree)
 	if result == nil {
 		return &types.ASTNode{Type: types.NodeStmt}
 	}

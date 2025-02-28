@@ -1,4 +1,6 @@
 // should be used for operators and new syntax instead of statements now.
+// 1 based indexing is disabled by default
+// immutable internal module allows immutable objects or it can be built into the compiler which is better
 
 grammar Lua_grammar_antlr4;
 
@@ -14,15 +16,17 @@ program
 // ---------------------------
 /* Statements (Assignment, Control Flow, etc.) */
 statement
-    : assignStatement
-    | controlFlowStatement
-    | functionDeclaration
-    | returnStatement
-    | localDeclaration
-    | labelStatement
-    | selectStatement
-    | 'spawn' expression
-    | expression (';')?
+    : assignStatement             #assignStmt
+    | controlFlowStatement        #controlFlowStmt
+    | functionDeclaration         #functionDecl
+    | localDeclaration            #localDecl
+    | labelStatement              #labelStmt
+    | selectStatement             #selectStmt
+    | SPAWN expression ';'?       #spawnStatement
+    | expression (';')?           #expressionStmt
+    | constDeclaration            #constDecl
+    | returnStatement             #returnStmt
+    | typeDeclaration             #typeDecl
     ;
 
 // **Adding a new statement**: 
@@ -39,14 +43,16 @@ assignStatement
 // ---------------------------
 /* Expressions (Literals, Variables, Operations) */
 expression
-    : primaryExpression (operatorGroup expression)*
-    | expression operatorGroup expression
-    |<assoc=right> expression operatorGroup expression
-    | unaryOp expression
+    : unaryOp expression
     | 'match' expression 'with' matchArm+ 'end'
     | 'async' block 'end'
     | 'await' expression
-    | expression '!!'       
+    | primaryExpression (operatorGroup expression)*
+    | expression operatorGroup expression
+    |<assoc=right> expression operatorGroup expression
+    | expression '|>' expression
+    | expression '?.' IDENTIFIER
+    | expression '?[' expression ']'
     ;
 
 primaryExpression
@@ -55,10 +61,10 @@ primaryExpression
     | variable
     | unaryOperation
     | tableConstructor
+    | arrayConstructor
     | functionExpression
     | '(' expression ')'
-    | lambdaExpression
-    ( callChain )*)
+    ) ( callChain | typeAssertion )*
     ;
 
 callChain
@@ -75,10 +81,8 @@ literal
     ;
 
 variable
-    : IDENTIFIER
-    | variable safeAccess
-    | variable '[' expression ']'
-    | variable '.' IDENTIFIER
+    : ( 'const' )? IDENTIFIER
+    | variable ( '.' IDENTIFIER | '[' expression ']' | '?.' IDENTIFIER | '?[' expression ']' )
     ;
 
 safeAccess
@@ -93,6 +97,10 @@ functionCall
 
 tableConstructor
     : '{' (field (',' field)*)? (',' metatable)? '}'
+    ;
+
+arrayConstructor
+    : '[' expressionList? ']'
     ;
 
 metatable
@@ -164,10 +172,8 @@ controlFlowStatement
     | forStatement
     | breakStatement
     | gotoStatement
-    // | coroutineStatement internal function call too
-    | protectedCallStatement
+    | tryCatchStatement
     ;
-
 ifStatement
     : 'if' expression 'then' block ('elseif' expression 'then' block)* ('else' block)? 'end'
     ;
@@ -193,14 +199,24 @@ gotoStatement
     : 'goto' IDENTIFIER
     ;
 
+// TODO: Should i add the throw statement or should it be a function call? well i guess the compiler will handle it, its not the parser's problem
+// anyways, throw should be like this
+// throw("Something went wrong!", aether.ErrorTypes.RuntimeError)
+
 //coroutineStatement
 //    : 'coroutine' '.' ( 'create' | 'resume' | 'yield' | 'status' | 'running' | 'wrap' | 'isyieldable' )
 //    ;
 
+// corountine can be autodetected because it is essentially a function call
+
+/* pcall is trash, proper error handling
 protectedCallStatement
     : (('pcall' | 'xpcall') ('.' | ':')? IDENTIFIER?)
       '(' (expressionList | namedArgs) ')'
     ;
+*/
+
+
 
 namedArgs
     : IDENTIFIER '=' expression (',' IDENTIFIER '=' expression)*
@@ -212,19 +228,30 @@ block
 
 // ---------------------------
 /* Declarations (Local Variables, Functions) */
+
+// Static typed is recommended for readability
 localDeclaration
-    : 'local' typeAnnotation? IDENTIFIER ('=' expression)?
-    | 'local' IDENTIFIER (',' IDENTIFIER)* '=' expressionList
-    | 'local' 'function' IDENTIFIER '(' (parameterList)? ')' block 'end'
+    : 'local' 'const'? (typeAnnotation IDENTIFIER (',' typeAnnotation IDENTIFIER)* '=' expressionList)  #typedLocalDecl
+    | 'local' 'const'? IDENTIFIER (',' IDENTIFIER)* '=' expressionList  #untypedLocalDecl
+    | 'local' 'function' IDENTIFIER '(' (parameterList)? ')' (typeAnnotation)? block 'end'  #localFunctionDecl
+    ;
+
+constDeclaration
+    : 'const' typeAnnotation IDENTIFIER '=' expression  #typedConstDecl
+    | 'const' IDENTIFIER (',' IDENTIFIER)* '=' expressionList  #untypedConstDecl
     ;
 
 functionDeclaration
-    : 'function' (IDENTIFIER '.' | IDENTIFIER ':')? IDENTIFIER
-      '(' (parameterList)? ')' block 'end'
+    : (DOC_COMMENT* 'function') 
+      (IDENTIFIER '.' | IDENTIFIER ':')? IDENTIFIER
+      '(' (parameterList)? ')' 
+      (typeAnnotation)? 
+      block 
+      'end'
     ;
 
 returnStatement
-    : 'return' (expression (',' expression)* | functionCall)?
+    : RETURN (expression (',' expression)* | functionCall)?
     ;
 
 // ---------------------------
@@ -246,7 +273,7 @@ operatorGroup
     ;
 
 logicalOp:     'and'|'or';
-comparisonOp:  '=='|'>='|'<='|'~='|'>'|'<';
+comparisonOp:  '=='|'>='|'<='|'~='|'>'|'<'|'in';
 arithOp:       '+'|'-'|'*'|'/'|'//'|'%'|'^';
 bitwiseOp:     '&'|'|'|'~'|'<<'|'>>';
 assignOp:      '='|'+='|'-='|'*='|'/='|'//='|'^='|'&='|'|=';
@@ -264,16 +291,47 @@ nonNullAssertOp: '!!';
 
 // ---------------------------
 /* Keywords and Identifiers */
+CONST: 'const';
+NIL: 'nil';
+BOOL: 'true'|'false';
+FUNCTION: 'function';
+LOCAL: 'local';
+RETURN: 'return';
+IF: 'if';
+THEN: 'then';
+ELSE: 'else';
+ELSEIF: 'elseif';
+END: 'end';
+WHILE: 'while';
+DO: 'do';
+REPEAT: 'repeat';
+UNTIL: 'until';
+FOR: 'for';
+IN: 'in';
+BREAK: 'break';
+GOTO: 'goto';
+AND: 'and';
+OR: 'or';
+NOT: 'not';
+ASYNC: 'async';
+AWAIT: 'await';
+MATCH: 'match';
+WITH: 'with';
+SELECT: 'select';
+TRY: 'try';
+CATCH: 'catch';
+FINALLY: 'finally';
+TYPEOF: 'typeof';
+
+SPAWN: 'spawn';
+VOID: 'void';
+TYPE: 'type';
+SAFE_NAV: '?.';
+PIPE: '|>';
+ARROW: '=>';
+
 IDENTIFIER
     : [a-zA-Z_][a-zA-Z_0-9]*
-    ;
-
-BOOL
-    : 'true' | 'false'
-    ;
-
-NIL
-    : 'nil'
     ;
 
 NUMBER
@@ -291,6 +349,10 @@ WS
     : [ \t\r\n]+ -> skip
     ;
 
+DOC_COMMENT
+    : '---' ~[\r\n]*
+    ;
+
 COMMENT
     : '--' ~[\r\n]* -> skip
     ;
@@ -305,30 +367,38 @@ expressionList
     ;
 
 functionExpression
-    : 'function' (IDENTIFIER ':')? '(' (parameterList)? ')' 
-      (block 'end' | '=>' expression)
+    : 'function' (IDENTIFIER ':')? '(' (parameterList)? ')' (typeAnnotation)?
+      block 'end'
     ;
 
 parameterList
-    : IDENTIFIER (',' IDENTIFIER)* (',' varargOp)?
-    | varargOp
+    : (IDENTIFIER typeAnnotation? (',' IDENTIFIER typeAnnotation?)*) 
+      (',' varargOp typeAnnotation?)?
+    | varargOp typeAnnotation?
     ;
 
 selectStatement
     : 'select' '(' ('#' | expression) ',' expression ')' 
     ;
 
-lambdaExpression
-    : '(' (IDENTIFIER (',' IDENTIFIER)*)? ')' '=>' expression
+typeAnnotation
+    : ':' typeSpec ('?' | '|' typeSpec)*
     ;
 
-typeAnnotation
-    : ':' typeSpec
+typeDeclaration
+    : 'type' IDENTIFIER '=' typeSpec
     ;
 
 typeSpec
-    : 'number' | 'string' | 'boolean' | 'table' | 'function'
-    | 'any' | typeSpec '[]' | 'table<' typeSpec ',' typeSpec '>'
+    : ( 'number' | 'string' | 'boolean' | 'table' | 'function' | 'void'
+      | 'any' | 'nil' | 'unknown' | IDENTIFIER )
+      ('[]' | '<' typeSpec (',' typeSpec)* '>')*
+    | 'function' '(' (typeSpec (',' typeSpec)*)? ')' '=>' typeSpec
+    | '(' typeSpec ')'
+    ;
+
+typeAssertion
+    : primaryExpression 'as' typeSpec
     ;
 
 // ---------------------------
@@ -369,3 +439,12 @@ decoratorSyntax
 //requireExpression
 //    : 'require' '(' expression ')'
 //    ;
+
+// ---------------------------
+/* Error Handling */
+tryCatchStatement
+    : 'try' block 
+      ('catch' (IDENTIFIER)? block)?
+      ('finally' block)?
+      'end'
+    ;
