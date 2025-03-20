@@ -2,7 +2,7 @@
 // 1 based indexing is disabled by default
 // immutable internal module allows immutable objects or it can be built into the compiler which is better
 
-grammar Lua_grammar_antlr4;
+grammar lua_grammar_antlr4;
 
 options {
     language = Go;
