@@ -1,6 +1,10 @@
 # FLUX ASSEMBLY
 
 [![GitHub release](https://img.shields.io/github/release/platane/snk.svg?style=flat-square)](https://github.com/The-baremetal/FLUXASSEMBLY/releases/latest) [![Tweet](https://img.shields.io/twitter/url/http/shields.io.svg?style=social)](https://twitter.com/intent/tweet?text=I%20Just%20Found%20This%20Named%20Aether&url=https://github.com/The-baremetal/FLUXASSEMBLY&hashtags=coding,programming,programminglanguage,aether,aetherlang,project,fyp)
+[![GitHub license](https://img.shields.io/github/license/The-baremetal/FLUXASSEMBLY)](https://github.com/The-baremetal/FLUXASSEMBLY/blob/master/LICENSE)
+[![GitHub contributors](https://img.shields.io/github/contributors/The-baremetal/FLUXASSEMBLY)](https://github.com/The-baremetal/FLUXASSEMBLY/graphs/contributors)
+[![GitHub commit activity](https://img.shields.io/github/commit-activity/m/The-baremetal/FLUXASSEMBLY)](https://github.com/The-baremetal/FLUXASSEMBLY/commits)
+
 
 ## Relativity
 > Flux assembly not to be confused with flux lang is a language that converts directly to x86 assembly.
