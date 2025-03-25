@@ -31,7 +31,7 @@ statement
 
 // **Adding a new statement**: 
 // 1. Add a new rule in the 'statement' section. 
-// 2. It should follow the pattern: newStatementName
+// 2. It should follow the pattearn: newStatementName
 // Example:
 // newStatement
 //     : 'newKeyword' expression ';'

@@ -6,8 +6,6 @@
 [![GitHub commit activity](https://img.shields.io/github/commit-activity/m/The-baremetal/FLUXASSEMBLY)](https://github.com/The-baremetal/FLUXASSEMBLY/commits)
 
 
-## Relativity
-> Flux assembly not to be confused with flux lang is a language that converts directly to x86 assembly.
 ## Why Flux Assembly?
 > Flux Assembly has been designed to be easy to learn. Its syntax is based on Lua, with all the characteristics which make it a good, 'first language' for immediate introduction to Assembly without having to get involved in all the complexities of low-level programming: self-contained and easily modifiable, personalized and flexible language.
 > What's more, Flux Assembly is fully backward compatible with Lua. In other words, any pre-existent code in Lua can be easily ported into Flux Assembly, therefore easing the path to migrate from a higher-level, easier-to-handle scripting to an efficient, low-level assembly.

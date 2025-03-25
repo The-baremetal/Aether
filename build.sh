@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# I think the code is already pretty self explainatory with all these step comments. Don't beg me for an explanation, user, the responsibility's YOURS
+# I think the code is already pretty self explainatory with all these step comments. Don't beg me for an explanation, user, the responsibility's YOUR
 
 # Directories
 grammar="src/Lua_grammar_antlr4.g4"
@@ -56,7 +56,7 @@ cd "$pwd"
 #   $output/lua_grammar_antlr4Parser.cpp: The parser source file
 #   -lantlr4-runtime: Link against the antlr4-runtime library
 compile() {
-    go build AetherGo/main.go
+    cmd.exe /C go build AetherGo/main.go
 }
 
 build() {
