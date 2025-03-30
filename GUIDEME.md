@@ -220,7 +220,23 @@ end
 
 ---
 
-### ✅ 12. Code Review Checklist  
+### 🚫12. Scopes
+**Avoid this:**
+```lua
+-- AVOID THIS, Even though the compiler may free it when it is not needed, it slows down compile times and makes your code a bit unmaintainable
+onetimecompute = "hello"
+print(hello..hello)
+```
+**Do this:**
+```lua
+-- Do this
+local onetimecomputer = "hello"
+print(hello..hello)
+```
+
+---
+
+### ✅ 13. Code Review Checklist  
 1. All functions under 40 lines?  
 2. No magic numbers/strings?  
 3. Error handling present?  
