@@ -43,7 +43,7 @@ return Weapon
 
 **Usage:**  
 ```lua
-local weapon = require("items.weapon")
+import items.weapon as Weapon
 local sword = Weapon.new(15, 1.2)
 ```
 
