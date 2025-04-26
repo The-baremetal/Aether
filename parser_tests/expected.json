@@ -1,0 +1,206 @@
+{
+  "type": "Program",
+  "statements": [
+    {
+      "type": "LocalStatement",
+      "name": {
+        "type": "Identifier",
+        "value": "foo"
+      },
+      "value": {
+        "type": "IntegerLiteral",
+        "value": 2
+      }
+    },
+    null,
+    {
+      "type": "ExpressionStatement",
+      "expr": null
+    },
+    {
+      "type": "ExpressionStatement",
+      "expr": {
+        "type": "Identifier",
+        "value": "boo"
+      }
+    },
+    {
+      "type": "ExpressionStatement",
+      "expr": null
+    },
+    {
+      "type": "ExpressionStatement",
+      "expr": {
+        "type": "Identifier",
+        "value": "print"
+      }
+    },
+    {
+      "type": "ExpressionStatement",
+      "expr": null
+    },
+    {
+      "type": "ExpressionStatement",
+      "expr": null
+    },
+    {
+      "type": "ExpressionStatement",
+      "expr": {
+        "type": "IntegerLiteral",
+        "value": 123
+      }
+    },
+    {
+      "type": "ExpressionStatement",
+      "expr": null
+    },
+    {
+      "type": "ExpressionStatement",
+      "expr": null
+    },
+    {
+      "type": "ExpressionStatement",
+      "expr": null
+    },
+    {
+      "type": "ExpressionStatement",
+      "expr": {
+        "type": "InfixExpression",
+        "left_node": {
+          "type": "Identifier",
+          "value": "foo"
+        },
+        "operator": "==",
+        "right_node": {
+          "type": "IntegerLiteral",
+          "value": 0
+        }
+      }
+    },
+    {
+      "type": "ExpressionStatement",
+      "expr": null
+    },
+    {
+      "type": "ExpressionStatement",
+      "expr": {
+        "type": "Identifier",
+        "value": "print"
+      }
+    },
+    {
+      "type": "ExpressionStatement",
+      "expr": {
+        "type": "StringLiteral",
+        "value": "hi"
+      }
+    },
+    {
+      "type": "ExpressionStatement",
+      "expr": null
+    },
+    {
+      "type": "ExpressionStatement",
+      "expr": {
+        "type": "InfixExpression",
+        "left_node": {
+          "type": "Identifier",
+          "value": "foo"
+        },
+        "operator": "==",
+        "right_node": {
+          "type": "IntegerLiteral",
+          "value": 1
+        }
+      }
+    },
+    {
+      "type": "ExpressionStatement",
+      "expr": null
+    },
+    {
+      "type": "ExpressionStatement",
+      "expr": {
+        "type": "Identifier",
+        "value": "print"
+      }
+    },
+    {
+      "type": "ExpressionStatement",
+      "expr": {
+        "type": "StringLiteral",
+        "value": "sup"
+      }
+    },
+    {
+      "type": "ExpressionStatement",
+      "expr": null
+    },
+    {
+      "type": "ExpressionStatement",
+      "expr": {
+        "type": "InfixExpression",
+        "left_node": {
+          "type": "Identifier",
+          "value": "foo"
+        },
+        "operator": "==",
+        "right_node": {
+          "type": "IntegerLiteral",
+          "value": 2
+        }
+      }
+    },
+    {
+      "type": "ExpressionStatement",
+      "expr": null
+    },
+    {
+      "type": "ExpressionStatement",
+      "expr": {
+        "type": "Identifier",
+        "value": "print"
+      }
+    },
+    {
+      "type": "ExpressionStatement",
+      "expr": {
+        "type": "StringLiteral",
+        "value": "bass"
+      }
+    },
+    {
+      "type": "ExpressionStatement",
+      "expr": null
+    },
+    {
+      "type": "ExpressionStatement",
+      "expr": {
+        "type": "Identifier",
+        "value": "print"
+      }
+    },
+    {
+      "type": "ExpressionStatement",
+      "expr": {
+        "type": "StringLiteral",
+        "value": "nah"
+      }
+    },
+    {
+      "type": "ExpressionStatement",
+      "expr": null
+    },
+    {
+      "type": "ExpressionStatement",
+      "expr": {
+        "type": "Identifier",
+        "value": "boo"
+      }
+    },
+    {
+      "type": "ExpressionStatement",
+      "expr": null
+    }
+  ]
+}

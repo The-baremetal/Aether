@@ -1,7 +1,18 @@
-
 package utils
 
-import "fmt"
+import (
+	"FLUX/src/aether/lexer" // Import lexer for TokenType
+	"fmt"
+)
+
+type UnexpectedTokenError struct {
+	ExpectedType lexer.TokenType
+	ReceivedType lexer.TokenType
+}
+
+func (e *UnexpectedTokenError) Error() string {
+	return fmt.Sprintf("expected token type %s, but got %s", e.ExpectedType, e.ReceivedType)
+}
 
 type ErrorHandler struct {
 	Errors []string
@@ -273,7 +284,7 @@ func (h *ErrorHandler) AddInvalidNamedArgsError(line int) {
 	h.Errors = append(h.Errors, fmt.Sprintf("Error on line %d: Invalid named args", line))
 }
 
-func (h *ErrorHandler) AddAlreadyDefinedError(redefinedline int, existingline int, variablename str) {
+func (h *ErrorHandler) AddAlreadyDefinedError(redefinedline int, existingline int, variablename string) {
 	h.Errors = append(h.Errors, fmt.Sprintf("Variable: (variablename) was redefined at (redefinedline) while being defined at (existingline)")) // this error only happens when the user tries to redefine an immutable variable they have manually made immutable, with the automatic borrowing and mutability, the compiler just defines it as atomic mutable instead.
 }
 

@@ -36,6 +36,6 @@ const asciiart = `
 `
 
 func main() {
-	fmt.Println(copyright)
-	fmt.Println(asciiart)
+	fmt.Print(copyright)
+	fmt.Print(asciiart)
 }
