@@ -86,6 +86,10 @@ func (l *Lexer) NextToken() Token {
 		} else {
 			tok = l.newSingleToken(DOT)
 		}
+	case ':':
+		tok = l.newSingleToken(COLON)
+	case ',':
+		tok = l.newSingleToken(COMMA)
 	case '"', '\'':
 		tok = l.readString(l.ch)
 	default:

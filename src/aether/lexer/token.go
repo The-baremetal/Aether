@@ -5,6 +5,8 @@ type TokenType string
 type Token struct {
 	Type    TokenType
 	Literal string
+	Line    int
+	Column  int
 }
 
 // token.go
@@ -44,7 +46,7 @@ const (
 
     // Delimiters
     COMMA     TokenType = "COMMA" // ,
-    COLON     TokenType = "COLON" // :
+    COLON     TokenType = "COLON" // : & op "call"
     SEMICOLON TokenType = "SEMICOLON" // ;
     LPAREN    TokenType = "LPAREN" // (
     RPAREN    TokenType = "RPAREN" // )

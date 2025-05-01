@@ -14,6 +14,12 @@ import (
 	"github.com/gookit/color" // ADDED
 )
 
+const Copyright = `Copyright (C) 2021 Free Software Foundation, Inc.
+This is free software; see the source for copying conditions.  There is NO
+warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+
+Learn more <https://www.gnu.org/licenses/>`
+
 func main() {
 	buildCmd := flag.NewFlagSet("build", flag.ExitOnError)
 	Target := buildCmd.String("target", "", "Target architecture (e.g., x86-64, ARM)")
@@ -47,6 +53,9 @@ func main() {
 		}
 		fmt.Println(string(content))
 		os.Exit(0)
+	case "license", "agreement", "clause":
+		fmt.Println(string(Copyright))
+		os.Exit(0)
 	case "build":
 		buildCmd.Parse(os.Args[2:])
 
@@ -78,6 +87,8 @@ func main() {
 		var outputData []byte
 		var barMessage string
 		var jsonOutput []byte
+		var numErrors int = 0 // Define numErrors here
+
 		switch outputExt {
 		case ".lex":
 			var tokens []lexer.Token
@@ -96,18 +107,45 @@ func main() {
 			outputData = jsonOutput
 			barMessage = "Lexing"
 			bar.UpdateProgress(75, "Marshalling")
+			err = ioutil.WriteFile(outputPath, outputData, 0644)
+				if err != nil {
+					fmt.Printf("Error writing to file: %s\n", err)
+					os.Exit(1)
+				}
 		case ".par":
 			p := parser.NewParser(l)
 			program := p.ParseProgram()
+			errors := p.Errors()
+			numErrors = len(errors)
 
-			jsonOutput, err = json.MarshalIndent(program, "", "  ")
-			if err != nil {
-				fmt.Printf("Error marshalling JSON: %s\n", err)
-				os.Exit(1)
+			if numErrors > 0 {
+				fmt.Println(red("😿 Parsing failed with the following errors:"))
+				for _, err := range errors {
+					fmt.Println(red(err))
+				}
 			}
-			outputData = jsonOutput
-			barMessage = "Parsing"
-			bar.UpdateProgress(75, "Marshalling")
+
+			if numErrors == 0 {
+				jsonOutput, err = json.MarshalIndent(program, "", "  ")
+				if err != nil {
+					fmt.Printf("Error marshalling JSON: %s\n", err)
+					os.Exit(1)
+				}
+				outputData = jsonOutput
+				barMessage = "Parsing"
+				bar.UpdateProgress(75, "Marshalling")
+
+				err = ioutil.WriteFile(outputPath, outputData, 0644)
+				if err != nil {
+					fmt.Printf("Error writing to file: %s\n", err)
+					os.Exit(1)
+				}
+
+				utils.DebugPrintf("JSON tokens generated to: %s\n", outputPath)
+			} else {
+				barMessage = "Parsing"
+				outputData = []byte{}
+			}
 		default:
 			var tokens []lexer.Token
 			for {
@@ -127,20 +165,11 @@ func main() {
 			bar.UpdateProgress(75, "Marshalling")
 		}
 
-		err = ioutil.WriteFile(outputPath, outputData, 0644)
-		if err != nil {
-			fmt.Printf("Error writing to file: %s\n", err)
-			os.Exit(1)
-		}
-
-		utils.DebugPrintf("JSON tokens generated to: %s\n", outputPath)
-
 		bar.UpdateProgress(100)
 		bar.Finish()
 
 		// Print compilation status
 		errorColor := white
-		numErrors := 0 // There are no parser errors anymore
 		if numErrors > 0 {
 			errorColor = red
 		}

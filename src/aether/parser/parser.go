@@ -1,5 +1,23 @@
 package parser
 
+// The parser of AetherC
+
+/*
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU Affero General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+GNU Affero General Public License for more details.
+
+You should have received a copy of the GNU Affero General Public License
+along with this program. If not, see <https://www.gnu.org/licenses/>.
+*/
+
+
 import (
 	"FLUX/src/aether/lexer"
     "fmt"
@@ -20,7 +38,7 @@ const (
     INDEX       // []
 )
 
-type Parser struct {
+type Parser struct { // defining parser as a structure that can be created
 	lexer         *lexer.Lexer
 	currentToken  lexer.Token
 	peekToken     lexer.Token
@@ -49,6 +67,7 @@ func NewParser(l *lexer.Lexer) *Parser {
 	p.registerPrefix(lexer.LBRACE, p.parseTableConstructor)
 	p.registerPrefix(lexer.LBRACKET, p.parseArrayConstructor)
 	p.registerPrefix(lexer.FUNCTION, p.parseFunctionLiteral)
+    p.registerPrefix(lexer.VAARG, p.parseVarArgs)
 
 	p.infixParseFns = make(map[lexer.TokenType]func(Expression) Expression)
 	p.registerInfix(lexer.PLUS, p.parseInfixExpression)
@@ -70,21 +89,22 @@ func NewParser(l *lexer.Lexer) *Parser {
 	p.registerInfix(lexer.LBRACKET, p.parseIndexExpression)
 	p.registerInfix(lexer.DOT, p.parseDotExpression)
 	p.registerInfix(lexer.ASSIGN, p.parseAssignExpression)
+    p.registerInfix(lexer.COLON, p.parseMethodCall)
 
 	p.registerPrefix(lexer.ASYNC, p.parseAsyncExpression)
 	p.registerPrefix(lexer.AWAIT, p.parseAwaitExpression)
 
 	p.precedences = map[lexer.TokenType]int{
-		lexer.ASSIGN:   10,
-		lexer.OR:       20,
-		lexer.AND:      30,
-		lexer.IN:       40,
-		lexer.EQ:       40, lexer.NE: 40, lexer.LT: 40, lexer.LE: 40, lexer.GT: 40, lexer.GE: 40,
-		lexer.CONCAT:   50,
-		lexer.PLUS:     60, lexer.MINUS: 60,
-		lexer.MULTIPLY: 70, lexer.DIVIDE: 70, lexer.MODULO: 70, lexer.EXPONENT: 70,
-		lexer.LPAREN:   80, lexer.LBRACKET: 80, lexer.DOT: 80,
-	}
+    lexer.ASSIGN:   10,
+    lexer.OR:       20,
+    lexer.AND:      30,
+    lexer.IN:       40,
+    lexer.EQ:       40, lexer.NE: 40, lexer.LT: 40, lexer.LE: 40, lexer.GT: 40, lexer.GE: 40,
+    lexer.CONCAT:   50,
+    lexer.PLUS:     60, lexer.MINUS: 60,
+    lexer.MULTIPLY: 70, lexer.DIVIDE: 70, lexer.MODULO: 70, lexer.EXPONENT: 70,
+    lexer.LPAREN:   80, lexer.LBRACKET: 80, lexer.DOT: 80, lexer.COLON: 80,
+}
 
 	p.nextToken()
 	p.nextToken()
@@ -146,6 +166,26 @@ func (p *Parser) parseConstDeclaration() Statement {
     return stmt
 }
 
+func (p *Parser) parseMethodCall(left Expression) Expression {
+    expr := &MethodCallExpression{
+        Token:   p.currentToken,
+        Object:  left,
+    }
+    p.nextToken()
+
+    if !p.expectPeek(lexer.IDENTIFIER) {
+        return nil
+    }
+    expr.Method = p.parseIdentifier().(*Identifier)
+
+    if !p.expectPeek(lexer.LPAREN) {
+        return nil
+    }
+    expr.Arguments = p.parseArgumentList()
+
+    return expr
+}
+
 func (p *Parser) parseReturnStatement() Statement {
     stmt := &ReturnStatement{Token: p.currentToken}
     p.nextToken()
@@ -190,15 +230,26 @@ func (p *Parser) parseLocalStatement() *LocalDeclaration {
     }
     
     p.nextToken()
-    stmt.Values = p.parseExpressionList(lexer.ASSIGN)
+
+    var values []Expression
+    values = append(values, p.parseExpression(LOWEST))
+    
+    for p.peekTokenIs(lexer.COMMA) {
+        p.nextToken()
+        p.nextToken()
+        values = append(values, p.parseExpression(LOWEST))
+    }
+    
+    stmt.Values = values
+    
     return stmt
 }
-
 func (p *Parser) parseCallExpression(function Expression) Expression {
     expr := &CallExpression{
         Token:    p.currentToken,
         Function: function,
     }
+    p.nextToken()
     expr.Arguments = p.parseArgumentList()
     return expr
 }
@@ -209,16 +260,13 @@ func (p *Parser) parseArgumentList() []Expression {
         p.nextToken()
         return args
     }
-
     p.nextToken()
     args = append(args, p.parseArgument())
-
     for p.peekTokenIs(lexer.COMMA) {
         p.nextToken()
         p.nextToken()
         args = append(args, p.parseArgument())
     }
-
     if !p.expectPeek(lexer.RPAREN) {
         return nil
     }
@@ -313,13 +361,18 @@ func (p *Parser) parseIndexExpression(left Expression) Expression {
 
 func (p *Parser) parseDotExpression(left Expression) Expression {
     exp := &DotExpression{
-        Token: p.currentToken,
-        Left:  left,
+        Token:    p.currentToken,
+        Object:   left,
     }
     if !p.expectPeek(lexer.IDENTIFIER) {
         return nil
     }
-    exp.Right = p.parseIdentifier()
+    ident, ok := p.parseIdentifier().(*Identifier)
+	if !ok {
+		p.errors = append(p.errors, "expected identifier")
+		return nil
+	}
+    exp.Property = ident
     return exp
 }
 
@@ -337,7 +390,6 @@ func (p *Parser) parseAssignExpression(left Expression) Expression {
 func (p *Parser) parseFunctionDeclaration() *FunctionDeclaration {
     stmt := &FunctionDeclaration{Token: p.currentToken}
     p.nextToken()
-    
     if p.peekToken.Type == lexer.COLON {
         ident, ok := p.parseIdentifier().(*Identifier)
         if !ok {
@@ -348,41 +400,57 @@ func (p *Parser) parseFunctionDeclaration() *FunctionDeclaration {
         p.nextToken()
         p.nextToken()
     }
-    
     stmt.Name = p.parseIdentifier().(*Identifier)
-    
     if !p.expectPeek(lexer.LPAREN) {
+        p.errors = append(p.errors, fmt.Sprintf("expected '(' after function name at line %d, column %d, got %s (%q) instead", p.peekToken.Line, p.peekToken.Column, p.peekToken.Type, p.peekToken.Literal))
         return nil
     }
-    
+    p.nextToken()
     stmt.Parameters = p.parseFunctionParameters()
     stmt.Body = p.parseBlockStatement(lexer.END)
-    
-    if !p.expectPeek(lexer.END) {
+    if p.currentToken.Type != lexer.END {
+        p.errors = append(p.errors, fmt.Sprintf("expected 'end' after function body at line %d, column %d, got %s (%q) instead", p.currentToken.Line, p.currentToken.Column, p.currentToken.Type, p.currentToken.Literal))
         return nil
     }
-    
+    p.nextToken()
     return stmt
 }
 
-func (p *Parser) parseFunctionParameters() []*Identifier {
+func (p *Parser) parseVarArgs() Expression {
+    return &VarArgLiteral{
+        Token: p.currentToken,
+    }
+}
+func (p *Parser) parseFunctionParameters() []*Identifier { // issue #5 made by luohoa97: when you parse more than 1 argument, it gives expected ')' after function parameters at line 0, column 0, got COMMA (",")
+    var params []*Identifier
     if p.peekTokenIs(lexer.RPAREN) {
         p.nextToken()
-        return []*Identifier{}
+        return params
     }
-
     p.nextToken()
-    params := []*Identifier{p.parseIdentifier().(*Identifier)}
-
-    for p.peekTokenIs(lexer.COMMA) {
+    if p.currentToken.Type == lexer.VAARG {
+        params = append(params, &Identifier{Token: p.currentToken, Value: "..."})
         p.nextToken()
-        p.nextToken()
+    } else {
         params = append(params, p.parseIdentifier().(*Identifier))
+        for p.peekTokenIs(lexer.COMMA) {
+            p.nextToken()
+            p.nextToken()
+            if p.currentToken.Type == lexer.VAARG {
+                params = append(params, &Identifier{Token: p.currentToken, Value: "..."})
+                p.nextToken()
+                break
+            }
+            params = append(params, p.parseIdentifier().(*Identifier))
+        }
     }
-
-    if !p.expectPeek(lexer.RPAREN) {
+    if p.currentToken.Type != lexer.RPAREN {
+        p.errors = append(p.errors, fmt.Sprintf(
+            "expected ')' after function parameters at line %d, column %d, got %s (%q)",
+            p.currentToken.Line, p.currentToken.Column, p.currentToken.Type, p.currentToken.Literal))
         return nil
     }
+
     return params
 }
 
@@ -525,30 +593,29 @@ func (p *Parser) registerInfix(tokenType lexer.TokenType, fn func(Expression) Ex
 }
 
 func (p *Parser) noPrefixParseFnError(t lexer.TokenType) {
-    p.errors = append(p.errors, fmt.Sprintf("no prefix parse function for %s found", t))
+    p.errors = append(p.errors, fmt.Sprintf("no prefix parse function for %s (%q) found at line %d, column %d", t, p.currentToken.Literal, p.currentToken.Line, p.currentToken.Column))
 }
 
 func (p *Parser) peekError(t lexer.TokenType) {
-    p.errors = append(p.errors, fmt.Sprintf("expected next token to be %s, got %s instead", 
-        t, p.peekToken.Type))
+    p.errors = append(p.errors, fmt.Sprintf("expected next token to be %s, got %s (%q) instead at line %d, column %d",
+        t, p.peekToken.Type, p.peekToken.Literal, p.peekToken.Line, p.peekToken.Column))
 }
 
-// Control flow statements
 func (p *Parser) parseIfStatement() *IfStatement {
     stmt := &IfStatement{Token: p.currentToken}
-    p.nextToken() // Skip 'if'
+    p.nextToken()
 
     stmt.Condition = p.parseExpression(LOWEST)
 
     if !p.expectPeek(lexer.THEN) {
+        p.errors = append(p.errors, fmt.Sprintf("expected 'then' after 'if' condition at line %d, column %d, got %s (%q) instead", p.peekToken.Line, p.peekToken.Column, p.peekToken.Type, p.peekToken.Literal))
         return nil
     }
 
     stmt.Consequence = p.parseBlockStatement(lexer.END)
 
-    // Handle elseif branches
     for p.peekTokenIs(lexer.ELSEIF) {
-        p.nextToken() // Skip 'elseif'
+        p.nextToken()
         elseif := &IfStatement{
             Token:       p.currentToken,
             Condition:   p.parseExpression(LOWEST),
@@ -557,9 +624,8 @@ func (p *Parser) parseIfStatement() *IfStatement {
         stmt.Alternatives = append(stmt.Alternatives, elseif)
     }
 
-    // Handle else branch
     if p.peekTokenIs(lexer.ELSE) {
-        p.nextToken() // Skip 'else'
+        p.nextToken()
         stmt.Alternative = p.parseBlockStatement(lexer.END)
     }
 
@@ -572,7 +638,7 @@ func (p *Parser) parseIfStatement() *IfStatement {
 
 func (p *Parser) parseWhileStatement() *WhileStatement {
     stmt := &WhileStatement{Token: p.currentToken}
-    p.nextToken() // Skip 'while'
+    p.nextToken()
 
     stmt.Condition = p.parseExpression(LOWEST)
 
@@ -591,11 +657,11 @@ func (p *Parser) parseWhileStatement() *WhileStatement {
 
 func (p *Parser) parseForStatement() *ForStatement {
     stmt := &ForStatement{Token: p.currentToken}
-    p.nextToken() // Skip 'for'
+    p.nextToken()
 
-    if p.peekTokenIs(lexer.ASSIGN) { // Numeric for
+    if p.peekTokenIs(lexer.ASSIGN) {
         stmt.Identifier = p.parseIdentifier().(*Identifier)
-        p.nextToken() // Skip =
+        p.nextToken()
         stmt.InitValue = p.parseExpression(LOWEST)
         if !p.expectPeek(lexer.COMMA) {
             return nil
@@ -607,7 +673,7 @@ func (p *Parser) parseForStatement() *ForStatement {
             p.nextToken()
             stmt.StepValue = p.parseExpression(LOWEST)
         }
-    } else { // Generic for
+    } else {
         stmt.Identifiers = p.parseIdentifierList()
         if !p.expectPeek(lexer.IN) {
             return nil
@@ -652,8 +718,6 @@ func (p *Parser) parseTableConstructor() Expression {
 
 func (p *Parser) parseTableField() (Expression, Expression) {
     var key Expression
-    
-    // [expression] = value syntax
     if p.curTokenIs(lexer.LBRACKET) {
         p.nextToken()
         key = p.parseExpression(LOWEST)
@@ -662,17 +726,14 @@ func (p *Parser) parseTableField() (Expression, Expression) {
         }
         p.nextToken()
     } else if p.curTokenIs(lexer.IDENTIFIER) && p.peekTokenIs(lexer.ASSIGN) {
-        // identifier = value syntax
         key = &StringLiteral{Token: p.currentToken, Value: p.currentToken.Literal}
-        p.nextToken() // Skip =
+        p.nextToken() 
     } else if p.curTokenIs(lexer.IDENTIFIER) && p.peekTokenIs(lexer.COLON) {
-        // method syntax: foo: function() ... end
         key = &StringLiteral{Token: p.currentToken, Value: p.currentToken.Literal}
-        p.nextToken() // Skip :
+        p.nextToken()
         value := p.parseFunctionLiteral()
         return key, value
     } else {
-        // array-style implicit key
         key = nil
     }
 
@@ -708,7 +769,6 @@ func (p *Parser) parseFunctionLiteral() Expression {
     return lit
 }
 
-// Helper parsing methods
 func (p *Parser) parseBlockStatement(endToken lexer.TokenType) *BlockStatement {
     block := &BlockStatement{Token: p.currentToken}
     p.nextToken()
@@ -775,7 +835,6 @@ func (p *Parser) parseExpressionList(end lexer.TokenType) []Expression {
     return list
 }
 
-// Error handling
 func (p *Parser) Errors() []string {
     return p.errors
 }

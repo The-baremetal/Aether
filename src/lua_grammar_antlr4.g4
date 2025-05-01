@@ -1,5 +1,5 @@
 // should be used for operators and new syntax instead of statements now.
-// 1 based indexing is disabled by default
+// the language uses 0 based indexing
 // immutable internal module allows immutable objects or it can be built into the compiler which is better
 
 grammar lua_grammar_antlr4;
@@ -74,7 +74,7 @@ literal
 
 variable
     : ( 'const' )? IDENTIFIER
-    | variable ( '.' IDENTIFIER | '[' expression ']' | '?.' IDENTIFIER | '?[' expression ']' )
+    | variable ( '.' IDENTIFIER | '[' expression ']' )
     ;
 
 functionCall
@@ -186,14 +186,12 @@ block
 
 // Static typed is recommended for readability
 localDeclaration
-    : 'local' 'const'? ( IDENTIFIER (','  IDENTIFIER)* '=' expressionList)  #typedLocalDecl
-    | 'local' 'const'? IDENTIFIER (',' IDENTIFIER)* '=' expressionList  #untypedLocalDecl
-    | 'local' 'function' IDENTIFIER '(' (parameterList)? ')' ? block 'end'  #localFunctionDecl
+    : 'local' 'const'? IDENTIFIER (',' IDENTIFIER)* '=' expressionList
+    | 'local' 'function' IDENTIFIER '(' (parameterList)? ')' ? block 'end'
     ;
 
 constDeclaration
-    : 'const' IDENTIFIER '=' expression  #typedConstDecl
-    | 'const' IDENTIFIER (',' IDENTIFIER)* '=' expressionList  #untypedConstDecl
+    : 'const' IDENTIFIER (',' IDENTIFIER)* '=' expressionList  #untypedConstDecl
     ;
 
 functionDeclaration
@@ -252,7 +250,6 @@ OR: 'or';
 NOT: 'not';
 ASYNC: 'async';
 AWAIT: 'await';
-WITH: 'with';
 TRY: 'try';
 CATCH: 'catch';
 FINALLY: 'finally';

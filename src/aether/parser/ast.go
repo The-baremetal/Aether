@@ -328,3 +328,22 @@ type Metamethod struct {
     Name  string
     Value Expression
 }
+
+type MethodCallExpression struct {
+    Token     lexer.Token
+    Object    Expression
+    Method    *Identifier
+    Arguments []Expression
+}
+
+func (mce *MethodCallExpression) expressionNode() {}
+func (mce *MethodCallExpression) node() {}
+
+type VarArgLiteral struct {
+    Token lexer.Token
+}
+
+func (v *VarArgLiteral) expressionNode() {}
+func (v *VarArgLiteral) TokenLiteral() string { return v.Token.Literal }
+func (v *VarArgLiteral) String() string       { return v.Token.Literal }
+func (v *VarArgLiteral) node() {}
