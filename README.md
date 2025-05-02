@@ -5,6 +5,9 @@
 [![GitHub contributors](https://img.shields.io/github/contributors/The-baremetal/FLUXASSEMBLY)](https://github.com/The-baremetal/FLUXASSEMBLY/graphs/contributors)
 [![GitHub commit activity](https://img.shields.io/github/commit-activity/m/The-baremetal/FLUXASSEMBLY)](https://github.com/The-baremetal/FLUXASSEMBLY/commits)
 
+## Recent achievements
+> 95th commit, yay!
+> Parser is down to its LAST issue!
 
 ## Why Flux Assembly?
 > Flux Assembly has been designed to be easy to learn. Its syntax is based on Lua, with all the characteristics which make it a good, 'first language' for immediate introduction to Assembly without having to get involved in all the complexities of low-level programming: self-contained and easily modifiable, personalized and flexible language.
