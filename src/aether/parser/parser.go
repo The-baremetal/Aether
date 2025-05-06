@@ -390,14 +390,16 @@ func (p *Parser) parseAssignExpression(left Expression) Expression {
 func (p *Parser) parseFunctionDeclaration() *FunctionDeclaration {
     stmt := &FunctionDeclaration{Token: p.currentToken}
     p.nextToken()
+    var hasColon bool
     if p.peekToken.Type == lexer.COLON {
+        hasColon = true
+        p.nextToken()
         ident, ok := p.parseIdentifier().(*Identifier)
         if !ok {
             p.errors = append(p.errors, "expected identifier")
             return nil
         }
         stmt.Receiver = ident
-        p.nextToken()
         p.nextToken()
     }
     stmt.Name = p.parseIdentifier().(*Identifier)
@@ -406,7 +408,15 @@ func (p *Parser) parseFunctionDeclaration() *FunctionDeclaration {
         return nil
     }
     p.nextToken()
-    stmt.Parameters = p.parseFunctionParameters()
+    if hasColon {
+        selfParam := &Identifier{
+            Token: lexer.Token{Type: lexer.IDENTIFIER, Literal: "self"},
+            Value: "self",
+        }
+        stmt.Parameters = append([]*Identifier{selfParam}, p.parseFunctionParameters()...)
+    } else {
+        stmt.Parameters = p.parseFunctionParameters()
+    }
     stmt.Body = p.parseBlockStatement(lexer.END)
     if p.currentToken.Type != lexer.END {
         p.errors = append(p.errors, fmt.Sprintf("expected 'end' after function body at line %d, column %d, got %s (%q) instead", p.currentToken.Line, p.currentToken.Column, p.currentToken.Type, p.currentToken.Literal))
@@ -718,6 +728,8 @@ func (p *Parser) parseTableConstructor() Expression {
 
 func (p *Parser) parseTableField() (Expression, Expression) {
     var key Expression
+    var value Expression
+
     if p.curTokenIs(lexer.LBRACKET) {
         p.nextToken()
         key = p.parseExpression(LOWEST)
@@ -725,20 +737,37 @@ func (p *Parser) parseTableField() (Expression, Expression) {
             return nil, nil
         }
         p.nextToken()
-    } else if p.curTokenIs(lexer.IDENTIFIER) && p.peekTokenIs(lexer.ASSIGN) {
-        key = &StringLiteral{Token: p.currentToken, Value: p.currentToken.Literal}
-        p.nextToken() 
-    } else if p.curTokenIs(lexer.IDENTIFIER) && p.peekTokenIs(lexer.COLON) {
-        key = &StringLiteral{Token: p.currentToken, Value: p.currentToken.Literal}
-        p.nextToken()
-        value := p.parseFunctionLiteral()
+        value = p.parseExpression(LOWEST)
         return key, value
-    } else {
-        key = nil
     }
 
-    p.nextToken()
-    value := p.parseExpression(LOWEST)
+    if p.curTokenIs(lexer.IDENTIFIER) {
+        if p.peekTokenIs(lexer.ASSIGN) {
+            key = &StringLiteral{Token: p.currentToken, Value: p.currentToken.Literal}
+            p.nextToken()
+            p.nextToken()
+            value = p.parseExpression(LOWEST)
+            return key, value
+        } else if p.peekTokenIs(lexer.COLON) {
+            key = &StringLiteral{Token: p.currentToken, Value: p.currentToken.Literal}
+            p.nextToken()
+            p.nextToken()
+            value = p.parseFunctionLiteral()
+            return key, value
+        } else {
+            key = &StringLiteral{Token: p.currentToken, Value: p.currentToken.Literal}
+            value = &Identifier{
+                Token: p.currentToken,
+                Value: p.currentToken.Literal,
+            }
+            if p.peekTokenIs(lexer.COMMA) || p.peekTokenIs(lexer.RBRACE) {
+                p.nextToken()
+                return key, value
+            }
+        }
+    }
+    key = nil
+    value = p.parseExpression(LOWEST)
     return key, value
 }
 
