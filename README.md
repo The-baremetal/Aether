@@ -33,6 +33,6 @@ Go: Install go at: https://golang.org/doc/install or run ```sudo apt install gol
 LLVM: You can get llvm by running the command ```sudo apt install llvm```
 > Step 3
 ### Actually building Flux Assembly
-``` build.sh build```
+```make build```
 Now that your Flux Assembly is installed, you can run ```./main```
 Example files: ### input.lua
