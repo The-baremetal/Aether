@@ -147,9 +147,26 @@ func (p *Parser) parseStatement() Statement {
 		return p.parseTryCatchStatement()
 	case lexer.COROUTINE:
 		return p.parseCoroutineStatement()
+	case lexer.IMPORT:
+		return p.parseImportStatement()
 	default:
 		return p.parseExpressionStatement()
 	}
+}
+
+func (p *Parser) parseImportStatement() Statement {
+    stmt := &ImportStatement{Token: p.currentToken}
+    if !p.expectPeek(lexer.STRING) {
+        return nil
+    }
+    stmt.Path = p.parseStringLiteral().(*StringLiteral)
+    if p.peekTokenIs(lexer.IDENTIFIER) && p.peekToken.Literal == "as" {
+        p.nextToken()
+        p.nextToken()
+        stmt.AsName = p.parseIdentifier().(*Identifier)
+    }
+
+    return stmt
 }
 
 func (p *Parser) parseConstDeclaration() Statement {

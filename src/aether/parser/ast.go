@@ -39,6 +39,15 @@ type LocalDeclaration struct {
 func (ld *LocalDeclaration) statementNode() {}
 func (ld *LocalDeclaration) node() {}
 
+type ImportStatement struct {
+    Token  lexer.Token
+    Path   *StringLiteral
+    AsName *Identifier
+}
+
+func (is *ImportStatement) statementNode() {}
+func (is *ImportStatement) node() {}
+
 type FunctionDeclaration struct {
     Token      lexer.Token
     Receiver   *Identifier

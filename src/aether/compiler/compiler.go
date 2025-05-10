@@ -1,4 +1,3 @@
-//todo: convert to go
 
 package compiler
 

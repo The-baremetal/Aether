@@ -53,12 +53,6 @@ func (l *Lexer) peekChar() byte {
 func (l *Lexer) NextToken() Token {
 	l.skipWhitespace()
 	var tok Token
-
-	// ADDED
-	if l.handleImportKeyword() {
-		return tok
-	}
-
 	switch l.ch {
 	case 0:
 		tok = Token{Type: EOF, Literal: ""}
@@ -238,26 +232,6 @@ func isLetter(ch byte) bool {
 
 func isDigit(ch byte) bool {
 	return '0' <= ch && ch <= '9'
-}
-
-func (l *Lexer) handleImportKeyword() bool {
-	if strings.HasPrefix(l.input[l.pos:], "import") {
-		if l.pos+len("import") < len(l.input) {
-			nextChar := l.input[l.pos+len("import")]
-			if nextChar == ' ' || nextChar == '\n' || nextChar == '\t' || nextChar == '(' {
-				l.pos += len("import")
-				l.readChar()
-				l.skipWhitespace()
-				return true
-			}
-		} else {
-			l.pos += len("import")
-			l.readChar()
-			l.skipWhitespace()
-			return true
-		}
-	}
-	return false
 }
 
 func (l *Lexer) Tokenize() []Token {

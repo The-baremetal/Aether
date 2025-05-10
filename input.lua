@@ -1,3 +1,1 @@
-function foo(a, ...)
-  local x = a
-end
+import "library.so" as something
