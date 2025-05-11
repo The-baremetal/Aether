@@ -9,14 +9,14 @@ Atleast 50 mb of ram and 500mb of storage
 # Estimates
 
 ### Estimate of storage
-LLVM: 1-3 gb of storage
-Go: 1-2 gb of storage
-Aether: 5-10 mb of storage
+- LLVM: 1-3 gb of storage
+- Go: 1-2 gb of storage
+- Aether: 5-10 mb of storage
 
 ### Estimate of ram
-LLVM: 500-700mb
-Go: 600-900mb
-Aether: 10-20mb
+- LLVM: 500-700mb
+- Go: 600-900mb
+- Aether: 10-20mb
 
 # Installing Aether
 
