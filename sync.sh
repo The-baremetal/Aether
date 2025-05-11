@@ -1,5 +1,8 @@
 #!/bin/bash
 
+set -euo pipefail
+IFS=$'\n\t'
+
 REPO_DIR=$(pwd)
 CURRENT_VERSION_FILE="currentversion.vortex"
 TAG_PREFIX="v"
