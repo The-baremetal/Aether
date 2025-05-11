@@ -124,35 +124,51 @@ func (p *Parser) ParseProgram() *Program {
 }
 
 func (p *Parser) parseStatement() Statement {
-	switch p.currentToken.Type {
-	case lexer.LOCAL:
-		return p.parseLocalStatement()
-	case lexer.FUNCTION:
-		return p.parseFunctionDeclaration()
-	case lexer.CONST:
-		return p.parseConstDeclaration()
-	case lexer.RETURN:
-		return p.parseReturnStatement()
-	case lexer.IF:
-		return p.parseIfStatement()
-	case lexer.WHILE:
-		return p.parseWhileStatement()
-	case lexer.FOR:
-		return p.parseForStatement()
-	case lexer.REPEAT:
-		return p.parseRepeatStatement()
-	case lexer.BREAK:
-		return p.parseBreakStatement()
-	case lexer.TRY:
-		return p.parseTryCatchStatement()
-	case lexer.COROUTINE:
-		return p.parseCoroutineStatement()
-	case lexer.IMPORT:
-		return p.parseImportStatement()
-	default:
-		return p.parseExpressionStatement()
-	}
+    switch p.currentToken.Type {
+    case lexer.LOCAL:
+        return p.parseLocalStatement()
+    case lexer.FUNCTION:
+        return p.parseFunctionDeclaration()
+    case lexer.CONST:
+        return p.parseConstDeclaration()
+    case lexer.RETURN:
+        return p.parseReturnStatement()
+    case lexer.IF:
+        return p.parseIfStatement()
+    case lexer.WHILE:
+        return p.parseWhileStatement()
+    case lexer.FOR:
+        return p.parseForStatement()
+    case lexer.REPEAT:
+        return p.parseRepeatStatement()
+    case lexer.BREAK:
+        return p.parseBreakStatement()
+    case lexer.TRY:
+        return p.parseTryCatchStatement()
+    case lexer.COROUTINE:
+        return p.parseCoroutineStatement()
+    case lexer.IMPORT:
+        return p.parseImportStatement()
+    /*case lexer.PRINT:
+        return p.parsePrintStatement()*/
+    default:
+        exprStmt := p.parseExpressionStatement()
+        if exprStmt == nil {
+            p.errors = append(p.errors, fmt.Sprintf("unknown statement at line %d, col %d: %s", p.currentToken.Line, p.currentToken.Column, p.currentToken.Literal))
+        }
+        return exprStmt
+    }
 }
+
+/*
+func (p *Parser) parsePrintStatement() Statement {
+    stmt := &PrintStatement{Token: p.currentToken}
+
+    p.nextToken()
+    expr.Arguments = p.parseArgumentList()
+    return stmt
+}
+*/
 
 func (p *Parser) parseImportStatement() Statement {
     stmt := &ImportStatement{Token: p.currentToken}
@@ -263,31 +279,41 @@ func (p *Parser) parseLocalStatement() *LocalDeclaration {
 }
 func (p *Parser) parseCallExpression(function Expression) Expression {
     expr := &CallExpression{
-        Token:    p.currentToken,
+        Token:    function.Token(),
         Function: function,
     }
-    p.nextToken()
     expr.Arguments = p.parseArgumentList()
     return expr
 }
 
 func (p *Parser) parseArgumentList() []Expression {
-    args := []Expression{}
+    params := []Expression{}
     if p.peekTokenIs(lexer.RPAREN) {
         p.nextToken()
-        return args
+        return params
     }
+
     p.nextToken()
-    args = append(args, p.parseArgument())
-    for p.peekTokenIs(lexer.COMMA) {
-        p.nextToken()
-        p.nextToken()
-        args = append(args, p.parseArgument())
+
+    for {
+        ident := &Identifier{Token: p.currentToken, Value: p.currentToken.Literal}
+        params = append(params, ident)
+
+        if p.peekTokenIs(lexer.COMMA) {
+            p.nextToken()
+            p.nextToken()
+        } else if p.peekTokenIs(lexer.IDENTIFIER) {
+            p.nextToken()
+        } else {
+            break
+        }
     }
+
     if !p.expectPeek(lexer.RPAREN) {
         return nil
     }
-    return args
+
+    return params
 }
 
 func (p *Parser) parseArgument() Expression {
@@ -448,33 +474,35 @@ func (p *Parser) parseVarArgs() Expression {
         Token: p.currentToken,
     }
 }
-func (p *Parser) parseFunctionParameters() []*Identifier { // issue #5 made by luohoa97: when you parse more than 1 argument, it gives expected ')' after function parameters at line 0, column 0, got COMMA (",")
-    var params []*Identifier
+func (p *Parser) parseFunctionParameters() []*Identifier {
+    params := []*Identifier{}
+
     if p.peekTokenIs(lexer.RPAREN) {
         p.nextToken()
         return params
     }
-    p.nextToken()
-    if p.currentToken.Type == lexer.VAARG {
-        params = append(params, &Identifier{Token: p.currentToken, Value: "..."})
-        p.nextToken()
-    } else {
-        params = append(params, p.parseIdentifier().(*Identifier))
-        for p.peekTokenIs(lexer.COMMA) {
+
+    for {
+        ident := &Identifier{Token: p.currentToken, Value: p.currentToken.Literal}
+        params = append(params, ident)
+    
+        if p.peekTokenIs(lexer.COMMA) {
             p.nextToken()
             p.nextToken()
-            if p.currentToken.Type == lexer.VAARG {
-                params = append(params, &Identifier{Token: p.currentToken, Value: "..."})
-                p.nextToken()
-                break
-            }
-            params = append(params, p.parseIdentifier().(*Identifier))
+        } else if p.peekTokenIs(lexer.IDENTIFIER) {
+            p.nextToken()
+        } else if p.peekTokenIs(lexer.VAARG) {
+            ident := &Identifier{Token: p.currentToken, Value: "..."}
+            params = append(params, ident)
+            p.nextToken()
+            break
+        } else {
+            break
         }
     }
-    if p.currentToken.Type != lexer.RPAREN {
-        p.errors = append(p.errors, fmt.Sprintf(
-            "expected ')' after function parameters at line %d, column %d, got %s (%q)",
-            p.currentToken.Line, p.currentToken.Column, p.currentToken.Type, p.currentToken.Literal))
+    
+
+    if !p.expectPeek(lexer.RPAREN) {
         return nil
     }
 
@@ -579,9 +607,19 @@ func (p *Parser) parseCoroutineStatement() Statement {
     return stmt
 }
 
+/*func (p *Parser) nextToken() {
+    p.currentToken = p.peekToken
+    p.peekToken = p.lexer.NextToken()
+}
+*/
+
 func (p *Parser) nextToken() {
     p.currentToken = p.peekToken
     p.peekToken = p.lexer.NextToken()
+    // DEBUG: Log token transitions
+    fmt.Printf("TOKEN SHIFT: Current=[%s] (Line %d, Col %d), Peek=[%s] (Line %d, Col %d)\n",
+        p.currentToken.Type, p.currentToken.Line, p.currentToken.Column,
+        p.peekToken.Type, p.peekToken.Line, p.peekToken.Column)
 }
 
 func (p *Parser) curPrecedence() int {
@@ -816,9 +854,9 @@ func (p *Parser) parseFunctionLiteral() Expression {
 }
 
 func (p *Parser) parseBlockStatement(endToken lexer.TokenType) *BlockStatement {
-    block := &BlockStatement{Token: p.currentToken}
     p.nextToken()
-
+    block := &BlockStatement{Token: p.currentToken}
+    block.Statements = []Statement{}
     for !p.curTokenIs(endToken) && !p.curTokenIs(lexer.EOF) {
         stmt := p.parseStatement()
         if stmt != nil {
@@ -826,7 +864,6 @@ func (p *Parser) parseBlockStatement(endToken lexer.TokenType) *BlockStatement {
         }
         p.nextToken()
     }
-
     return block
 }
 

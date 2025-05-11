@@ -1,1 +1,1 @@
-import "library.so" as something
+nd("e")

@@ -84,6 +84,7 @@ const (
     AND      TokenType = "AND"
     OR       TokenType = "OR"
     COROUTINE TokenType = "COROUTINE"
+    //PRINT    TokenType = "PRINT"
 )
 var keywords = map[string]TokenType{
 	"function": FUNCTION,
@@ -114,6 +115,7 @@ var keywords = map[string]TokenType{
 	"or":       OR,
 	"and":      AND,
 	"import":   IMPORT,
+    //"print":    PRINT,
     "coroutine":COROUTINE,
 }
 
