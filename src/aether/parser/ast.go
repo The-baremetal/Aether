@@ -107,11 +107,11 @@ func (ws *WhileStatement) node() {}
 
 type ForStatement struct {
     Token       lexer.Token
-    Identifier  *Identifier  // Numeric for
+    Identifier  *Identifier
+    Identifiers []*Identifier
     InitValue   Expression
     EndValue    Expression
     StepValue   Expression
-    Identifiers []*Identifier // Generic for
     Iterators   []Expression
     Body        *BlockStatement
 }

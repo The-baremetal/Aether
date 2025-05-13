@@ -149,12 +149,11 @@ func (p *Parser) parseStatement() Statement {
         return p.parseCoroutineStatement()
     case lexer.IMPORT:
         return p.parseImportStatement()
-    /*case lexer.PRINT:
-        return p.parsePrintStatement()*/
     default:
         exprStmt := p.parseExpressionStatement()
         if exprStmt == nil {
-            p.errors = append(p.errors, fmt.Sprintf("unknown statement at line %d, col %d: %s", p.currentToken.Line, p.currentToken.Column, p.currentToken.Literal))
+            p.recoverFromError()
+            return nil
         }
         return exprStmt
     }
@@ -244,7 +243,13 @@ func (p *Parser) parseBreakStatement() Statement {
 
 func (p *Parser) parseExpressionStatement() Statement {
     expr := p.parseExpression(LOWEST)
-    return &ExpressionStatement{Expression: expr}
+    if expr == nil {
+        p.recoverFromError()
+        return nil
+    }
+
+    stmt := &ExpressionStatement{Expression: expr}
+    return stmt
 }
 
 func (p *Parser) parseLocalStatement() *LocalDeclaration {
@@ -279,7 +284,7 @@ func (p *Parser) parseLocalStatement() *LocalDeclaration {
 }
 func (p *Parser) parseCallExpression(function Expression) Expression {
     expr := &CallExpression{
-        Token:    function.Token(),
+        Token:    p.currentToken,
         Function: function,
     }
     expr.Arguments = p.parseArgumentList()
@@ -540,10 +545,14 @@ func (p *Parser) parseExpression(precedence int) Expression {
     prefix := p.prefixParseFns[p.currentToken.Type]
     if prefix == nil {
         p.noPrefixParseFnError(p.currentToken.Type)
+        p.recoverFromError()
         return nil
     }
     leftExp := prefix()
-    
+    if leftExp == nil {
+        return nil
+    }
+
     for precedence < p.peekPrecedence() {
         infix := p.infixParseFns[p.peekToken.Type]
         if infix == nil {
@@ -551,8 +560,11 @@ func (p *Parser) parseExpression(precedence int) Expression {
         }
         p.nextToken()
         leftExp = infix(leftExp)
+        if leftExp == nil {
+            p.recoverFromError()
+            return nil
+        }
     }
-    
     return leftExp
 }
 
@@ -723,38 +735,78 @@ func (p *Parser) parseWhileStatement() *WhileStatement {
 func (p *Parser) parseForStatement() *ForStatement {
     stmt := &ForStatement{Token: p.currentToken}
     p.nextToken()
-
-    if p.peekTokenIs(lexer.ASSIGN) {
-        stmt.Identifier = p.parseIdentifier().(*Identifier)
+    stmt.Identifiers = p.parseIdentifierList()
+    if len(stmt.Identifiers) == 0 {
+        p.recoverFromError()
+        return nil
+    }
+    switch {
+    case p.peekTokenIs(lexer.ASSIGN):
+        if len(stmt.Identifiers) != 1 {
+            p.errors = append(p.errors, "numeric for loop must have exactly one variable")
+            return nil
+        }
+        stmt.Identifier = stmt.Identifiers[0]
+        if !p.expectPeek(lexer.ASSIGN) {
+            return nil
+        }
         p.nextToken()
         stmt.InitValue = p.parseExpression(LOWEST)
+        if stmt.InitValue == nil {
+            return nil
+        }
         if !p.expectPeek(lexer.COMMA) {
             return nil
         }
         p.nextToken()
         stmt.EndValue = p.parseExpression(LOWEST)
+        if stmt.EndValue == nil {
+            return nil
+        }
         if p.peekTokenIs(lexer.COMMA) {
-            p.nextToken()
+            if !p.expectPeek(lexer.COMMA) {
+                return nil
+            }
             p.nextToken()
             stmt.StepValue = p.parseExpression(LOWEST)
+            if stmt.StepValue == nil {
+                return nil
+            }
         }
-    } else {
-        stmt.Identifiers = p.parseIdentifierList()
+        if !p.expectPeek(lexer.DO) {
+            return nil
+        }
+        p.nextToken()
+        stmt.Body = p.parseBlockStatement(lexer.END)
+        if !p.expectPeek(lexer.END) {
+            return nil
+        }
+        p.nextToken()
+        return stmt
+    case p.peekTokenIs(lexer.IN):
         if !p.expectPeek(lexer.IN) {
             return nil
         }
         p.nextToken()
         stmt.Iterators = p.parseExpressionList(lexer.DO)
-    }
-    if !p.expectPeek(lexer.DO) {
+        if stmt.Iterators == nil {
+            return nil
+        }
+        if !p.expectPeek(lexer.DO) {
+            return nil
+        }
+        p.nextToken()
+        stmt.Body = p.parseBlockStatement(lexer.END)
+        if !p.expectPeek(lexer.END) {
+            return nil
+        }
+        p.nextToken()
+        return stmt
+    default:
+        fmt.Sprintf("expected '%s' or '%s' after loop variables, got '%s'",
+            lexer.ASSIGN, lexer.IN, p.peekToken.Type)
         return nil
     }
-    stmt.Body = p.parseBlockStatement(lexer.END)
-
-    if !p.expectPeek(lexer.END) {
-        return nil
-    }
-    return stmt
 }
 
 func (p *Parser) parseTableConstructor() Expression {
@@ -916,6 +968,34 @@ func (p *Parser) parseExpressionList(end lexer.TokenType) []Expression {
     }
 
     return list
+}
+
+func (p *Parser) skipUntil(tokens ...lexer.TokenType) {
+    for !p.curTokenIs(lexer.EOF) {
+        for _, t := range tokens {
+            if p.currentToken.Type == t {
+                return
+            }
+        }
+        p.nextToken()
+    }
+}
+
+func (p *Parser) recoverFromError() {
+    p.errors = append(p.errors, fmt.Sprintf("unexpected token: %s at line %d, col %d", p.currentToken.Type, p.currentToken.Line, p.currentToken.Column))
+    for !p.curTokenIs(lexer.EOF) {
+        if p.peekTokenIs(lexer.LOCAL) || p.peekTokenIs(lexer.FUNCTION) ||
+           p.peekTokenIs(lexer.CONST) || p.peekTokenIs(lexer.RETURN) ||
+           p.peekTokenIs(lexer.IF) || p.peekTokenIs(lexer.WHILE) ||
+           p.peekTokenIs(lexer.FOR) || p.peekTokenIs(lexer.REPEAT) ||
+           p.peekTokenIs(lexer.BREAK) || p.peekTokenIs(lexer.END) ||
+           p.peekTokenIs(lexer.ELSEIF) || p.peekTokenIs(lexer.ELSE) ||
+           p.peekTokenIs(lexer.SEMICOLON) {
+            p.nextToken()
+            return
+        }
+        p.nextToken()
+    }
 }
 
 func (p *Parser) Errors() []string {
