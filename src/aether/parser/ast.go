@@ -272,6 +272,14 @@ type BooleanLiteral struct {
 func (bl *BooleanLiteral) expressionNode() {}
 func (bl *BooleanLiteral) node() {}
 
+type DoStatement struct {
+    Token lexer.Token
+    Body  *BlockStatement
+}
+
+func (ds *DoStatement) statementNode() {}
+func (ds *DoStatement) node() {}
+
 type DotExpression struct {
     Token    lexer.Token
     Object   Expression

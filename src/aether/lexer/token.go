@@ -20,7 +20,8 @@ const (
     IDENTIFIER TokenType = "IDENTIFIER"
     NUMBER     TokenType = "NUMBER"
     STRING     TokenType = "STRING"
-    BOOL       TokenType = "BOOL"
+    TRUE       TokenType = "TRUE"
+    FALSE      TokenType = "FALSE"
     NIL        TokenType = "NIL"
 
     // Operators
@@ -39,10 +40,6 @@ const (
     LT        TokenType = "LT"
     CONCAT    TokenType = "CONCAT"
     VAARG     TokenType = "VAARG"
-
-    // Booleans
-    TRUE  TokenType = "TRUE"
-    FALSE TokenType = "FALSE"
 
     // Delimiters
     COMMA     TokenType = "COMMA" // ,
@@ -109,8 +106,8 @@ var keywords = map[string]TokenType{
 	"catch":    CATCH,
 	"finally":  FINALLY,
 	"nil":      NIL,
-	"true":     BOOL,
-	"false":    BOOL,
+	"true":     TRUE,
+	"false":    FALSE,
 	"not":      NOT,
 	"or":       OR,
 	"and":      AND,

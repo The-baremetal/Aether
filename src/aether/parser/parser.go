@@ -135,6 +135,8 @@ func (p *Parser) parseStatement() Statement {
         return p.parseReturnStatement()
     case lexer.IF:
         return p.parseIfStatement()
+    case lexer.DO:
+        return p.parseDoStatement()
     case lexer.WHILE:
         return p.parseWhileStatement()
     case lexer.FOR:
@@ -168,6 +170,15 @@ func (p *Parser) parsePrintStatement() Statement {
     return stmt
 }
 */
+
+func (p *Parser) parseDoStatement() *DoStatement {
+    stmt := &DoStatement{Token: p.currentToken}
+    p.nextToken()
+
+    stmt.Body = p.parseBlockStatement(lexer.END)
+    return stmt
+}
+
 
 func (p *Parser) parseImportStatement() Statement {
     stmt := &ImportStatement{Token: p.currentToken}
@@ -677,37 +688,40 @@ func (p *Parser) peekError(t lexer.TokenType) {
     p.errors = append(p.errors, fmt.Sprintf("expected next token to be %s, got %s (%q) instead at line %d, column %d",
         t, p.peekToken.Type, p.peekToken.Literal, p.peekToken.Line, p.peekToken.Column))
 }
-
 func (p *Parser) parseIfStatement() *IfStatement {
     stmt := &IfStatement{Token: p.currentToken}
     p.nextToken()
-
     stmt.Condition = p.parseExpression(LOWEST)
 
     if !p.expectPeek(lexer.THEN) {
         p.errors = append(p.errors, fmt.Sprintf("expected 'then' after 'if' condition at line %d, column %d, got %s (%q) instead", p.peekToken.Line, p.peekToken.Column, p.peekToken.Type, p.peekToken.Literal))
         return nil
     }
-
+    p.nextToken()
     stmt.Consequence = p.parseBlockStatement(lexer.END)
-
     for p.peekTokenIs(lexer.ELSEIF) {
         p.nextToken()
+        elseifToken := p.currentToken
+        p.nextToken()
+        cond := p.parseExpression(LOWEST)
+
+        if !p.expectPeek(lexer.THEN) {
+            p.errors = append(p.errors, fmt.Sprintf("expected 'then' after 'elseif' condition at line %d, column %d", p.peekToken.Line, p.peekToken.Column))
+            return nil
+        }
+        p.nextToken()
         elseif := &IfStatement{
-            Token:       p.currentToken,
-            Condition:   p.parseExpression(LOWEST),
+            Token:       elseifToken,
+            Condition:   cond,
             Consequence: p.parseBlockStatement(lexer.END),
         }
+
         stmt.Alternatives = append(stmt.Alternatives, elseif)
     }
-
     if p.peekTokenIs(lexer.ELSE) {
         p.nextToken()
+        p.nextToken()
         stmt.Alternative = p.parseBlockStatement(lexer.END)
-    }
-
-    if !p.expectPeek(lexer.END) {
-        return nil
     }
 
     return stmt
@@ -906,7 +920,6 @@ func (p *Parser) parseFunctionLiteral() Expression {
 }
 
 func (p *Parser) parseBlockStatement(endToken lexer.TokenType) *BlockStatement {
-    p.nextToken()
     block := &BlockStatement{Token: p.currentToken}
     block.Statements = []Statement{}
     for !p.curTokenIs(endToken) && !p.curTokenIs(lexer.EOF) {

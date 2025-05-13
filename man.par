@@ -1,6 +1,83 @@
 {
   "Statements": [
     {
+      "Token": {
+        "Type": "IF",
+        "Literal": "if",
+        "Line": 1,
+        "Column": 1
+      },
+      "Condition": {
+        "Token": {
+          "Type": "GT",
+          "Literal": "\u003e",
+          "Line": 1,
+          "Column": 8
+        },
+        "Left": {
+          "Token": {
+            "Type": "IDENTIFIER",
+            "Literal": "i",
+            "Line": 1,
+            "Column": 5
+          },
+          "Value": "i"
+        },
+        "Operator": "\u003e",
+        "Right": {
+          "Token": {
+            "Type": "NUMBER",
+            "Literal": "5",
+            "Line": 1,
+            "Column": 11
+          },
+          "Value": 5
+        }
+      },
+      "Consequence": {
+        "Token": {
+          "Type": "IDENTIFIER",
+          "Literal": "print",
+          "Line": 3,
+          "Column": 9
+        },
+        "Statements": [
+          {
+            "Expression": {
+              "Token": {
+                "Type": "LPAREN",
+                "Literal": "(",
+                "Line": 0,
+                "Column": 0
+              },
+              "Function": {
+                "Token": {
+                  "Type": "IDENTIFIER",
+                  "Literal": "print",
+                  "Line": 3,
+                  "Column": 9
+                },
+                "Value": "print"
+              },
+              "Arguments": [
+                {
+                  "Token": {
+                    "Type": "IDENTIFIER",
+                    "Literal": "i",
+                    "Line": 3,
+                    "Column": 15
+                  },
+                  "Value": "i"
+                }
+              ]
+            }
+          }
+        ]
+      },
+      "Alternatives": null,
+      "Alternative": null
+    },
+    {
       "Expression": {
         "Token": {
           "Type": "LPAREN",
@@ -11,30 +88,21 @@
         "Function": {
           "Token": {
             "Type": "IDENTIFIER",
-            "Literal": "nd",
-            "Line": 0,
-            "Column": 0
+            "Literal": "print",
+            "Line": 11,
+            "Column": 1
           },
-          "Value": "nd"
+          "Value": "print"
         },
         "Arguments": [
           {
             "Token": {
               "Type": "STRING",
-              "Literal": "e",
-              "Line": 0,
-              "Column": 0
+              "Literal": "les gooooooo",
+              "Line": 11,
+              "Column": 7
             },
-            "Value": "e"
-          },
-          {
-            "Token": {
-              "Type": "IDENTIFIER",
-              "Literal": "death",
-              "Line": 0,
-              "Column": 0
-            },
-            "Value": "death"
+            "Value": "les gooooooo"
           }
         ]
       }

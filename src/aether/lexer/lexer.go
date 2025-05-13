@@ -25,10 +25,12 @@ type Lexer struct {
 	input        string
 	pos, readPos int
 	ch           byte
+	line         int
+	column       int
 }
 
 func NewLexer(input string) *Lexer {
-	l := &Lexer{input: input}
+	l := &Lexer{input: input, line: 1, column: 0}
 	l.readChar()
 	return l
 }
@@ -39,6 +41,14 @@ func (l *Lexer) readChar() {
 	} else {
 		l.ch = l.input[l.readPos]
 	}
+
+	if l.ch == '\n' {
+		l.line++
+		l.column = 0
+	} else {
+		l.column++
+	}
+
 	l.pos = l.readPos
 	l.readPos++
 }
@@ -75,15 +85,41 @@ func (l *Lexer) NextToken() Token {
 		tok = l.newSingleToken(MODULO)
 	case '^':
 		tok = l.newSingleToken(EXPONENT)
-	case '<':
-		tok = l.newSingleToken(LT)
 	case '>':
-		tok = l.newSingleToken(GT)
+		if l.peekChar() == '=' {
+			tok = l.newDoubleToken(GE)
+		} else {
+			tok = l.newSingleToken(GT)
+		}
+	case '<':
+		if l.peekChar() == '=' {
+			tok = l.newDoubleToken(LE)
+		} else {
+			tok = l.newSingleToken(LT)
+		}
+	case '!':
+		if l.peekChar() == '=' {
+			tok = l.newDoubleToken(NE)
+		} else {
+			tok = Token{Type: ILLEGAL, Literal: "!", Line: l.line, Column: l.column}
+		}
 	case '(':
 		tok = Token{Type: LPAREN, Literal: string(l.ch)}
 		l.readChar()
 	case ')':
 		tok = Token{Type: RPAREN, Literal: string(l.ch)}
+		l.readChar()
+	case '{':
+		tok = Token{Type: LBRACE, Literal: string(l.ch)}
+		l.readChar()
+	case '}':
+		tok = Token{Type: RBRACE, Literal: string(l.ch)}
+		l.readChar()
+	case '[':
+		tok = Token{Type: LBRACKET, Literal: string(l.ch)}
+		l.readChar()
+	case ']':
+		tok = Token{Type: RBRACKET, Literal: string(l.ch)}
 		l.readChar()
 	case '.':
 		if l.peekChar() == '.' {
@@ -115,17 +151,19 @@ func (l *Lexer) NextToken() Token {
 }
 
 func (l *Lexer) newSingleToken(t TokenType) Token {
-	tok := Token{Type: t, Literal: string(l.ch)}
+	tok := Token{Type: t, Literal: string(l.ch), Line: l.line, Column: l.column}
 	l.readChar()
 	return tok
 }
 
 func (l *Lexer) newDoubleToken(t TokenType) Token {
+	line := l.line
+	column := l.column
 	ch := l.ch
 	l.readChar()
 	literal := string(ch) + string(l.ch)
 	l.readChar()
-	return Token{Type: t, Literal: literal}
+	return Token{Type: t, Literal: literal, Line: line, Column: column}
 }
 
 func (l *Lexer) newMultiCharToken(t TokenType, count int) Token {
@@ -145,8 +183,15 @@ func (l *Lexer) peekAhead(n int) byte {
 
 func (l *Lexer) skipWhitespace() {
 	for unicode.IsSpace(rune(l.ch)) {
+		if l.ch == '\n' {
+			l.line++
+			l.column = 0
+		} else {
+			l.column++
+		}
 		l.readChar()
 	}
+
 	if l.ch == '-' && l.peekChar() == '-' {
 		for l.ch != '\n' && l.ch != 0 {
 			l.readChar()
@@ -157,73 +202,79 @@ func (l *Lexer) skipWhitespace() {
 
 func (l *Lexer) readIdentifier() Token {
 	start := l.pos
+	startColumn := l.column
 	for isLetter(l.ch) || isDigit(l.ch) || l.ch == '_' {
 		l.readChar()
 	}
 	lit := l.input[start:l.pos]
 	if typ, ok := keywords[strings.ToLower(lit)]; ok {
-		return Token{Type: typ, Literal: lit}
+		return Token{Type: typ, Literal: lit, Line: l.line, Column: startColumn}
 	}
-	return Token{Type: IDENTIFIER, Literal: lit}
+	return Token{Type: IDENTIFIER, Literal: lit, Line: l.line, Column: startColumn}
 }
 
 func (l *Lexer) readNumber() Token {
-    start := l.pos
-    if l.ch == '0' && (l.peekChar() == 'x' || l.peekChar() == 'X') {
-        l.readChar()
-        l.readChar()
-        for isHexDigit(l.ch) {
-            l.readChar()
-        }
-    } else if isDigit(l.ch) {
-        for isDigit(l.ch) {
-            l.readChar()
-        }
-        if l.ch == '.' && isDigit(l.peekChar()) {
-            l.readChar()
-            for isDigit(l.ch) {
-                l.readChar()
-            }
-        }
-    }
-    return Token{Type: NUMBER, Literal: l.input[start:l.pos]}
+	start := l.pos
+	startColumn := l.column
+	if l.ch == '0' && (l.peekChar() == 'x' || l.peekChar() == 'X') {
+		l.readChar()
+		l.readChar()
+		for isHexDigit(l.ch) {
+			l.readChar()
+		}
+	} else if isDigit(l.ch) {
+		for isDigit(l.ch) {
+			l.readChar()
+		}
+		if l.ch == '.' && isDigit(l.peekChar()) {
+			l.readChar()
+			for isDigit(l.ch) {
+				l.readChar()
+			}
+		}
+	}
+	return Token{Type: NUMBER, Literal: l.input[start:l.pos], Line: l.line, Column: startColumn}
 }
 
-func (l *Lexer) readString(delim byte) Token { // rich strings
-	start := l.pos + 1
-	_ = start
+func (l *Lexer) readString(delim byte) Token {
+	startColumn := l.column
 	l.readChar()
-
 	var strBuilder strings.Builder
-
 	for l.ch != delim && l.ch != 0 {
 		if l.ch == '\\' {
 			l.readChar()
 			switch l.ch {
 			case 'n':
 				strBuilder.WriteByte('\n')
+				l.line++
+				l.column = 0
 			case 't':
 				strBuilder.WriteByte('\t')
+				l.column++
 			case 'r':
 				strBuilder.WriteByte('\r')
+				l.column++
 			case '\\':
 				strBuilder.WriteByte('\\')
+				l.column++
 			case '"', '\'':
 				strBuilder.WriteByte(l.ch)
+				l.column++
 			default:
 				strBuilder.WriteByte(l.ch)
+				l.column++
 			}
 		} else {
 			strBuilder.WriteByte(l.ch)
+			l.column++
 		}
 		l.readChar()
 	}
 	if l.ch == 0 {
-		return Token{Type: ILLEGAL, Literal: "unfinished string"}
+		return Token{Type: ILLEGAL, Literal: "unfinished string", Line: l.line, Column: startColumn}
 	}
 	l.readChar()
-
-	return Token{Type: STRING, Literal: strBuilder.String()}
+	return Token{Type: STRING, Literal: strBuilder.String(), Line: l.line, Column: startColumn}
 }
 
 func isLetter(ch byte) bool {
@@ -239,7 +290,7 @@ func (l *Lexer) Tokenize() []Token {
 	for tok := l.NextToken(); tok.Type != EOF; tok = l.NextToken() {
 		tokens = append(tokens, tok)
 	}
-	tokens = append(tokens, Token{Type: EOF, Literal: ""})
+	tokens = append(tokens, Token{Type: EOF, Literal: "", Line: l.line, Column: l.column})
 	return tokens
 }
 
